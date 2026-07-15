@@ -262,6 +262,25 @@ h3 { font-size: 1.22rem; }
 
 .section--tint { background: var(--bg-soft); }
 
+.section__sub {
+  color: var(--ink-soft);
+  margin-top: 0.4rem;
+}
+
+/* ===== Booking calendar (GoHighLevel embed) ===== */
+.booking {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(0.6rem, 2vw, 1.4rem);
+}
+
+.booking iframe {
+  display: block;
+  min-height: 700px;
+}
+
 .section--dark {
   background: var(--ink);
   color: #f5f2ec;
