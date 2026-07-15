@@ -259,11 +259,8 @@ h3 { font-size: 1.22rem; }
 
 /* ===== Booking calendar (GoHighLevel embed) ===== */
 .booking {
-  background: var(--surface);
-  border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: clamp(0.6rem, 2vw, 1.4rem);
+  overflow: hidden;
 }
 
 .booking iframe {
@@ -404,9 +401,15 @@ h3 { font-size: 1.22rem; }
   text-align: center;
 }
 
-.about__logo {
-  width: min(340px, 88%);
-  margin: -18% 0 -24%;
+.about__stars {
+  color: var(--accent);
+  font-size: 1.35rem;
+  letter-spacing: 0.35em;
+}
+
+.about__author {
+  font-size: 0.9rem;
+  color: rgba(245, 242, 236, 0.55);
 }
 
 .about__quote {

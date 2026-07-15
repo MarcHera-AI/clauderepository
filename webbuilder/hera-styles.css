@@ -285,11 +285,8 @@
 
 /* ===== Booking calendar (GoHighLevel embed) ===== */
 #hera-site .booking {
-  background: var(--surface);
-  border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: clamp(0.6rem, 2vw, 1.4rem);
+  overflow: hidden;
 }
 
 #hera-site .booking iframe {
@@ -423,9 +420,15 @@
   text-align: center;
 }
 
-#hera-site .about__logo {
-  width: min(340px, 88%);
-  margin: -18% 0 -24%;
+#hera-site .about__stars {
+  color: var(--accent);
+  font-size: 1.35rem;
+  letter-spacing: 0.35em;
+}
+
+.about__author {
+  font-size: 0.9rem;
+  color: rgba(245, 242, 236, 0.55);
 }
 
 #hera-site .about__quote {
@@ -701,4 +704,22 @@
   #hera-site .form__row { grid-template-columns: 1fr; }
   #hera-site .hero__stats-inner { grid-template-columns: 1fr; row-gap: 1.4rem; }
   #hera-site .logo img { height: 126px; margin: -39px 0 -49px; }
+}
+
+/* ===== GHL page cleanup =====
+   Removes the builder's default white spacing above and below the
+   embed (body margin + section/row/column padding). If you later add
+   other sections to this page that need their own padding, delete
+   this block and instead set THIS section's padding to 0 in the
+   builder settings. */
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #faf7f2 !important;
+}
+
+.c-section, .c-row, .c-column, .c-wrapper,
+.hl_page-creator--section, .hl_page-creator--row, .hl_page-creator--col,
+.fullSection, .noBorder {
+  padding: 0 !important;
 }
