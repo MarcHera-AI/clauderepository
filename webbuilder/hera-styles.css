@@ -70,16 +70,20 @@
 
 #hera-site .accent { color: var(--accent); }
 
-/* ===== Logo ===== */
+/* ===== Logo =====
+   The brand PNGs are square with generous transparent padding, so
+   negative margins collapse the empty space while keeping the
+   wordmark large. */
 #hera-site .logo {
   display: inline-flex;
   text-decoration: none;
 }
 
 #hera-site .logo img {
-  height: 52px;
+  height: 150px;
   width: auto;
   display: block;
+  margin: -46px 0 -58px;
 }
 
 /* ===== Buttons ===== */
@@ -409,7 +413,8 @@
 }
 
 #hera-site .about__logo {
-  width: clamp(200px, 60%, 280px);
+  width: min(340px, 88%);
+  margin: -18% 0 -24%;
 }
 
 #hera-site .about__quote {
@@ -615,7 +620,7 @@
   flex-wrap: wrap;
 }
 
-#hera-site .logo--footer img { height: 44px; }
+#hera-site .logo--footer img { height: 130px; margin: -40px 0 -50px; }
 
 #hera-site .footer__links {
   display: flex;
@@ -684,5 +689,5 @@
   #hera-site .cards, #hera-site .work, #hera-site .steps { grid-template-columns: 1fr; }
   #hera-site .form__row { grid-template-columns: 1fr; }
   #hera-site .hero__stats-inner { grid-template-columns: 1fr; row-gap: 1.4rem; }
-  #hera-site .logo img { height: 44px; }
+  #hera-site .logo img { height: 126px; margin: -39px 0 -49px; }
 }
