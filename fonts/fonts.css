@@ -1,0 +1,17 @@
+/* Self-hosted variable fonts (latin subsets, via Google Fonts) */
+
+@font-face {
+  font-family: 'Baloo 2';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('Baloo2-variable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('Inter-variable.woff2') format('woff2');
+}
