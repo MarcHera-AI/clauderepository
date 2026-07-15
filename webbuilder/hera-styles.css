@@ -12,6 +12,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 #hera-site {
+  /* Break out of the builder's boxed column to span the full
+     viewport width, no matter how narrow the parent section is. */
+  width: auto;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
   --bg: #faf7f2;          /* primary: warm dirty white */
   --bg-soft: #f3efe7;     /* slightly deeper tint for alt sections */
   --surface: #fffdf9;     /* cards */
@@ -32,7 +38,12 @@
   -webkit-font-smoothing: antialiased;
 }
 
-#hera-site, #hera-site * {
+#hera-site {
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#hera-site * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
