@@ -1,5 +1,5 @@
 <!-- ============================================================
-     Hera Solutions all-in-one block (styles included)
+     Hera Solutions booking page (all-in-one, styles included)
      Paste this whole file into ONE custom HTML / embed element.
      Styles are included inline, so there is NOTHING to paste into
      the Custom CSS area. Clear that field of any older stylesheet.
@@ -791,240 +791,70 @@ body {
 <div id="hera-site">
 
 
-  <!-- ===== Navigation ===== -->
-  <header class="nav" id="top">
-    <div class="container nav__inner">
-      <a href="#top" class="logo" aria-label="Hera Solutions home">
+  <main class="book-page">
+    <div class="container">
+
+      <!-- ===== Logo ===== -->
+      <span class="logo book-logo">
         <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/69953f406bac240a202f30df.png" alt="Hera Solutions" />
-      </a>
-      <nav class="nav__links" id="heraNavLinks" aria-label="Main navigation">
-        <a href="#how-it-works">How It Works</a>
-        <a href="#results">Results</a>
-        <a href="#faq">FAQ</a>
-        <a href="#book" class="btn btn--primary btn--small">Book Your Call</a>
-      </nav>
-      <button class="nav__toggle" id="heraNavToggle" aria-label="Toggle menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      </span>
+
+      <!-- ===== Social proof =====
+           Swap each avatar for a real client photo:
+           <span class="proof__avatar" style="background-image:url('PHOTO_URL')"></span>
+           If you have a real client count, replace the count line with
+           something like "30+ Contractors". Don't put a number here you
+           can't back up. -->
+      <div class="proof reveal">
+        <div class="proof__avatars" aria-hidden="true">
+          <span class="proof__avatar">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5c0-3-4-5.5-9-5.5z"/></svg>
+          </span>
+          <span class="proof__avatar">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5c0-3-4-5.5-9-5.5z"/></svg>
+          </span>
+          <span class="proof__avatar">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5c0-3-4-5.5-9-5.5z"/></svg>
+          </span>
+          <span class="proof__avatar">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5c0-3-4-5.5-9-5.5z"/></svg>
+          </span>
+          <span class="proof__avatar">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5 0-9 2.5-9 5.5V22h18v-2.5c0-3-4-5.5-9-5.5z"/></svg>
+          </span>
+        </div>
+        <p class="proof__count">Trusted By Contractors</p>
+        <p class="proof__label">Across The US &amp; Canada</p>
+      </div>
+
+      <!-- ===== Headline ===== -->
+      <h1 class="book-title reveal">
+        Stop Chasing Leads
+        <em>Start Quoting Booked Jobs</em>
+      </h1>
+
+      <!-- ===== Calendar ===== -->
+      <div class="calendar-card reveal">
+        <iframe
+          src="https://api.leadconnectorhq.com/widget/booking/1ORiaV39AR6yaDfpMFR8"
+          scrolling="no"
+          id="1ORiaV39AR6yaDfpMFR8_booking"
+          title="Book a call with Hera Solutions"></iframe>
+      </div>
+
     </div>
-  </header>
-
-  <main>
-    <!-- ===== Hero ===== -->
-    <section class="hero">
-      <div class="hero__bg" aria-hidden="true"></div>
-      <div class="container hero__inner">
-        <span class="eyebrow reveal">For Deck Builders &amp; Contractors</span>
-        <h1 class="hero__title reveal">
-          Stop Chasing Leads.<br />Start Quoting <span class="accent">Booked Jobs.</span>
-        </h1>
-        <p class="hero__sub reveal">
-          We run the ads, <u>screen every lead by phone</u>, and put ready-to-go
-          homeowners straight onto your calendar. All you do is show up and quote.
-        </p>
-        <div class="hero__actions reveal">
-          <a href="#book" class="btn btn--primary">
-            Book Your Strategy Call
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-          </a>
-          <a href="#how-it-works" class="btn btn--ghost">See How It Works</a>
-        </div>
-        <p class="hero__trust reveal">Trusted by contractors across the US and Canada</p>
-      </div>
-    </section>
-
-    <!-- ===== How it works ===== -->
-    <section class="section" id="how-it-works">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow">The Hera System</span>
-          <h2>How We Fill Your Calendar</h2>
-          <p class="section__sub">Three steps that turn ad spend into booked estimates on your calendar.</p>
-        </div>
-
-        <ol class="steps">
-          <li class="step reveal">
-            <span class="step__num" aria-hidden="true">01</span>
-            <div class="step__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6.5a8 8 0 0 1 0 11"/></svg>
-            </div>
-            <h3>Demand Generation</h3>
-            <p>We run targeted Meta ads that reach homeowners actively planning projects in your service area.</p>
-          </li>
-
-          <li class="step step--featured reveal">
-            <span class="step__num" aria-hidden="true">02</span>
-            <div class="step__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 20.5a15 15 0 0 1-12-12A2.5 2.5 0 0 1 6 6h2l1.5 4-2 1.5a11 11 0 0 0 5 5L14 14.5l4 1.5v2a2.5 2.5 0 0 1-2.5 2.5z"/></svg>
-            </div>
-            <h3>Human Qualification</h3>
-            <p>A real person calls every lead, confirms the project, budget and timeline, then books the qualified ones straight onto your calendar.</p>
-          </li>
-
-          <li class="step reveal">
-            <span class="step__num" aria-hidden="true">03</span>
-            <div class="step__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
-            </div>
-            <h3>Automation &amp; Follow-Up</h3>
-            <p>Every lead lands in a CRM with automated SMS and email follow-up, plus an online booking page, so nobody slips through the cracks.</p>
-          </li>
-        </ol>
-
-        <div class="steps-cta reveal">
-          <a href="#book" class="btn btn--primary">
-            See If You Qualify
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== Results / testimonials ===== -->
-    <section class="section section--alt" id="results">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow">Real Contractors</span>
-          <h2>Check Out What Our Clients Say</h2>
-          <p class="section__sub">Straight from the contractors growing with Hera Solutions.</p>
-        </div>
-
-        <!-- Screenshot wall. Add or remove buttons freely; the columns reflow. -->
-        <div class="wall reveal">
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 1">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5fccebf8478ee0eda3cad8.jpg" alt="Client testimonial 1" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 2">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dfe.jpg" alt="Client testimonial 2" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 3">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef106e.jpg" alt="Client testimonial 3" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 4">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef1068.jpg" alt="Client testimonial 4" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 5">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef1072.jpg" alt="Client testimonial 5" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 6">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dc8.jpg" alt="Client testimonial 6" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 7">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbc0b1f5d2e2b03b3.jpg" alt="Client testimonial 7" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 8">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dcd.jpg" alt="Client testimonial 8" loading="lazy" />
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== FAQ ===== -->
-    <section class="section" id="faq">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow">FAQ</span>
-          <h2>Common Questions</h2>
-        </div>
-
-        <div class="faq reveal">
-          <details class="faq__item">
-            <summary>
-              What exactly does Hera Solutions do?
-              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </summary>
-            <p>We run Meta (Facebook &amp; Instagram) ad campaigns for contractors and turn them into qualified homeowner appointments. We handle the ads, the creative, the lead screening and the booking. You handle the quote and the job.</p>
-          </details>
-
-          <details class="faq__item">
-            <summary>
-              Are the leads exclusive to my business?
-              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </summary>
-            <p>Yes. Every lead we generate is yours alone. We never resell or share leads between clients, and we don't work with two competing contractors in the same service area.</p>
-          </details>
-
-          <details class="faq__item">
-            <summary>
-              Which trades do you work with?
-              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </summary>
-            <p>We work with deck builders and contractors across the US and Canada. Our system is built to scale in any local market - urban, suburban, or rural.</p>
-          </details>
-
-          <details class="faq__item">
-            <summary>
-              How quickly will I see leads?
-              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </summary>
-            <p>Campaigns typically go live within 48 hours of onboarding, and most clients see their first qualified appointments within the first week or two while the campaigns dial in.</p>
-          </details>
-
-          <details class="faq__item">
-            <summary>
-              What makes you different from other agencies?
-              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
-            </summary>
-            <p>Simple: we don't just send you leads. We qualify them by phone, automate follow-up, and book real estimates. We're measured on revenue impact - not impressions or clicks.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== Book a call ===== -->
-    <section class="section section--alt" id="book">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow">Book A Call</span>
-          <h2>Pick A Time That Suits You</h2>
-          <p class="section__sub">A free strategy call. We'll look at your trade and service area and tell you honestly what Meta ads can do for you.</p>
-        </div>
-        <div class="booking reveal">
-          <iframe
-            src="https://api.leadconnectorhq.com/widget/booking/1ORiaV39AR6yaDfpMFR8"
-            style="width: 100%; border: none; overflow: hidden; min-height: 700px;"
-            scrolling="no"
-            id="1ORiaV39AR6yaDfpMFR8_booking"
-            title="Book a call with Hera Solutions"></iframe>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== Final CTA ===== -->
-    <section class="cta-band">
-      <div class="container">
-        <h2>Ready To Fill Your Calendar?</h2>
-        <p>Tell us your trade and your service area, and we'll tell you straight whether we can keep your crews busy.</p>
-        <a href="#book" class="btn btn--primary">
-          Book Your Strategy Call
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
-        </a>
-      </div>
-    </section>
   </main>
 
   <!-- ===== Footer ===== -->
-  <footer class="footer">
-    <div class="container footer__inner">
-      <a href="#top" class="logo logo--footer" aria-label="Back to top">
-        <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/69953f406bac240a202f30df.png" alt="Hera Solutions" />
-      </a>
-      <nav class="footer__links" aria-label="Footer navigation">
-        <a href="#how-it-works">How It Works</a>
-        <a href="#results">Results</a>
-        <a href="#faq">FAQ</a>
-        <a href="#book">Book Your Call</a>
-        <a href="mailto:heraecomm@gmail.com">Contact</a>
-      </nav>
-      <p class="footer__copy">© <span id="heraYear"></span> Hera Solutions. All rights reserved.</p>
+  <footer class="ty-footer">
+    <div class="container">
+      <p class="disclaimer">
+        This website is not a part of the Facebook website or Facebook Inc. Additionally, this
+        website is NOT endorsed by Facebook in any way. Facebook is a trademark of Facebook, Inc.
+      </p>
+      <p class="footer__copy" style="margin-top:1.2rem">© <span id="heraYear"></span> Hera Solutions. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Lightbox for the testimonial screenshots -->
-  <div class="lightbox" id="heraLightbox" role="dialog" aria-modal="true" aria-label="Testimonial image">
-    <button class="lightbox__close" id="heraLightboxClose" type="button" aria-label="Close">&times;</button>
-    <img id="heraLightboxImg" src="" alt="" />
-  </div>
 </div><!-- /#hera-site -->
 
 <script>

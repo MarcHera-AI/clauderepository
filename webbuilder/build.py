@@ -312,9 +312,22 @@ def main():
     ty = ty.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
     (OUT / "hera-thankyou-all-in-one.html").write_text(ty)
 
+    # ---- Booking page ----
+    (OUT / "hera-book.html").write_text(
+        build_html("booking page (pairs with hera-styles.css)", False, "book.html")
+    )
+    bk = build_html("booking page (all-in-one, styles included)", False, "book.html").replace(
+        "     Pair it with hera-styles.css in the builder's Custom CSS area.\n",
+        "     Styles are included inline, so there is NOTHING to paste into\n"
+        "     the Custom CSS area. Clear that field of any older stylesheet.\n",
+    )
+    bk = bk.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
+    (OUT / "hera-book-all-in-one.html").write_text(bk)
+
     print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html,")
     print("      hera-all-in-one.html, hera-thankyou.html,")
-    print("      hera-thankyou-all-in-one.html")
+    print("      hera-thankyou-all-in-one.html, hera-book.html,")
+    print("      hera-book-all-in-one.html")
 
 
 if __name__ == "__main__":

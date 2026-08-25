@@ -686,6 +686,109 @@ h3 { font-size: 1.15rem; letter-spacing: -0.01em; }
   .next-steps { gap: 2rem; }
 }
 
+
+/* ============================================================
+   Booking page (funnel step before the thank-you page)
+   ============================================================ */
+.book-page {
+  text-align: center;
+  padding: clamp(2rem, 5vw, 3.5rem) 0 clamp(4rem, 8vw, 6rem);
+}
+
+.book-logo img {
+  height: 130px;
+  width: auto;
+  margin: -40px auto -46px;
+}
+
+/* ===== Social proof cluster ===== */
+.proof {
+  margin: clamp(2rem, 5vw, 3rem) 0 clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.proof__avatars {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+/* Overlapping circles. Swap each background for a real client photo:
+   style="background-image:url('PHOTO_URL')" */
+.proof__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: linear-gradient(150deg, #2a2e36, #171a20) center / cover no-repeat;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+}
+
+.proof__avatar + .proof__avatar { margin-left: -16px; }
+
+.proof__avatar svg { width: 26px; height: 26px; }
+
+.proof__count {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+  letter-spacing: -0.01em;
+}
+
+.proof__label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(0.9rem, 1.5vw, 1.02rem);
+  color: var(--muted);
+}
+
+/* ===== Headline ===== */
+.book-title {
+  font-size: clamp(1.9rem, 5.2vw, 3.6rem);
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.book-title em {
+  display: block;
+  font-style: italic;
+  color: var(--accent);
+  margin-top: 0.2em;
+}
+
+/* ===== Calendar with the orange glow ===== */
+.calendar-card {
+  max-width: 1000px;
+  margin-inline: auto;
+  border-radius: calc(var(--radius) * 1.2);
+  border: 1px solid rgba(248, 177, 23, 0.40);
+  background: var(--card);
+  padding: 6px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(248, 177, 23, 0.10),
+    0 0 90px rgba(248, 177, 23, 0.28),
+    0 30px 80px rgba(0, 0, 0, 0.55);
+}
+
+.calendar-card iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: calc(var(--radius) * 1.2 - 6px);
+  min-height: 760px;
+}
+
+@media (max-width: 640px) {
+  .book-logo img { height: 112px; margin: -34px auto -40px; }
+  .proof__avatar { width: 44px; height: 44px; }
+  .proof__avatar + .proof__avatar { margin-left: -14px; }
+  .calendar-card iframe { min-height: 900px; }
+}
+
 /* ===== Scroll reveal ===== */
 .js .reveal {
   opacity: 0;
