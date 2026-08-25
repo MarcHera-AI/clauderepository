@@ -1,37 +1,63 @@
 # Hera Solutions — Website
 
-Clean, single-page website for **Hera Solutions**, a contractor-marketing agency that runs Meta Ads and books qualified homeowner leads.
+Dark-theme site for **Hera Solutions**, a contractor marketing agency that runs
+Meta ads for deck builders and books qualified homeowner estimates.
 
 ## Stack
 
-Static HTML + CSS + vanilla JavaScript. No build step, no dependencies — deployable as-is to GitHub Pages, Netlify, Vercel, or any static host.
+Static HTML + CSS + vanilla JavaScript. No build step and no dependencies, so it
+deploys as-is to GitHub Pages, Netlify or Vercel, and the same content also
+generates paste-in blocks for GoHighLevel.
 
 ## Structure
 
 ```
-index.html       # the page (nav, hero, services, results, about, process, booking, FAQ, contact, footer)
-css/style.css    # design system + layout (CSS custom properties at the top)
-js/main.js       # mobile nav, scroll reveal, stat count-up, footer year
-fonts/           # self-hosted variable fonts (Baloo 2 + Inter, latin subsets)
-images/          # logo PNGs (dark variant for light backgrounds, light for dark)
-webbuilder/      # copy-paste versions for external page builders (GoHighLevel etc.)
+index.html            # the site (source of truth)
+css/style.css         # design system + layout (CSS variables at the top)
+js/main.js            # mobile nav, scroll reveal, click-to-load video, year
+images/               # logo PNGs (kept for reference; the site loads the
+                      #   originals from the GHL media CDN)
+webbuilder/
+  build.py            # generates the GHL blocks from the files above
+  hera-styles.css     # GENERATED - paste into GHL Custom CSS
+  hera-page.html      # GENERATED - paste into one custom HTML element
+  hera-page-no-nav.html  # GENERATED - same, minus the top nav
 ```
+
+**The files in `webbuilder/` are generated.** Edit `index.html`, `css/style.css`
+and `js/main.js`, then run:
+
+```
+python3 webbuilder/build.py
+```
+
+That scopes every CSS rule to the `#hera-site` wrapper, inlines the JavaScript,
+adds the full-width breakout, and appends the GoHighLevel page-padding reset.
 
 ## Brand
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `--bg` | `#faf7f2` | Primary surface (warm dirty white) |
-| `--ink` | `#1f1f1f` | Text + dark sections |
-| `--accent` | `#f8b117` | Buttons, highlights, "solutions." |
+| `--bg` | `#08090b` | Page background |
+| `--bg-2` | `#0d0f12` | Alternating sections |
+| `--card` | `#121419` | Cards |
+| `--accent` | `#f8b117` | Buttons, highlights, accents |
+| `--ink` | `#ffffff` | Headings and primary text |
 
-The logo lives in `images/` as transparent PNGs recreated with the Fredoka typeface: `hera-logo-dark.png` for light backgrounds (nav) and `hera-logo-light.png` for dark backgrounds (about panel, footer). To swap in the original logo file, replace those PNGs and keep the filenames.
+Buttons use dark text on orange, which clears WCAG AA comfortably. White text on
+this orange would not, so keep the dark text if you restyle them.
 
-## Editing content
+## Things to fill in
 
-- **Contact email**: `heraecomm@gmail.com` in `index.html` (mailto link and form action).
-- **Stats**: hero numbers live in `data-count` attributes on the `.stat__num` elements.
-- **Copy**: all text is plain HTML in `index.html`.
+- **Hero photo** — set `--hero-image` at the top of the CSS to a real photo URL.
+  Until then the hero falls back to a gradient, which looks deliberate but flat.
+- **Client logos** — the `.marquee__item` slots say "Your Client Logo". Swap each
+  for `<img src="..." alt="..." />` and edit **both** marquee tracks so the loop
+  stays seamless.
+- **Testimonials** — the `.tcard` blocks in the Results section. Photo cards take
+  an `<img>`; video cards take a YouTube id in `data-video` plus a thumbnail.
+- **Trust line** — the hero says "Trusted by contractors across the US and
+  Canada". Add a real client count when you have one to stand behind.
 
 ## Local preview
 

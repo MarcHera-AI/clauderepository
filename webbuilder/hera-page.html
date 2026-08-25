@@ -1,32 +1,34 @@
 <!-- ============================================================
-     Hera Solutions — Web-builder HTML + JS block (with navigation)
-     Paste this whole file into ONE custom HTML/embed element.
-     Pair it with hera-styles.css in your builder's Custom CSS area.
+     Hera Solutions web-builder block (with navigation)
+     Paste this whole file into ONE custom HTML / embed element.
+     Pair it with hera-styles.css in the builder's Custom CSS area.
+
+     Generated from index.html by webbuilder/build.py -- edit the
+     source files in the repo root, then re-run the script.
 
      Quick edits:
-     - Logo: the <img> tags load the original brand PNGs straight
-       from your GHL media library (assets.cdn.filesafe.space).
-     - Contact email: heraecomm@gmail.com (2 places)
-     - Hero stats: the data-count attributes
-     - Booking calendar: the iframe src (your GHL booking link)
+     - Hero photo: set --hero-image in the CSS (see the top of the file)
+     - Client logos: the .marquee__item slots (edit BOTH tracks)
+     - Testimonials: the .tcard blocks in the Results section
+     - Booking calendar: the iframe src
      ============================================================ -->
 
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 
 <div id="hera-site">
+
 
   <!-- ===== Navigation ===== -->
   <header class="nav" id="top">
     <div class="container nav__inner">
       <a href="#top" class="logo" aria-label="Hera Solutions home">
-        <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/69953f405c226547dd0d87d5.png" alt="Hera Solutions" />
+        <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/69953f406bac240a202f30df.png" alt="Hera Solutions" />
       </a>
       <nav class="nav__links" id="heraNavLinks" aria-label="Main navigation">
-        <a href="#services">What we do</a>
-        <a href="#work">Results</a>
-        <a href="#about">About</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#results">Results</a>
         <a href="#faq">FAQ</a>
-        <a href="#book" class="btn btn--small btn--dark">Book a call</a>
+        <a href="#book" class="btn btn--primary btn--small">Book Your Call</a>
       </nav>
       <button class="nav__toggle" id="heraNavToggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -37,171 +39,240 @@
   <main>
     <!-- ===== Hero ===== -->
     <section class="hero">
+      <div class="hero__bg" aria-hidden="true"></div>
       <div class="container hero__inner">
-        <p class="eyebrow reveal">Contractor marketing</p>
+        <span class="eyebrow reveal">For Deck Builders &amp; Contractors</span>
         <h1 class="hero__title reveal">
-          We turn Meta Ads into <span class="accent">booked jobs.</span>
+          Stop Chasing Leads.<br />Start Quoting <span class="accent">Booked Jobs.</span>
         </h1>
         <p class="hero__sub reveal">
-          Hera Solutions runs Meta Ads for contractors. No tire-kickers and no shared lists.
-          Just qualified, ready-to-go homeowners booked straight into your calendar.
+          We run the ads, <u>screen every lead by phone</u>, and put ready-to-go
+          homeowners straight onto your calendar. All you do is show up and quote.
         </p>
         <div class="hero__actions reveal">
-          <a href="#book" class="btn btn--primary">Book a free call</a>
-          <a href="#services" class="btn btn--ghost">See how it works</a>
+          <a href="#book" class="btn btn--primary">
+            Book Your Strategy Call
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#how-it-works" class="btn btn--ghost">See How It Works</a>
         </div>
+        <p class="hero__trust reveal">Trusted by contractors across the US and Canada</p>
       </div>
-      <div class="hero__stats">
-        <div class="container hero__stats-inner">
-          <div class="stat reveal">
-            <span class="stat__num" data-count="100">0</span><span class="stat__suffix">%</span>
-            <span class="stat__label">Exclusive leads, never resold</span>
-          </div>
-          <div class="stat reveal">
-            <span class="stat__num" data-count="4">0</span><span class="stat__suffix">x</span>
-            <span class="stat__label">Avg. return on ad spend</span>
-          </div>
-          <div class="stat reveal">
-            <span class="stat__num" data-count="48">0</span><span class="stat__suffix">hrs</span>
-            <span class="stat__label">From signup to live campaigns</span>
-          </div>
+    </section>
+
+    <!-- ===== Trusted businesses marquee ===== -->
+    <section class="marquee-section">
+      <p class="marquee-section__label">Trusted Businesses</p>
+      <div class="marquee">
+        <!-- Two identical tracks make the scroll loop seamlessly, so edit
+             BOTH tracks together. Swap each span for a real client logo:
+             <span class="marquee__item"><img src="LOGO_URL" alt="Client name" /></span> -->
+        <div class="marquee__track">
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+        </div>
+        <div class="marquee__track" aria-hidden="true">
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
+          <span class="marquee__item">Your Client Logo</span>
         </div>
       </div>
     </section>
 
-    <!-- ===== Services ===== -->
-    <section class="section" id="services">
+    <!-- ===== How it works ===== -->
+    <section class="section" id="how-it-works">
       <div class="container">
         <div class="section__head reveal">
-          <p class="eyebrow">What we do</p>
-          <h2>Meta Ads that fill your calendar</h2>
-          <p class="section__sub">One service, done exceptionally well: we run your ads, qualify the leads, and book the appointments. You show up and quote.</p>
+          <span class="eyebrow">The Hera System</span>
+          <h2>How We Fill Your Calendar</h2>
+          <p class="section__sub">Three steps that turn ad spend into booked estimates on your calendar.</p>
         </div>
-        <div class="cards">
-          <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
-            </div>
-            <h3>Meta Ads Management</h3>
-            <p>Campaigns built, launched and optimised daily on Facebook &amp; Instagram, targeting homeowners in your service area.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-5"/><circle cx="12" cy="12" r="9"/></svg>
-            </div>
-            <h3>Lead Qualification</h3>
-            <p>Every lead is screened for project intent, timeline and service area before it ever reaches you. No tire-kickers.</p>
-          </article>
-          <article class="card reveal">
-            <div class="card__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="M9 15.5l2 2 4-4"/></svg>
-            </div>
-            <h3>Appointment Booking</h3>
-            <p>Qualified homeowners land straight on your calendar as booked appointments, ready for a quote.</p>
-          </article>
-        </div>
-      </div>
-    </section>
 
-    <!-- ===== Work / results banner (dark) ===== -->
-    <section class="section section--dark" id="work">
-      <div class="container">
-        <div class="section__head section__head--split reveal">
-          <div>
-            <p class="eyebrow eyebrow--light">Results</p>
-            <h2>Numbers our contractors brag about</h2>
-          </div>
-          <a href="#book" class="btn btn--primary">Become a case study</a>
-        </div>
-        <div class="work">
-          <article class="work__item reveal">
-            <div class="work__visual work__visual--a" aria-hidden="true"><span>+43</span></div>
-            <h3>Roofing contractor</h3>
-            <p>Booked estimates in the first 60 days, from Meta Ads alone.</p>
-          </article>
-          <article class="work__item reveal">
-            <div class="work__visual work__visual--b" aria-hidden="true"><span>5.2x</span></div>
-            <h3>HVAC company</h3>
-            <p>Return on ad spend across peak-season campaigns.</p>
-          </article>
-          <article class="work__item reveal">
-            <div class="work__visual work__visual--c" aria-hidden="true"><span>−38%</span></div>
-            <h3>Home renovation</h3>
-            <p>Drop in cost per qualified lead after a creative overhaul.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== About ===== -->
-    <section class="section" id="about">
-      <div class="container about">
-        <div class="about__text reveal">
-          <p class="eyebrow">About us</p>
-          <h2>Built for contractors. Nothing else.</h2>
-          <p>
-            Hera Solutions does one thing: Meta Ads for contractors. No e-commerce,
-            no dabbling in ten industries. Just homeowner lead generation for the
-            trades, done properly.
-          </p>
-          <p>
-            Because we specialise, we already know what works in your market: the
-            offers homeowners respond to, the creative that stops the scroll, and
-            the questions that separate a real project from a time-waster.
-          </p>
-          <ul class="checklist">
-            <li>Exclusive leads: yours alone, never resold</li>
-            <li>Transparent reporting every week, not every quarter</li>
-            <li>No long-term contracts. We keep clients with results</li>
-          </ul>
-        </div>
-        <div class="about__panel reveal">
-          <p class="about__stars" aria-hidden="true">★★★★★</p>
-          <p class="about__quote">"First month in, our crew was booked two weeks out. We stopped chasing homeowners and started quoting them."</p>
-          <p class="about__author">Roofing client, first 60 days</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== Process ===== -->
-    <section class="section section--tint" id="process">
-      <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow">How we work</p>
-          <h2>A process with no black boxes</h2>
-        </div>
         <ol class="steps">
           <li class="step reveal">
-            <span class="step__num">01</span>
-            <h3>Audit</h3>
-            <p>We dig into your trade, service area and capacity to find where the jobs are.</p>
+            <span class="step__num" aria-hidden="true">01</span>
+            <div class="step__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M16 9a4 4 0 0 1 0 6"/><path d="M19 6.5a8 8 0 0 1 0 11"/></svg>
+            </div>
+            <h3>Demand Generation</h3>
+            <p>We run targeted Meta ads that reach homeowners actively planning projects in your service area.</p>
           </li>
-          <li class="step reveal">
-            <span class="step__num">02</span>
-            <h3>Launch</h3>
-            <p>Your campaigns go live on Meta within 48 hours, targeting homeowners near you.</p>
+
+          <li class="step step--featured reveal">
+            <span class="step__num" aria-hidden="true">02</span>
+            <div class="step__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15.5 20.5a15 15 0 0 1-12-12A2.5 2.5 0 0 1 6 6h2l1.5 4-2 1.5a11 11 0 0 0 5 5L14 14.5l4 1.5v2a2.5 2.5 0 0 1-2.5 2.5z"/></svg>
+            </div>
+            <h3>Human Qualification</h3>
+            <p>A real person calls every lead, confirms the project, budget and timeline, then books the qualified ones straight onto your calendar.</p>
           </li>
+
           <li class="step reveal">
-            <span class="step__num">03</span>
-            <h3>Qualify</h3>
-            <p>We screen every lead for intent, timeline and location before you ever see it.</p>
-          </li>
-          <li class="step reveal">
-            <span class="step__num">04</span>
-            <h3>Book</h3>
-            <p>Ready-to-go homeowners land straight on your calendar. You show up and quote.</p>
+            <span class="step__num" aria-hidden="true">03</span>
+            <div class="step__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 9 19.4a1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 9a1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg>
+            </div>
+            <h3>Automation &amp; Follow-Up</h3>
+            <p>Every lead lands in a CRM with automated SMS and email follow-up, plus an online booking page, so nobody slips through the cracks.</p>
           </li>
         </ol>
+
+        <div class="steps-cta reveal">
+          <a href="#book" class="btn btn--primary">
+            See If You Qualify
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Results / testimonials ===== -->
+    <section class="section section--alt" id="results">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="eyebrow">Real Contractors</span>
+          <h2>Check Out What Our Clients Say</h2>
+          <p class="section__sub">Straight from the contractors growing with Hera Solutions.</p>
+        </div>
+
+        <!-- ============================================================
+             TESTIMONIALS
+             Video card:  <button class="tcard__media" data-video="YOUTUBE_ID">
+                            <img src="THUMBNAIL_URL" alt="" />
+                            <span class="tcard__play">...</span>
+                          </button>
+             Photo card:  <div class="tcard__media"><img src="PHOTO_URL" alt="" /></div>
+             The placeholder div is only there until real media is added.
+             ============================================================ -->
+        <div class="testimonials">
+          <article class="tcard reveal">
+            <div class="tcard__media">
+              <div class="tcard__placeholder">Screenshot or photo goes here</div>
+            </div>
+            <div class="tcard__body">
+              <p class="tcard__quote">"Add a short client quote here."</p>
+              <div>
+                <div class="tcard__name">Client name</div>
+                <div class="tcard__company">Company name</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <div class="tcard__media">
+              <div class="tcard__placeholder">Screenshot or photo goes here</div>
+            </div>
+            <div class="tcard__body">
+              <p class="tcard__quote">"Add a short client quote here."</p>
+              <div>
+                <div class="tcard__name">Client name</div>
+                <div class="tcard__company">Company name</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <div class="tcard__media">
+              <div class="tcard__placeholder">Screenshot or photo goes here</div>
+            </div>
+            <div class="tcard__body">
+              <p class="tcard__quote">"Add a short client quote here."</p>
+              <div>
+                <div class="tcard__name">Client name</div>
+                <div class="tcard__company">Company name</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="tcard reveal">
+            <button class="tcard__media" data-video="REPLACE_WITH_YOUTUBE_ID" aria-label="Play client video testimonial">
+              <div class="tcard__placeholder">Video goes here</div>
+              <span class="tcard__play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </span>
+            </button>
+            <div class="tcard__body">
+              <p class="tcard__quote">"Add the quote from your video testimonial here."</p>
+              <div>
+                <div class="tcard__name">Client name</div>
+                <div class="tcard__company">Company name</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section__head reveal">
+          <span class="eyebrow">FAQ</span>
+          <h2>Common Questions</h2>
+        </div>
+
+        <div class="faq reveal">
+          <details class="faq__item">
+            <summary>
+              What exactly does Hera Solutions do?
+              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p>We run Meta (Facebook &amp; Instagram) ad campaigns for contractors and turn them into qualified homeowner appointments. We handle the ads, the creative, the lead screening and the booking. You handle the quote and the job.</p>
+          </details>
+
+          <details class="faq__item">
+            <summary>
+              Are the leads exclusive to my business?
+              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p>Yes. Every lead we generate is yours alone. We never resell or share leads between clients, and we don't work with two competing contractors in the same service area.</p>
+          </details>
+
+          <details class="faq__item">
+            <summary>
+              Which trades do you work with?
+              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p>We work with deck builders and contractors across the US and Canada. Our system is built to scale in any local market - urban, suburban, or rural.</p>
+          </details>
+
+          <details class="faq__item">
+            <summary>
+              How quickly will I see leads?
+              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p>Campaigns typically go live within 48 hours of onboarding, and most clients see their first qualified appointments within the first week or two while the campaigns dial in.</p>
+          </details>
+
+          <details class="faq__item">
+            <summary>
+              What makes you different from other agencies?
+              <svg class="faq__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <p>Simple: we don't just send you leads. We qualify them by phone, automate follow-up, and book real estimates. We're measured on revenue impact - not impressions or clicks.</p>
+          </details>
+        </div>
       </div>
     </section>
 
     <!-- ===== Book a call ===== -->
-    <section class="section" id="book">
+    <section class="section section--alt" id="book">
       <div class="container">
         <div class="section__head reveal">
-          <p class="eyebrow">Book a call</p>
-          <h2>Pick a time that suits you</h2>
-          <p class="section__sub">Grab a free strategy call. We'll look at your trade and service area and tell you honestly what Meta Ads can do for you.</p>
+          <span class="eyebrow">Book A Call</span>
+          <h2>Pick A Time That Suits You</h2>
+          <p class="section__sub">A free strategy call. We'll look at your trade and service area and tell you honestly what Meta ads can do for you.</p>
         </div>
         <div class="booking reveal">
           <iframe
@@ -214,72 +285,15 @@
       </div>
     </section>
 
-    <!-- ===== FAQ ===== -->
-    <section class="section section--tint" id="faq">
+    <!-- ===== Final CTA ===== -->
+    <section class="cta-band">
       <div class="container">
-        <div class="section__head reveal">
-          <p class="eyebrow">FAQ</p>
-          <h2>Questions contractors ask us</h2>
-        </div>
-        <div class="faq reveal">
-          <details class="faq__item">
-            <summary>What exactly does Hera Solutions do?</summary>
-            <p>We run Meta (Facebook &amp; Instagram) ad campaigns for contractors and turn them into qualified homeowner appointments. We handle the ads, the creative, the lead screening and the booking. You handle the quote and the job.</p>
-          </details>
-          <details class="faq__item">
-            <summary>Are the leads exclusive to my business?</summary>
-            <p>Yes. Every lead we generate is yours alone. We never resell or share leads between clients, and we don't work with two competing contractors in the same service area.</p>
-          </details>
-          <details class="faq__item">
-            <summary>What makes a lead "qualified"?</summary>
-            <p>Before a lead reaches your calendar, it's screened for the things that matter: a real project, a realistic timeline, and an address inside your service area. If a homeowner is just browsing, you'll never hear about them.</p>
-          </details>
-          <details class="faq__item">
-            <summary>Which trades do you work with?</summary>
-            <p>Home-service contractors: roofing, HVAC, renovations, windows and doors, landscaping, and similar trades. If your customers are homeowners, we can fill your calendar.</p>
-          </details>
-          <details class="faq__item">
-            <summary>How quickly will I see leads?</summary>
-            <p>Campaigns typically go live within 48 hours of onboarding, and most clients see their first qualified appointments within the first week or two while the campaigns dial in.</p>
-          </details>
-          <details class="faq__item">
-            <summary>Am I locked into a long contract?</summary>
-            <p>No. We don't do long-term lock-ins, and you can leave anytime. We'd rather keep you with booked jobs than with paperwork.</p>
-          </details>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== Contact / CTA ===== -->
-    <section class="section section--dark section--cta" id="contact">
-      <div class="container cta">
-        <div class="cta__text reveal">
-          <p class="eyebrow eyebrow--light">Let's talk</p>
-          <h2>Ready for a full calendar?</h2>
-          <p>Tell us your trade and your service area. We'll come back within one business day and tell you honestly whether we can fill your pipeline.</p>
-          <a class="cta__mail" href="mailto:heraecomm@gmail.com">heraecomm@gmail.com</a>
-        </div>
-        <form class="form reveal" action="mailto:heraecomm@gmail.com" method="post" enctype="text/plain">
-          <div class="form__row">
-            <label>
-              <span>Name</span>
-              <input type="text" name="name" placeholder="Jane Doe" required />
-            </label>
-            <label>
-              <span>Email</span>
-              <input type="email" name="email" placeholder="jane@company.com" required />
-            </label>
-          </div>
-          <label>
-            <span>Trade &amp; service area</span>
-            <input type="text" name="company" placeholder="e.g. Roofing in the Greater Toronto Area" />
-          </label>
-          <label>
-            <span>What do you need?</span>
-            <textarea name="message" rows="4" placeholder="Tell us about your goals…" required></textarea>
-          </label>
-          <button type="submit" class="btn btn--primary btn--full">Send message</button>
-        </form>
+        <h2>Ready To Fill Your Calendar?</h2>
+        <p>Tell us your trade and your service area, and we'll tell you straight whether we can keep your crews busy.</p>
+        <a href="#book" class="btn btn--primary">
+          Book Your Strategy Call
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>
+        </a>
       </div>
     </section>
   </main>
@@ -291,28 +305,24 @@
         <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/69953f406bac240a202f30df.png" alt="Hera Solutions" />
       </a>
       <nav class="footer__links" aria-label="Footer navigation">
-        <a href="#services">What we do</a>
-        <a href="#work">Results</a>
-        <a href="#about">About</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#results">Results</a>
         <a href="#faq">FAQ</a>
-        <a href="#book">Book a call</a>
-        <a href="#contact">Contact</a>
+        <a href="#book">Book Your Call</a>
+        <a href="mailto:heraecomm@gmail.com">Contact</a>
       </nav>
       <p class="footer__copy">© <span id="heraYear"></span> Hera Solutions. All rights reserved.</p>
     </div>
   </footer>
-
 </div><!-- /#hera-site -->
 
 <script>
 (function () {
   var site = document.getElementById('hera-site');
   if (!site) return;
-
-  // Opt in to JS-only styles (scroll-reveal hidden states)
   site.classList.add('js');
 
-  // Mobile navigation toggle
+  // ---- Mobile navigation ----
   var navToggle = document.getElementById('heraNavToggle');
   var navLinks = document.getElementById('heraNavLinks');
 
@@ -322,7 +332,6 @@
       navToggle.classList.toggle('is-open', open);
       navToggle.setAttribute('aria-expanded', String(open));
     });
-
     navLinks.addEventListener('click', function (e) {
       if (e.target.closest('a')) {
         navLinks.classList.remove('is-open');
@@ -332,7 +341,7 @@
     });
   }
 
-  // Scroll reveal
+  // ---- Scroll reveal ----
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var revealEls = site.querySelectorAll('.reveal');
 
@@ -350,40 +359,23 @@
     revealEls.forEach(function (el) { observer.observe(el); });
   }
 
-  // Count-up animation for hero stats
-  function countUp(el) {
-    var target = parseInt(el.dataset.count, 10);
-    if (reduceMotion) {
-      el.textContent = target;
-      return;
-    }
-    var duration = 1200;
-    var start = performance.now();
-    function tick(now) {
-      var progress = Math.min((now - start) / duration, 1);
-      var eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(target * eased);
-      if (progress < 1) requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
+  // ---- Click-to-load video testimonials ----
+  site.querySelectorAll('.tcard__media[data-video]').forEach(function (holder) {
+    holder.addEventListener('click', function () {
+      var id = holder.dataset.video;
+      if (!id || id.indexOf('REPLACE') === 0) return;
+      var frame = document.createElement('iframe');
+      frame.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
+      frame.title = 'Client testimonial';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      frame.allowFullscreen = true;
+      holder.innerHTML = '';
+      holder.removeAttribute('data-video');
+      holder.appendChild(frame);
+    });
+  });
 
-  var statEls = site.querySelectorAll('.stat__num');
-  if ('IntersectionObserver' in window) {
-    var statObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          countUp(entry.target);
-          statObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
-    statEls.forEach(function (el) { statObserver.observe(el); });
-  } else {
-    statEls.forEach(countUp);
-  }
-
-  // Footer year
+  // ---- Footer year ----
   var yearEl = document.getElementById('heraYear');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 })();
