@@ -7,9 +7,9 @@
      source files in the repo root, then re-run the script.
 
      Quick edits:
-     - Hero photo: set --hero-image in the CSS (see the top of the file)
-     - Client logos: the .marquee__item slots (edit BOTH tracks)
-     - Testimonials: the .tcard blocks in the Results section
+     - Hero photo: set --hero-image at the top of the CSS
+     - Video testimonial: the <video src> in the Results section
+     - Screenshots: the .wall__item buttons (add or remove freely)
      - Booking calendar: the iframe src
      ============================================================ -->
 
@@ -57,36 +57,6 @@
           <a href="#how-it-works" class="btn btn--ghost">See How It Works</a>
         </div>
         <p class="hero__trust reveal">Trusted by contractors across the US and Canada</p>
-      </div>
-    </section>
-
-    <!-- ===== Trusted businesses marquee ===== -->
-    <section class="marquee-section">
-      <p class="marquee-section__label">Trusted Businesses</p>
-      <div class="marquee">
-        <!-- Two identical tracks make the scroll loop seamlessly, so edit
-             BOTH tracks together. Swap each span for a real client logo:
-             <span class="marquee__item"><img src="LOGO_URL" alt="Client name" /></span> -->
-        <div class="marquee__track">
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-        </div>
-        <div class="marquee__track" aria-hidden="true">
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-          <span class="marquee__item">Your Client Logo</span>
-        </div>
       </div>
     </section>
 
@@ -146,70 +116,40 @@
           <p class="section__sub">Straight from the contractors growing with Hera Solutions.</p>
         </div>
 
-        <!-- ============================================================
-             TESTIMONIALS
-             Video card:  <button class="tcard__media" data-video="YOUTUBE_ID">
-                            <img src="THUMBNAIL_URL" alt="" />
-                            <span class="tcard__play">...</span>
-                          </button>
-             Photo card:  <div class="tcard__media"><img src="PHOTO_URL" alt="" /></div>
-             The placeholder div is only there until real media is added.
-             ============================================================ -->
-        <div class="testimonials">
-          <article class="tcard reveal">
-            <div class="tcard__media">
-              <div class="tcard__placeholder">Screenshot or photo goes here</div>
-            </div>
-            <div class="tcard__body">
-              <p class="tcard__quote">"Add a short client quote here."</p>
-              <div>
-                <div class="tcard__name">Client name</div>
-                <div class="tcard__company">Company name</div>
-              </div>
-            </div>
-          </article>
+        <!-- Featured video testimonial -->
+        <div class="video-testimonial reveal">
+          <video controls playsinline preload="metadata" src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f30f11a0f048050ef05ca.mp4">
+            Your browser does not support embedded video.
+            <a href="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f30f11a0f048050ef05ca.mp4">Watch the testimonial</a>.
+          </video>
+        </div>
 
-          <article class="tcard reveal">
-            <div class="tcard__media">
-              <div class="tcard__placeholder">Screenshot or photo goes here</div>
-            </div>
-            <div class="tcard__body">
-              <p class="tcard__quote">"Add a short client quote here."</p>
-              <div>
-                <div class="tcard__name">Client name</div>
-                <div class="tcard__company">Company name</div>
-              </div>
-            </div>
-          </article>
-
-          <article class="tcard reveal">
-            <div class="tcard__media">
-              <div class="tcard__placeholder">Screenshot or photo goes here</div>
-            </div>
-            <div class="tcard__body">
-              <p class="tcard__quote">"Add a short client quote here."</p>
-              <div>
-                <div class="tcard__name">Client name</div>
-                <div class="tcard__company">Company name</div>
-              </div>
-            </div>
-          </article>
-
-          <article class="tcard reveal">
-            <button class="tcard__media" data-video="REPLACE_WITH_YOUTUBE_ID" aria-label="Play client video testimonial">
-              <div class="tcard__placeholder">Video goes here</div>
-              <span class="tcard__play" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-              </span>
-            </button>
-            <div class="tcard__body">
-              <p class="tcard__quote">"Add the quote from your video testimonial here."</p>
-              <div>
-                <div class="tcard__name">Client name</div>
-                <div class="tcard__company">Company name</div>
-              </div>
-            </div>
-          </article>
+        <!-- Screenshot wall. Add or remove buttons freely; the columns reflow. -->
+        <div class="wall reveal">
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 1">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5fccebf8478ee0eda3cad8.jpg" alt="Client testimonial 1" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 2">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dfe.jpg" alt="Client testimonial 2" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 3">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef106e.jpg" alt="Client testimonial 3" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 4">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef1068.jpg" alt="Client testimonial 4" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 5">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef1072.jpg" alt="Client testimonial 5" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 6">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dc8.jpg" alt="Client testimonial 6" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 7">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbc0b1f5d2e2b03b3.jpg" alt="Client testimonial 7" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 8">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dcd.jpg" alt="Client testimonial 8" loading="lazy" />
+          </button>
         </div>
       </div>
     </section>
@@ -314,6 +254,12 @@
       <p class="footer__copy">© <span id="heraYear"></span> Hera Solutions. All rights reserved.</p>
     </div>
   </footer>
+
+  <!-- Lightbox for the testimonial screenshots -->
+  <div class="lightbox" id="heraLightbox" role="dialog" aria-modal="true" aria-label="Testimonial image">
+    <button class="lightbox__close" id="heraLightboxClose" type="button" aria-label="Close">&times;</button>
+    <img id="heraLightboxImg" src="" alt="" />
+  </div>
 </div><!-- /#hera-site -->
 
 <script>
@@ -359,21 +305,33 @@
     revealEls.forEach(function (el) { observer.observe(el); });
   }
 
-  // ---- Click-to-load video testimonials ----
-  site.querySelectorAll('.tcard__media[data-video]').forEach(function (holder) {
-    holder.addEventListener('click', function () {
-      var id = holder.dataset.video;
-      if (!id || id.indexOf('REPLACE') === 0) return;
-      var frame = document.createElement('iframe');
-      frame.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
-      frame.title = 'Client testimonial';
-      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      frame.allowFullscreen = true;
-      holder.innerHTML = '';
-      holder.removeAttribute('data-video');
-      holder.appendChild(frame);
+  // ---- Lightbox for testimonial screenshots ----
+  var lightbox = document.getElementById('heraLightbox');
+  var lightboxImg = document.getElementById('heraLightboxImg');
+
+  if (lightbox && lightboxImg) {
+    var closeLightbox = function () {
+      lightbox.classList.remove('is-open');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    };
+
+    site.querySelectorAll('.wall__item').forEach(function (item) {
+      item.addEventListener('click', function () {
+        var img = item.querySelector('img');
+        if (!img) return;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || '';
+        lightbox.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
     });
-  });
+
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
+    });
+  }
 
   // ---- Footer year ----
   var yearEl = document.getElementById('heraYear');

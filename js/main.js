@@ -40,25 +40,34 @@
     revealEls.forEach(function (el) { observer.observe(el); });
   }
 
-  // ---- Click-to-load video testimonials ----
-  // The thumbnail is swapped for the real iframe only on click, so the
-  // page never loads six YouTube players up front.
-  document.querySelectorAll('.tcard__media[data-video]').forEach(function (holder) {
-    holder.addEventListener('click', function () {
-      var id = holder.dataset.video;
-      if (!id || id.indexOf('REPLACE') === 0) return;
+  // ---- Lightbox for testimonial screenshots ----
+  var lightbox = document.getElementById('heraLightbox');
+  var lightboxImg = document.getElementById('heraLightboxImg');
 
-      var frame = document.createElement('iframe');
-      frame.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
-      frame.title = 'Client testimonial';
-      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      frame.allowFullscreen = true;
+  if (lightbox && lightboxImg) {
+    var closeLightbox = function () {
+      lightbox.classList.remove('is-open');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    };
 
-      holder.innerHTML = '';
-      holder.removeAttribute('data-video');
-      holder.appendChild(frame);
+    document.querySelectorAll('.wall__item').forEach(function (item) {
+      item.addEventListener('click', function () {
+        var img = item.querySelector('img');
+        if (!img) return;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || '';
+        lightbox.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
     });
-  });
+
+    // Click anywhere on the backdrop (or the close button) to dismiss
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
+    });
+  }
 
   // ---- Footer year ----
   var yearEl = document.getElementById('year');

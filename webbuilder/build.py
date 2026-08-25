@@ -179,21 +179,33 @@ EMBED_JS = """
     revealEls.forEach(function (el) { observer.observe(el); });
   }
 
-  // ---- Click-to-load video testimonials ----
-  site.querySelectorAll('.tcard__media[data-video]').forEach(function (holder) {
-    holder.addEventListener('click', function () {
-      var id = holder.dataset.video;
-      if (!id || id.indexOf('REPLACE') === 0) return;
-      var frame = document.createElement('iframe');
-      frame.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0';
-      frame.title = 'Client testimonial';
-      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      frame.allowFullscreen = true;
-      holder.innerHTML = '';
-      holder.removeAttribute('data-video');
-      holder.appendChild(frame);
+  // ---- Lightbox for testimonial screenshots ----
+  var lightbox = document.getElementById('heraLightbox');
+  var lightboxImg = document.getElementById('heraLightboxImg');
+
+  if (lightbox && lightboxImg) {
+    var closeLightbox = function () {
+      lightbox.classList.remove('is-open');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    };
+
+    site.querySelectorAll('.wall__item').forEach(function (item) {
+      item.addEventListener('click', function () {
+        var img = item.querySelector('img');
+        if (!img) return;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || '';
+        lightbox.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      });
     });
-  });
+
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
+    });
+  }
 
   // ---- Footer year ----
   var yearEl = document.getElementById('heraYear');
@@ -214,9 +226,9 @@ HEADER = """<!-- ============================================================
      source files in the repo root, then re-run the script.
 
      Quick edits:
-     - Hero photo: set --hero-image in the CSS (see the top of the file)
-     - Client logos: the .marquee__item slots (edit BOTH tracks)
-     - Testimonials: the .tcard blocks in the Results section
+     - Hero photo: set --hero-image at the top of the CSS
+     - Video testimonial: the <video src> in the Results section
+     - Screenshots: the .wall__item buttons (add or remove freely)
      - Booking calendar: the iframe src
      ============================================================ -->
 

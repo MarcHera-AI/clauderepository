@@ -47,17 +47,21 @@ adds the full-width breakout, and appends the GoHighLevel page-padding reset.
 Buttons use dark text on orange, which clears WCAG AA comfortably. White text on
 this orange would not, so keep the dark text if you restyle them.
 
-## Things to fill in
+## Media
 
-- **Hero photo** — set `--hero-image` at the top of the CSS to a real photo URL.
-  Until then the hero falls back to a gradient, which looks deliberate but flat.
-- **Client logos** — the `.marquee__item` slots say "Your Client Logo". Swap each
-  for `<img src="..." alt="..." />` and edit **both** marquee tracks so the loop
-  stays seamless.
-- **Testimonials** — the `.tcard` blocks in the Results section. Photo cards take
-  an `<img>`; video cards take a YouTube id in `data-video` plus a thumbnail.
+All media loads from the GoHighLevel media CDN (`assets.cdn.filesafe.space`):
+
+- **Hero photo** — the `--hero-image` variable at the top of the CSS. Set it to
+  `none` to fall back to the gradient.
+- **Video testimonial** — the `<video>` in the Results section. Native player, so
+  any aspect ratio works; portrait clips are capped at 70vh tall.
+- **Screenshot wall** — the `.wall__item` buttons. Add or remove them freely and
+  the columns reflow. Clicking one opens it full size in the lightbox.
+
+## Still to fill in
+
 - **Trust line** — the hero says "Trusted by contractors across the US and
-  Canada". Add a real client count when you have one to stand behind.
+  Canada". Add a real client count when there is one to stand behind.
 
 ## Local preview
 
