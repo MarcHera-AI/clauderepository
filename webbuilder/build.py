@@ -234,8 +234,15 @@ HEADER = """<!-- ============================================================
 """
 
 
-def build_html(variant_name: str, drop_nav: bool) -> str:
-    html = (ROOT / "index.html").read_text()
+def build_html(variant_name: str, drop_nav: bool, source: str = "index.html") -> str:
+    html = (ROOT / source).read_text()
+    head = html.split("<head>", 1)[1].split("</head>", 1)[0]
+
+    # Third-party player markup lives in <head> on the standalone page, but
+    # has to travel inside the embed block in the builder.
+    extras = re.findall(r'<script[^>]*fast\.wistia\.com[^>]*>\s*</script>', head)
+    extras += [m for m in re.findall(r"<style>.*?</style>", head, re.S) if "wistia-player" in m]
+    extras_html = ("\n".join(extras) + "\n\n") if extras else ""
 
     body = html.split("<body>", 1)[1].rsplit("</body>", 1)[0]
     body = body.replace('<script src="js/main.js"></script>', "")
@@ -255,7 +262,7 @@ def build_html(variant_name: str, drop_nav: bool) -> str:
              'family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" '
              'rel="stylesheet" />\n\n')
 
-    return (HEADER.format(variant=variant_name) + fonts
+    return (HEADER.format(variant=variant_name) + fonts + extras_html
             + '<div id="hera-site">\n' + body.rstrip() + '\n</div><!-- /#hera-site -->\n'
             + EMBED_JS)
 
@@ -293,7 +300,17 @@ def main():
     )
     (OUT / "hera-all-in-one.html").write_text(combined)
 
-    print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html, hera-all-in-one.html")
+    # ---- Thank-you / confirmation page ----
+    ty = build_html("thank-you page (all-in-one, styles included)", False, "thankyou.html").replace(
+        "     Pair it with hera-styles.css in the builder's Custom CSS area.\n",
+        "     Styles are included inline, so there is NOTHING to paste into\n"
+        "     the Custom CSS area. Clear that field of any older stylesheet.\n",
+    )
+    ty = ty.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
+    (OUT / "hera-thankyou-all-in-one.html").write_text(ty)
+
+    print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html,")
+    print("      hera-all-in-one.html, hera-thankyou-all-in-one.html")
 
 
 if __name__ == "__main__":
