@@ -719,7 +719,9 @@ h3 { font-size: 1.15rem; letter-spacing: -0.01em; }
   height: 52px;
   border-radius: 50%;
   border: 2px solid var(--accent);
-  background: linear-gradient(150deg, #2a2e36, #171a20) center / cover no-repeat;
+  /* Faces sit above the vertical centre in most portrait shots, so bias
+     the crop upward rather than dead-centre. */
+  background: linear-gradient(150deg, #2a2e36, #171a20) center 25% / cover no-repeat;
   display: grid;
   place-items: center;
   color: rgba(255, 255, 255, 0.35);
