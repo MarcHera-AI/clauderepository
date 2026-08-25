@@ -306,11 +306,15 @@ def main():
         "     Styles are included inline, so there is NOTHING to paste into\n"
         "     the Custom CSS area. Clear that field of any older stylesheet.\n",
     )
+    (OUT / "hera-thankyou.html").write_text(
+        build_html("thank-you page (pairs with hera-styles.css)", False, "thankyou.html")
+    )
     ty = ty.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
     (OUT / "hera-thankyou-all-in-one.html").write_text(ty)
 
     print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html,")
-    print("      hera-all-in-one.html, hera-thankyou-all-in-one.html")
+    print("      hera-all-in-one.html, hera-thankyou.html,")
+    print("      hera-thankyou-all-in-one.html")
 
 
 if __name__ == "__main__":
