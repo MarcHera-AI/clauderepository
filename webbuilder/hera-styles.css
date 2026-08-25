@@ -239,68 +239,6 @@ html { scroll-behavior: smooth; }
   font-size: 0.9rem;
   color: var(--muted-2);
 }
-/* ===== Logo marquee =====
-   Works with either <img> logos or plain text names. Transparent PNG or
-   SVG logos look best; add the --invert modifier to force a logo to
-   render white on the dark strip. */
-#hera-site .marquee-section {
-  border-block: 1px solid var(--line);
-  background: var(--bg-2);
-  padding-block: 2.2rem;
-}
-#hera-site .marquee-section__label {
-  text-align: center;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--muted-2);
-  margin-bottom: 1.8rem;
-}
-#hera-site .marquee {
-  display: flex;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-/* min-width:100% guarantees the two tracks always cover the viewport,
-   so no gap appears on very wide screens. */
-#hera-site .marquee__track {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  gap: 4rem;
-  min-width: 100%;
-  flex-shrink: 0;
-  animation: marquee 38s linear infinite;
-}
-#hera-site .marquee:hover .marquee__track { animation-play-state: paused; }
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
-}
-#hera-site .marquee__item {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.05rem;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.38);
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: color 0.25s ease;
-}
-#hera-site .marquee__item:hover { color: rgba(255, 255, 255, 0.75); }
-#hera-site .marquee__item img {
-  height: 38px;
-  width: auto;
-  opacity: 0.55;
-  filter: grayscale(1);
-  transition: opacity 0.25s ease, filter 0.25s ease;
-}
-#hera-site .marquee__item img:hover { opacity: 1; filter: grayscale(0); }
-/* For dark or coloured logos that disappear on the black strip */
-#hera-site .marquee__item--invert img { filter: brightness(0) invert(1); opacity: 0.5; }
-#hera-site .marquee__item--invert img:hover { filter: brightness(0) invert(1); opacity: 0.9; }
 /* ===== Sections ===== */
 #hera-site .section { padding-block: clamp(4.5rem, 9vw, 8rem); }
 #hera-site .section--alt { background: var(--bg-2); }
@@ -569,7 +507,6 @@ html { scroll-behavior: auto; }
 #hera-site.js .reveal { opacity: 1; transform: none; transition: none; }
 #hera-site .btn,
 #hera-site .wall__item { transition: none; }
-#hera-site .marquee__track { animation: none; }
 
 }
 /* ===== Responsive ===== */
