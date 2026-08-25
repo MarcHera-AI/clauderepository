@@ -227,7 +227,6 @@ HEADER = """<!-- ============================================================
 
      Quick edits:
      - Hero photo: set --hero-image at the top of the CSS
-     - Video testimonial: the <video src> in the Results section
      - Screenshots: the .wall__item buttons (add or remove freely)
      - Booking calendar: the iframe src
      ============================================================ -->
@@ -279,7 +278,22 @@ def main():
     (OUT / "hera-page.html").write_text(build_html("web-builder block (with navigation)", False))
     (OUT / "hera-page-no-nav.html").write_text(build_html("web-builder block (no navigation)", True))
 
-    print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html")
+    # Single-paste build: CSS inlined in a <style> tag so there is only one
+    # thing to paste and no separate Custom CSS field to fall out of sync.
+    page = build_html("all-in-one block (styles included)", False).replace(
+        "     Pair it with hera-styles.css in the builder's Custom CSS area.\n",
+        "     Styles are included inline, so there is NOTHING to paste into\n"
+        "     the Custom CSS area. Clear that field of any older stylesheet.\n",
+    )
+    marker = '<div id="hera-site">'
+    combined = page.replace(
+        marker,
+        "<style>\n" + scoped + "\n</style>\n\n" + marker,
+        1,
+    )
+    (OUT / "hera-all-in-one.html").write_text(combined)
+
+    print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html, hera-all-in-one.html")
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@
   --bg-2: #0d0f12;        /* alternate section */
   --card: #121419;        /* card surface */
   --card-2: #16191f;      /* raised card */
+  --surface: #121419;     /* alias used by older markup */
   --line: rgba(255, 255, 255, 0.09);
   --ink: #ffffff;
   --muted: rgba(255, 255, 255, 0.62);
@@ -290,6 +291,7 @@ h3 { font-size: 1.15rem; letter-spacing: -0.01em; }
   padding: 2.4rem 2rem;
   border-radius: var(--radius);
   border: 1px solid transparent;
+  background: transparent;
   overflow: hidden;
 }
 
@@ -344,34 +346,10 @@ h3 { font-size: 1.15rem; letter-spacing: -0.01em; }
   margin-top: clamp(2.5rem, 5vw, 3.6rem);
 }
 
-/* ===== Testimonials ===== */
-/* One featured video, then a masonry wall of client screenshots. The wall
-   uses CSS columns so screenshots of any aspect ratio show in full rather
-   than being cropped to a uniform card. */
-/* fit-content lets the card hug the video, so a portrait recording does
-   not sit in a wide box with black bars either side */
-.video-testimonial {
-  width: fit-content;
-  max-width: min(840px, 100%);
-  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
-  border: 1px solid rgba(248, 177, 23, 0.35);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: 0 0 60px rgba(248, 177, 23, 0.14);
-  background: #000;
-}
-
-/* auto width + both max constraints keeps the aspect ratio intact, so a
-   portrait phone recording fits the height instead of running metres tall */
-.video-testimonial video {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  max-height: 70vh;
-  margin-inline: auto;
-  background: #000;
-}
-
+/* ===== Testimonials =====
+   Masonry wall of client screenshots, four per line on desktop. CSS
+   columns are used so screenshots of any aspect ratio show in full
+   rather than being cropped to a uniform box. */
 .wall {
   column-count: 4;
   column-gap: 1.2rem;
@@ -443,17 +421,28 @@ h3 { font-size: 1.15rem; letter-spacing: -0.01em; }
 
 .lightbox__close:hover { background: rgba(255, 255, 255, 0.18); }
 
+/* Neutralises the "+" marker from the previous light-theme stylesheet,
+   in case an old copy is still sitting in the builder's Custom CSS. */
+.faq__item summary::after { content: none; }
+
 /* ===== FAQ ===== */
 .faq {
   max-width: 820px;
   margin-inline: auto;
 }
 
-.faq__item { border-bottom: 1px solid var(--line); }
+.faq__item {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  overflow: visible;
+}
 
 .faq__item summary {
   list-style: none;
   cursor: pointer;
+  color: var(--ink);
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 1.06rem;
@@ -486,7 +475,7 @@ h3 { font-size: 1.15rem; letter-spacing: -0.01em; }
 .faq__item p {
   color: var(--muted);
   font-size: 0.98rem;
-  padding-bottom: 1.6rem;
+  padding: 0 0 1.6rem;
   max-width: 700px;
 }
 
