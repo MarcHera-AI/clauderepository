@@ -1,5 +1,5 @@
 <!-- ============================================================
-     Hera Solutions booking page (all-in-one, styles included)
+     Hera Solutions landing page (all-in-one, styles included)
      Paste this whole file into ONE custom HTML / embed element.
      Styles are included inline, so there is NOTHING to paste into
      the Custom CSS area. Clear that field of any older stylesheet.
@@ -879,13 +879,41 @@ body {
         <em>Start Quoting Booked Jobs</em>
       </h1>
 
-      <!-- ===== Calendar ===== -->
-      <div class="calendar-card reveal">
-        <iframe
-          src="https://api.leadconnectorhq.com/widget/booking/1ORiaV39AR6yaDfpMFR8"
-          scrolling="no"
-          id="1ORiaV39AR6yaDfpMFR8_booking"
-          title="Book a call with Hera Solutions"></iframe>
+      <!-- Optional supporting line. Delete this paragraph if you want the
+           form sitting straight under the headline. -->
+      <p class="book-sub reveal">
+        Answer a few quick questions about your business and we'll show you
+        exactly how we fill contractor calendars with qualified homeowner
+        estimates.
+      </p>
+
+      <!-- ===== Form =====
+           REPLACE THE .form-slot DIV BELOW WITH YOUR GHL FORM EMBED.
+
+           In GoHighLevel: Sites > Forms > your form > Integrate > Embed,
+           copy the <iframe> it gives you and paste it in place of the
+           .form-slot div. Keep it inside .form-card so it keeps the glow.
+           The form_embed.js script at the bottom of this page handles the
+           auto-resize, so you can drop GHL's duplicate copy of it.
+
+           It will look roughly like this:
+
+           <iframe
+             src="https://api.leadconnectorhq.com/widget/form/YOUR_FORM_ID"
+             id="inline-YOUR_FORM_ID"
+             data-layout="{'id':'INLINE'}"
+             data-trigger-type="alwaysShow"
+             data-form-id="YOUR_FORM_ID"
+             data-height="600"
+             title="Hera Solutions application"
+             style="width:100%;border:none;border-radius:10px"></iframe>
+      -->
+      <div class="form-card reveal">
+        <div class="form-slot">
+          <strong>Your form goes here</strong>
+          <span>Replace this block with the embed code from GoHighLevel
+            (Sites &rsaquo; Forms &rsaquo; Integrate &rsaquo; Embed).</span>
+        </div>
       </div>
 
     </div>

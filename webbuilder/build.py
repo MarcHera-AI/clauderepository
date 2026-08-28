@@ -324,10 +324,23 @@ def main():
     bk = bk.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
     (OUT / "hera-book-all-in-one.html").write_text(bk)
 
+    # ---- Landing page (form instead of the calendar) ----
+    (OUT / "hera-landing.html").write_text(
+        build_html("landing page (pairs with hera-styles.css)", False, "landing.html")
+    )
+    ld = build_html("landing page (all-in-one, styles included)", False, "landing.html").replace(
+        "     Pair it with hera-styles.css in the builder's Custom CSS area.\n",
+        "     Styles are included inline, so there is NOTHING to paste into\n"
+        "     the Custom CSS area. Clear that field of any older stylesheet.\n",
+    )
+    ld = ld.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
+    (OUT / "hera-landing-all-in-one.html").write_text(ld)
+
     print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html,")
     print("      hera-all-in-one.html, hera-thankyou.html,")
     print("      hera-thankyou-all-in-one.html, hera-book.html,")
-    print("      hera-book-all-in-one.html")
+    print("      hera-book-all-in-one.html, hera-landing.html,")
+    print("      hera-landing-all-in-one.html")
 
 
 if __name__ == "__main__":

@@ -680,8 +680,18 @@ html { scroll-behavior: smooth; }
   color: var(--accent);
   margin-top: 0.2em;
 }
-/* ===== Calendar with the orange glow ===== */
-#hera-site .calendar-card {
+/* Optional supporting line under the headline. Delete the <p> in the
+   HTML if you'd rather go straight from headline to the card. */
+#hera-site .book-sub {
+  max-width: 640px;
+  margin: -1.8rem auto clamp(2.5rem, 6vw, 3.5rem);
+  font-size: clamp(1rem, 1.7vw, 1.15rem);
+  color: var(--muted);
+  line-height: 1.65;
+}
+/* ===== Calendar / form card with the orange glow ===== */
+#hera-site .calendar-card,
+#hera-site .form-card {
   max-width: 1000px;
   margin-inline: auto;
   border-radius: calc(var(--radius) * 1.2);
@@ -701,12 +711,58 @@ html { scroll-behavior: smooth; }
   border-radius: calc(var(--radius) * 1.2 - 6px);
   min-height: 760px;
 }
+/* The form is narrower than a calendar, so it reads better in a tighter
+   card. Raise or lower max-width to taste. */
+#hera-site .form-card {
+  max-width: 760px;
+}
+#hera-site .form-card iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: calc(var(--radius) * 1.2 - 6px);
+  /* GHL's form_embed.js resizes this to fit once the form loads; this is
+     just the height before that happens. */
+  min-height: 620px;
+  background: var(--card);
+}
+/* Shown only until you drop a real form embed in. Delete it with the
+   surrounding comment once the form is in place. */
+#hera-site .form-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 460px;
+  padding: 2rem;
+  border-radius: calc(var(--radius) * 1.2 - 6px);
+  border: 1px dashed rgba(248, 177, 23, 0.45);
+  background: var(--card-2);
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-weight: 600;
+  text-align: center;
+}
+#hera-site .form-slot strong {
+  display: block;
+  color: var(--accent);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+}
+#hera-site .form-slot span {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.95rem;
+  color: var(--muted-2);
+  max-width: 42ch;
+}
 @media (max-width: 640px) {
 
 #hera-site .book-logo img { height: 112px; margin: -34px auto -40px; }
 #hera-site .proof__avatar { width: 44px; height: 44px; }
 #hera-site .proof__avatar + .proof__avatar { margin-left: -14px; }
 #hera-site .calendar-card iframe { min-height: 900px; }
+#hera-site .form-card iframe { min-height: 680px; }
 
 }
 /* ===== Scroll reveal ===== */
