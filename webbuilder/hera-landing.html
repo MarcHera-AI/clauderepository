@@ -55,6 +55,25 @@
         estimates.
       </p>
 
+      <!-- ===== What they get =====
+           Three plain statements of what the service does. Keep these
+           factual -- they sit right above the form, so anything
+           overstated here is what a lead holds you to on the call. -->
+      <ul class="benefits reveal">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          We run and manage the Meta ads end to end
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Every lead is screened by phone before it reaches you
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Estimates land straight on your calendar
+        </li>
+      </ul>
+
       <!-- ===== Survey =====
            "Deck Builder - Application" survey, embedded from GoHighLevel
            (Sites > Surveys > Edit > Integrate > Embed Code).
@@ -81,8 +100,50 @@
           style="border:none;width:100%;"></iframe>
       </div>
 
+      <!-- Friction-reducers, directly under the form where the hesitation
+           actually happens. Update the question count if you add slides. -->
+      <p class="assure reveal">
+        <span>Takes under a minute</span>
+        <span>5 quick questions</span>
+        <span>No obligation</span>
+      </p>
+
+      <!-- ===== Results wall =====
+           Real client screenshots, same images as the homepage. Clicking
+           one opens the lightbox at the bottom of this block. Add or
+           remove .wall__item buttons freely -- the layout reflows. -->
+      <section class="results reveal">
+        <p class="results__head">Results we've generated for contractors</p>
+        <div class="wall wall--compact">
+          <button class="wall__item" type="button" aria-label="Enlarge client result 1">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5fccebf8478ee0eda3cad8.jpg" alt="Client result 1" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client result 2">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dfe.jpg" alt="Client result 2" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client result 3">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef106e.jpg" alt="Client result 3" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client result 4">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef1068.jpg" alt="Client result 4" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client result 5">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef1072.jpg" alt="Client result 5" loading="lazy" />
+          </button>
+          <button class="wall__item" type="button" aria-label="Enlarge client result 6">
+            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dc8.jpg" alt="Client result 6" loading="lazy" />
+          </button>
+        </div>
+      </section>
+
     </div>
   </main>
+
+  <!-- ===== Lightbox ===== -->
+  <div class="lightbox" id="heraLightbox" role="dialog" aria-modal="true" aria-label="Client result image">
+    <button class="lightbox__close" id="heraLightboxClose" type="button" aria-label="Close">&times;</button>
+    <img id="heraLightboxImg" src="" alt="" />
+  </div>
 
   <!-- ===== Footer ===== -->
   <footer class="ty-footer">

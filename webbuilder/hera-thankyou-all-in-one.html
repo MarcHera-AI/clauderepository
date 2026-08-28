@@ -733,6 +733,75 @@ html { scroll-behavior: smooth; }
   background: var(--card);
   transition: height 0.25s ease;
 }
+/* ===== Benefit line above the form ===== */
+#hera-site .benefits {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem 2.2rem;
+  max-width: 1150px;
+  margin: 0 auto clamp(2rem, 4vw, 2.8rem);
+}
+#hera-site .benefits li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.78);
+  text-align: left;
+}
+#hera-site .benefits svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--accent);
+}
+/* ===== Friction-reducers under the form ===== */
+#hera-site .assure {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.6rem;
+  margin-top: 1.4rem;
+  font-size: 0.86rem;
+  color: var(--muted-2);
+}
+/* Dot separators, drawn between items rather than after each one so the
+   last item never trails a stray dot. */
+#hera-site .assure span + span::before {
+  content: "•";
+  margin-right: 1.6rem;
+  color: rgba(255, 255, 255, 0.22);
+}
+/* ===== Results wall under the form ===== */
+#hera-site .results {
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+}
+#hera-site .results__head {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: var(--muted);
+  margin-bottom: clamp(1.4rem, 3vw, 2rem);
+}
+/* Narrower than the homepage wall so it sits under the form card rather
+   than sprawling past it. */
+#hera-site .wall--compact {
+  column-count: 3;
+  max-width: 900px;
+  margin-inline: auto;
+}
+@media (max-width: 900px) {
+
+#hera-site .wall--compact { column-count: 2; }
+
+}
+@media (max-width: 560px) {
+
+#hera-site .wall--compact { column-count: 1; max-width: 340px; }
+
+}
 /* Shown only until you drop a real form embed in. Delete it with the
    surrounding comment once the form is in place. */
 #hera-site .form-slot {
