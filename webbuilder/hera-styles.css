@@ -694,10 +694,13 @@ html { scroll-behavior: smooth; }
   border-radius: calc(var(--radius) * 1.2 - 6px);
   min-height: 760px;
 }
-/* The form is narrower than a calendar, so it reads better in a tighter
-   card. Raise or lower max-width to taste. */
+/* Sized to clear the survey's own fixed width (set to 800px in GHL under
+   Styles > Layout > Width). The card's 6px padding on each side means the
+   inner area is max-width minus 12, so this leaves ~48px of breathing
+   room. If you change the width in GHL, keep this at least 60px above it
+   or the survey overflows and its edges get clipped. */
 #hera-site .form-card {
-  max-width: 760px;
+  max-width: 860px;
 }
 /* Deliberately no height here. GHL's form_embed.js sets the iframe's
    height inline and re-measures on every slide change; any height or
