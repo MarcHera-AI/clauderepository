@@ -55,33 +55,30 @@
         estimates.
       </p>
 
-      <!-- ===== Form =====
-           REPLACE THE .form-slot DIV BELOW WITH YOUR GHL FORM EMBED.
+      <!-- ===== Survey =====
+           "Deck Builder - Application" survey, embedded from GoHighLevel
+           (Sites > Surveys > Edit > Integrate > Embed Code).
 
-           In GoHighLevel: Sites > Forms > your form > Integrate > Embed,
-           copy the <iframe> it gives you and paste it in place of the
-           .form-slot div. Keep it inside .form-card so it keeps the glow.
-           The form_embed.js script at the bottom of this page handles the
-           auto-resize, so you can drop GHL's duplicate copy of it.
+           form_embed.js at the bottom of this page resizes the iframe as
+           the survey moves between slides, which is why GHL's duplicate
+           copy of that script is not repeated here.
 
-           It will look roughly like this:
+           To swap in a different survey later, change the src and the id
+           to the new survey ID -- both carry the same value.
 
-           <iframe
-             src="https://api.leadconnectorhq.com/widget/form/YOUR_FORM_ID"
-             id="inline-YOUR_FORM_ID"
-             data-layout="{'id':'INLINE'}"
-             data-trigger-type="alwaysShow"
-             data-form-id="YOUR_FORM_ID"
-             data-height="600"
-             title="Hera Solutions application"
-             style="width:100%;border:none;border-radius:10px"></iframe>
-      -->
+           height="520" is only the starting height, used for the moment
+           before the script measures the first slide. Set it in the
+           attribute, never in the CSS, or short slides get floored. -->
       <div class="form-card reveal">
-        <div class="form-slot">
-          <strong>Your form goes here</strong>
-          <span>Replace this block with the embed code from GoHighLevel
-            (Sites &rsaquo; Forms &rsaquo; Integrate &rsaquo; Embed).</span>
-        </div>
+        <iframe
+          src="https://api.leadconnectorhq.com/widget/survey/GZvLvMrkZf1vfuhEMrVk"
+          id="GZvLvMrkZf1vfuhEMrVk"
+          title="Deck Builder application"
+          scrolling="no"
+          height="520"
+          data-cookie-consent="true"
+          data-cookie-consent-provider="auto"
+          style="border:none;width:100%;"></iframe>
       </div>
 
     </div>

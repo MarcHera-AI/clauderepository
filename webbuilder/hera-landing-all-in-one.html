@@ -705,15 +705,19 @@ html { scroll-behavior: smooth; }
 #hera-site .form-card {
   max-width: 760px;
 }
+/* Deliberately no height here. GHL's form_embed.js sets the iframe's
+   height inline and re-measures on every slide change; any height or
+   min-height set in CSS would beat the iframe's own height attribute and
+   floor the short slides, leaving dead space under them. The starting
+   height lives on the height="" attribute in the HTML instead, which the
+   script's inline style is free to override. */
 #hera-site .form-card iframe {
   display: block;
   width: 100%;
   border: none;
   border-radius: calc(var(--radius) * 1.2 - 6px);
-  /* GHL's form_embed.js resizes this to fit once the form loads; this is
-     just the height before that happens. */
-  min-height: 620px;
   background: var(--card);
+  transition: height 0.25s ease;
 }
 /* Shown only until you drop a real form embed in. Delete it with the
    surrounding comment once the form is in place. */
@@ -751,7 +755,6 @@ html { scroll-behavior: smooth; }
 #hera-site .proof__avatar { width: 44px; height: 44px; }
 #hera-site .proof__avatar + .proof__avatar { margin-left: -14px; }
 #hera-site .calendar-card iframe { min-height: 900px; }
-#hera-site .form-card iframe { min-height: 680px; }
 
 }
 /* ===== Scroll reveal ===== */
@@ -887,33 +890,30 @@ body {
         estimates.
       </p>
 
-      <!-- ===== Form =====
-           REPLACE THE .form-slot DIV BELOW WITH YOUR GHL FORM EMBED.
+      <!-- ===== Survey =====
+           "Deck Builder - Application" survey, embedded from GoHighLevel
+           (Sites > Surveys > Edit > Integrate > Embed Code).
 
-           In GoHighLevel: Sites > Forms > your form > Integrate > Embed,
-           copy the <iframe> it gives you and paste it in place of the
-           .form-slot div. Keep it inside .form-card so it keeps the glow.
-           The form_embed.js script at the bottom of this page handles the
-           auto-resize, so you can drop GHL's duplicate copy of it.
+           form_embed.js at the bottom of this page resizes the iframe as
+           the survey moves between slides, which is why GHL's duplicate
+           copy of that script is not repeated here.
 
-           It will look roughly like this:
+           To swap in a different survey later, change the src and the id
+           to the new survey ID -- both carry the same value.
 
-           <iframe
-             src="https://api.leadconnectorhq.com/widget/form/YOUR_FORM_ID"
-             id="inline-YOUR_FORM_ID"
-             data-layout="{'id':'INLINE'}"
-             data-trigger-type="alwaysShow"
-             data-form-id="YOUR_FORM_ID"
-             data-height="600"
-             title="Hera Solutions application"
-             style="width:100%;border:none;border-radius:10px"></iframe>
-      -->
+           height="520" is only the starting height, used for the moment
+           before the script measures the first slide. Set it in the
+           attribute, never in the CSS, or short slides get floored. -->
       <div class="form-card reveal">
-        <div class="form-slot">
-          <strong>Your form goes here</strong>
-          <span>Replace this block with the embed code from GoHighLevel
-            (Sites &rsaquo; Forms &rsaquo; Integrate &rsaquo; Embed).</span>
-        </div>
+        <iframe
+          src="https://api.leadconnectorhq.com/widget/survey/GZvLvMrkZf1vfuhEMrVk"
+          id="GZvLvMrkZf1vfuhEMrVk"
+          title="Deck Builder application"
+          scrolling="no"
+          height="520"
+          data-cookie-consent="true"
+          data-cookie-consent-provider="auto"
+          style="border:none;width:100%;"></iframe>
       </div>
 
     </div>
