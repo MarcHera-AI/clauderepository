@@ -350,11 +350,24 @@ def main():
     ld = ld.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
     (OUT / "hera-landing-all-in-one.html").write_text(ld)
 
+    # ---- "Not a fit" page (survey disqualify redirect) ----
+    (OUT / "hera-notfit.html").write_text(
+        build_html("not-a-fit page (pairs with hera-styles.css)", False, "not-a-fit.html")
+    )
+    nf = build_html("not-a-fit page (all-in-one, styles included)", False, "not-a-fit.html").replace(
+        "     Pair it with hera-styles.css in the builder's Custom CSS area.\n",
+        "     Styles are included inline, so there is NOTHING to paste into\n"
+        "     the Custom CSS area. Clear that field of any older stylesheet.\n",
+    )
+    nf = nf.replace(marker, "<style>\n" + scoped + "\n</style>\n\n" + marker, 1)
+    (OUT / "hera-notfit-all-in-one.html").write_text(nf)
+
     print("wrote hera-styles.css, hera-page.html, hera-page-no-nav.html,")
     print("      hera-all-in-one.html, hera-thankyou.html,")
     print("      hera-thankyou-all-in-one.html, hera-book.html,")
     print("      hera-book-all-in-one.html, hera-landing.html,")
-    print("      hera-landing-all-in-one.html")
+    print("      hera-landing-all-in-one.html, hera-notfit.html,")
+    print("      hera-notfit-all-in-one.html")
 
 
 if __name__ == "__main__":

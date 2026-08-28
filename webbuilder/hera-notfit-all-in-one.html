@@ -1,5 +1,5 @@
 <!-- ============================================================
-     Hera Solutions thank-you page (all-in-one, styles included)
+     Hera Solutions not-a-fit page (all-in-one, styles included)
      Paste this whole file into ONE custom HTML / embed element.
      Styles are included inline, so there is NOTHING to paste into
      the Custom CSS area. Clear that field of any older stylesheet.
@@ -14,17 +14,6 @@
      ============================================================ -->
 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-
-<script src="https://fast.wistia.com/player.js" async></script>
-<script src="https://fast.wistia.com/embed/t9cf1vrhzd.js" async type="module"></script>
-<style>
-    wistia-player[media-id='t9cf1vrhzd']:not(:defined) {
-      background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/t9cf1vrhzd/swatch');
-      display: block;
-      filter: blur(5px);
-      padding-top: 56.25%;
-    }
-  </style>
 
 <style>
 
@@ -1005,90 +994,55 @@ body {
 <div id="hera-site">
 
 
-  <main>
-    <!-- ===== Logo + confirmation ===== -->
-    <div class="ty-top">
-      <span class="logo ty-logo">
+  <main class="book-page">
+    <div class="container">
+
+      <!-- ===== Logo ===== -->
+      <span class="logo book-logo">
         <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/69953f406bac240a202f30df.png" alt="Hera Solutions" />
       </span>
-    </div>
 
-    <div class="container ty-head">
-      <span class="badge reveal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
-        Your call is booked
-      </span>
-      <h1 class="ty-title reveal">You're Booked. Here's How To Lock It In.</h1>
-      <p class="ty-sub reveal">Watch this short video while we get everything ready for your call.</p>
-    </div>
+      <!-- ===== Message =====
+           Reached when someone answers "No" to the deck builder question.
+           The survey's disqualify action should be set to
+           "Redirect to URL" pointing at this page. -->
+      <div class="notice reveal">
+        <span class="notice__badge">Not a fit right now</span>
 
-    <!-- ===== Video ===== -->
-    <div class="container">
-      <div class="video-wrap reveal">
-        <wistia-player media-id="t9cf1vrhzd" aspect="1.7777777777777777"></wistia-player>
-      </div>
-    </div>
+        <h1 class="notice__title">
+          We only work with
+          <em>deck builders</em>
+        </h1>
 
-    <!-- ===== What happens next ===== -->
-    <section class="container">
-      <div class="section__head reveal">
-        <h2>What Happens Next</h2>
-      </div>
+        <p class="notice__body">
+          The whole system is built around how deck jobs get quoted and sold, from
+          the ad copy through to the questions we ask on the phone. It doesn't
+          transfer well to other trades, so we'd rather tell you now than take
+          your money and guess.
+        </p>
 
-      <ol class="next-steps">
-        <li class="next-step reveal">
-          <span class="next-step__num" aria-hidden="true">1</span>
-          <h3>Check your phone</h3>
-          <p>We'll text you a confirmation in the next few minutes.</p>
-        </li>
-        <li class="next-step reveal">
-          <span class="next-step__num" aria-hidden="true">2</span>
-          <h3>Reply to the text</h3>
-          <p>Just reply <strong>YES</strong> so we know your spot is locked in.</p>
-        </li>
-        <li class="next-step reveal">
-          <span class="next-step__num" aria-hidden="true">3</span>
-          <h3>Show up to the call</h3>
-          <p>We'll walk you through exactly how the system would work in your market.</p>
-        </li>
-      </ol>
+        <div class="notice__actions">
+          <!-- REPLACE THIS HREF with your landing page URL, so anyone who hit
+               "No" by mistake can go straight back to the application. -->
+          <a class="btn btn--primary" href="#">Go back and try again</a>
 
-      <p class="banner reveal">Your spot is being held. Reply to the text to confirm.</p>
-    </section>
-
-    <!-- ===== Proof ===== -->
-    <section class="section" id="results">
-      <div class="container">
-        <div class="section__head reveal">
-          <span class="eyebrow">Real Contractors</span>
-          <h2>Hear From Contractors</h2>
-          <p class="section__sub">A few of the crews we've filled calendars for.</p>
+          <a class="btn btn--ghost" href="mailto:heraecomm@gmail.com?subject=Different%20trade%20-%20keep%20me%20posted&amp;body=My%20trade%3A%20%0AMy%20business%3A%20%0AMy%20city%3A%20">
+            I'm a different trade
+          </a>
         </div>
 
-        <div class="wall reveal">
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 1">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5fccebf8478ee0eda3cad8.jpg" alt="Client testimonial 1" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 2">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310dbaf5f6da40d56dfe.jpg" alt="Client testimonial 2" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 3">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef106e.jpg" alt="Client testimonial 3" loading="lazy" />
-          </button>
-          <button class="wall__item" type="button" aria-label="Enlarge client testimonial 4">
-            <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/6a5f310d1a0f048050ef1068.jpg" alt="Client testimonial 4" loading="lazy" />
-          </button>
-        </div>
+        <p class="notice__foot">
+          Expanding past decks is on the roadmap. Send us your trade and we'll
+          reach out when we get there.
+        </p>
       </div>
-    </section>
+
+    </div>
   </main>
 
   <!-- ===== Footer ===== -->
   <footer class="ty-footer">
     <div class="container">
-      <span class="logo ty-logo">
-        <img src="https://assets.cdn.filesafe.space/hk1aNvq7l95EzYuX7141/media/69953f406bac240a202f30df.png" alt="Hera Solutions" />
-      </span>
       <p class="disclaimer">
         This website is not a part of the Facebook website or Facebook Inc. Additionally, this
         website is NOT endorsed by Facebook in any way. Facebook is a trademark of Facebook, Inc.
@@ -1096,12 +1050,6 @@ body {
       <p class="footer__copy" style="margin-top:1.2rem">© <span id="heraYear"></span> Hera Solutions. All rights reserved.</p>
     </div>
   </footer>
-
-  <!-- Lightbox for the testimonial screenshots -->
-  <div class="lightbox" id="heraLightbox" role="dialog" aria-modal="true" aria-label="Testimonial image">
-    <button class="lightbox__close" id="heraLightboxClose" type="button" aria-label="Close">&times;</button>
-    <img id="heraLightboxImg" src="" alt="" />
-  </div>
 </div><!-- /#hera-site -->
 
 <script>
