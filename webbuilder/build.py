@@ -123,12 +123,26 @@ body {{
 
 BREAKOUT = f"""
 /* Break out of the builder's boxed column so the site spans the full
-   viewport width no matter how narrow the parent section is. */
+   viewport width no matter how narrow the parent section is.
+
+   min-height fills the screen when the content is shorter than the
+   viewport -- a short survey slide would otherwise end mid-screen and
+   let the builder's white page background show underneath. The column
+   layout pushes the footer to the bottom in that case instead of
+   leaving it stranded in the middle. */
+html {{ background: {PAGE_BG}; }}
+
 {WRAP} {{
   width: auto;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }}
+
+{WRAP} > main {{ flex: 1 0 auto; }}
+{WRAP} > footer {{ flex-shrink: 0; }}
 """
 
 
