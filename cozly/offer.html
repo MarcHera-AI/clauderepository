@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cozly Media | Private Pay Families For Home Care Agencies</title>
+<meta name="description" content="We help established home care agencies sign new private pay families." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Cozly Media — single-page funnel
+   Palette sampled from the Nomads screenshots. Adjust here only.
+   ============================================================ */
+:root {
+  --bg: #fdfbf7;          /* page cream */
+  --surface: #ffffff;     /* the card the funnel sits on */
+  --option: #f4f1ec;      /* radio option fill */
+  --option-hover: #efebe4;
+  --line: #e7e2d9;
+  --ink: #1a1a1a;
+  --muted: #6f6a62;
+  --muted-2: #9a948b;
+  --accent: #f5b800;      /* amber */
+  --accent-dark: #e0a800;
+  --accent-ink: #1a1500;
+  --danger: #e02020;      /* thank-you page "WAIT" */
+  --radius: 14px;
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { background: var(--bg); }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img { max-width: 100%; display: block; }
+
+/* The whole funnel lives in one narrow centred column, mobile-first,
+   because essentially all the traffic arrives from Meta on a phone. */
+.shell {
+  width: 100%;
+  max-width: 430px;
+  margin-inline: auto;
+  padding: 28px 20px 48px;
+  flex: 1 0 auto;
+}
+
+/* ===== Logo ===== */
+.brand { text-align: center; margin-bottom: 22px; }
+.brand img { height: 34px; width: auto; margin-inline: auto; }
+
+/* Fallback wordmark, shown until a real logo URL is set in CONFIG. */
+.brand__text {
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+.brand__text span { color: var(--accent); }
+.brand__sub {
+  font-size: 0.56rem;
+  letter-spacing: 0.42em;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  margin-top: -2px;
+  padding-left: 0.42em;
+}
+
+/* ===== Steps ===== */
+.step { display: none; }
+.step.is-active { display: block; animation: rise 0.28s ease both; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step.is-active { animation: none; }
+}
+
+/* ===== Type ===== */
+.eyebrow {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.15rem, 5vw, 1.4rem);
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.75rem, 7.5vw, 2.2rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+h1.accent { color: var(--accent); }
+
+.subhead {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+
+.q-title {
+  font-weight: 800;
+  font-size: clamp(1.2rem, 5.4vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+/* ===== Video ===== */
+.video {
+  position: relative;
+  margin: 18px 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #111;
+  aspect-ratio: 16 / 9;
+}
+
+.video iframe,
+.video video,
+.video > div { width: 100%; height: 100%; border: 0; display: block; }
+
+/* Placeholder until a real embed is dropped in. */
+.video__slot {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: #8b8b8b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ===== Buttons ===== */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 1.02rem;
+  padding: 17px 24px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.12s ease;
+}
+
+.btn:hover { background: var(--accent-dark); }
+.btn:active { transform: scale(0.99); }
+.btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+/* ===== Options (Q1 / Q2 / Q3) ===== */
+.options { display: grid; gap: 11px; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+  background: var(--option);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 17px 18px;
+  font-family: var(--font);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.option:hover { background: var(--option-hover); }
+
+.option.is-chosen {
+  border-color: var(--accent);
+  background: #fdf6e2;
+}
+
+/* Drawn rather than a native radio, so the unselected state is an empty
+   ring instead of a filled dot that reads as already-answered. */
+.option::before {
+  content: "";
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid #c9c3b8;
+  background: transparent;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.option.is-chosen::before {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 4px var(--accent);
+}
+
+/* ===== Form ===== */
+.fields { display: grid; gap: 11px; margin-bottom: 16px; }
+
+.field input {
+  width: 100%;
+  background: var(--option);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.field input::placeholder { color: var(--muted-2); }
+
+.field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+}
+
+.field.has-error input { border-color: var(--danger); background: #fff6f6; }
+
+.field__error {
+  display: none;
+  color: var(--danger);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 5px 0 0 4px;
+}
+
+.field.has-error .field__error { display: block; }
+
+/* ===== Calendar ===== */
+.cal {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  margin-top: 16px;
+}
+
+.cal iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
+/* Starting height only. GHL's form_embed.js overrides it inline once the
+   calendar reports its real height, which is why this is an attribute on
+   the iframe and not a min-height here. */
+
+.cal__slot {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  min-height: 300px;
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: var(--option);
+}
+
+/* ===== Thank you ===== */
+.ty-title {
+  text-align: center;
+  color: var(--danger);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 6.6vw, 1.95rem);
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+}
+
+.ty-title u { text-underline-offset: 3px; }
+
+.steps-head {
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  margin: 22px 0 10px;
+}
+
+.steps-list { list-style: none; display: grid; gap: 10px; }
+
+.steps-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 0.96rem;
+  color: var(--ink);
+}
+
+.steps-list b { flex-shrink: 0; }
+
+/* ===== Disqualify ===== */
+.dq-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 6vw, 1.8rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.dq-body {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.96rem;
+  margin-top: 12px;
+}
+
+/* ===== Disclaimer ===== */
+.disclaimer {
+  text-align: center;
+  color: var(--muted-2);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  margin-top: 16px;
+}
+
+.disclaimer a { color: inherit; }
+
+/* ===== Progress ===== */
+.progress {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.progress.is-on { display: block; }
+
+.progress__bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ===== Logo (set CONFIG.logoUrl to replace the text wordmark) ===== -->
+  <div class="brand" id="brand">
+    <div class="brand__text">cozly<span>.</span></div>
+    <div class="brand__sub">media</div>
+  </div>
+
+  <div class="progress" id="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+  <!-- ============================================================
+       STEP 1 — VSL
+       ============================================================ -->
+  <section class="step" data-step="vsl">
+    <p class="eyebrow">Home Care Agencies</p>
+    <h1 class="accent">We Guarantee You 20 New Private Pay Families In 90 Days Or&hellip;</h1>
+    <p class="subhead">We'll Send You $2,000 For Every Family We Miss!</p>
+
+    <div class="video" id="vslVideo">
+      <div class="video__slot">Your VSL goes here<br />(set CONFIG.vslEmbed)</div>
+    </div>
+
+    <button class="btn" type="button" data-go="q1">See if You Qualify &rarr;</button>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 2 — Q1  (No -> disqualify)
+       ============================================================ -->
+  <section class="step" data-step="q1">
+    <h2 class="q-title">Are you a home care agency?</h2>
+    <div class="options">
+      <button class="option" type="button" data-q="agency" data-value="Yes" data-next="q2">Yes</button>
+      <button class="option" type="button" data-q="agency" data-value="No" data-next="dq">No</button>
+    </div>
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 3 — Q2  (No -> disqualify)
+       ============================================================ -->
+  <section class="step" data-step="q2">
+    <h2 class="q-title">Do you handle marketing decisions for your agency?</h2>
+    <div class="options">
+      <button class="option" type="button" data-q="decision_maker" data-value="Yes, I'm the decision-maker" data-next="q3">Yes, I'm the decision-maker</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="Yes, with a partner or team" data-next="q3">Yes, with a partner or team</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq">No</button>
+    </div>
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 4 — Q3  (0-10 -> disqualify)
+       ============================================================ -->
+  <section class="step" data-step="q3">
+    <h2 class="q-title">How many clients are on service right now?</h2>
+    <div class="options">
+      <button class="option" type="button" data-q="clients" data-value="0 to 10"  data-next="dq">0 to 10</button>
+      <button class="option" type="button" data-q="clients" data-value="11 to 25" data-next="form">11 to 25</button>
+      <button class="option" type="button" data-q="clients" data-value="26 to 50" data-next="form">26 to 50</button>
+      <button class="option" type="button" data-q="clients" data-value="51 to 99" data-next="form">51 to 99</button>
+      <button class="option" type="button" data-q="clients" data-value="100+"     data-next="form">100+</button>
+    </div>
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 5 — Form
+       ============================================================ -->
+  <section class="step" data-step="form">
+    <h1>You're Almost There!</h1>
+    <p class="subhead">Enter your details below, then choose a time to discuss growing your private-pay census.</p>
+
+    <form id="leadForm" novalidate style="margin-top:18px">
+      <div class="fields">
+        <div class="field" data-field="name">
+          <input type="text" id="fName" name="name" placeholder="Full name" autocomplete="name" />
+          <p class="field__error">Please enter your name</p>
+        </div>
+        <div class="field" data-field="email">
+          <input type="email" id="fEmail" name="email" placeholder="Email" autocomplete="email" inputmode="email" />
+          <p class="field__error">Please enter a valid email</p>
+        </div>
+        <div class="field" data-field="phone">
+          <input type="tel" id="fPhone" name="phone" placeholder="Phone" autocomplete="tel" inputmode="tel" />
+          <p class="field__error">Please enter a valid phone number</p>
+        </div>
+        <div class="field" data-field="company">
+          <input type="text" id="fCompany" name="company" placeholder="Company" autocomplete="organization" />
+          <p class="field__error">Please enter your company</p>
+        </div>
+      </div>
+
+      <button class="btn" type="submit" id="formSubmit">Continue</button>
+    </form>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 6 — Book a call
+       ============================================================ -->
+  <section class="step" data-step="calendar">
+    <h1>Choose A Time To Talk With Our Team</h1>
+    <p class="subhead">A specialist will walk you through a plan to sign your next 20 private-pay families in 90 days.</p>
+
+    <div class="cal" id="calWrap">
+      <div class="cal__slot">Your calendar goes here<br />(set CONFIG.calendarUrl)</div>
+    </div>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 7 — Thank you
+       ============================================================ -->
+  <section class="step" data-step="thankyou">
+    <h2 class="ty-title">WAIT, Your Call Is <u>Not</u> Yet Confirmed!!</h2>
+    <p class="subhead">To confirm your call please watch the below video and follow the stated steps</p>
+
+    <div class="video" id="tyVideo">
+      <div class="video__slot">Your thank-you video goes here<br />(set CONFIG.thankYouEmbed)</div>
+    </div>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+
+    <h3 class="steps-head">Follow The Steps Below:</h3>
+    <ol class="steps-list">
+      <li><b>1.)</b> Open the calendar invite in your email and click "Yes".</li>
+      <li><b>2.)</b> Invite anyone who helps you make marketing decisions for your agency.</li>
+      <li><b>3.)</b> Show up to the call on a computer.</li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       STEP 8 — Disqualify
+       ============================================================ -->
+  <section class="step" data-step="dq">
+    <h2 class="dq-title">We May Not Be the Right Fit Right Now</h2>
+    <p class="dq-body">
+      The Cozly LaunchPad is for established home care agency owners looking to get
+      more private-pay families.
+    </p>
+    <p class="dq-body">Based on your answers, we're unable to offer a call at this time.</p>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — the only part you need to edit.
+   Every value below is a placeholder until you fill it in. The page
+   degrades gracefully: empty values render a labelled slot rather
+   than breaking.
+   ============================================================ */
+var CONFIG = {
+  // Logo image URL. Leave empty to keep the text wordmark.
+  logoUrl: "",
+
+  // VSL embed. Paste the full <iframe>/<script> markup from Wistia,
+  // YouTube or Vimeo, or a direct .mp4 URL ending in ".mp4".
+  vslEmbed: "",
+
+  // Thank-you page video, same rules as above.
+  thankYouEmbed: "",
+
+  // GHL calendar, e.g.
+  // "https://api.leadconnectorhq.com/widget/booking/XXXXXXXXXXXX"
+  calendarUrl: "",
+
+  // GHL inbound webhook. The form POSTs JSON here on submit.
+  webhookUrl: "",
+
+  // Meta Pixel ID. Leave empty and no pixel code runs at all.
+  pixelId: ""
+};
+
+(function () {
+  "use strict";
+
+  var steps = {};
+  document.querySelectorAll(".step").forEach(function (el) {
+    steps[el.dataset.step] = el;
+  });
+
+  var ORDER = ["vsl", "q1", "q2", "q3", "form", "calendar", "thankyou"];
+  var answers = {};
+  var lead = {};
+  var current = null;
+
+  /* ---------- Meta Pixel (only if an ID is set) ---------- */
+  function initPixel() {
+    if (!CONFIG.pixelId) return;
+    /* eslint-disable */
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    /* eslint-enable */
+    window.fbq("init", CONFIG.pixelId);
+    window.fbq("track", "PageView");
+  }
+
+  function track(event) {
+    if (CONFIG.pixelId && window.fbq) window.fbq("track", event);
+  }
+
+  /* ---------- Ad click attribution ----------
+     fbclid and utm_* only exist on the first URL. Stash them so they
+     survive the hash changes and still ride along on the webhook. */
+  function captureAttribution() {
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem("cozly_attr") || "{}"); } catch (e) {}
+    var params = new URLSearchParams(window.location.search);
+    ["fbclid", "gclid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]
+      .forEach(function (key) {
+        var val = params.get(key);
+        if (val) saved[key] = val;
+      });
+    try { sessionStorage.setItem("cozly_attr", JSON.stringify(saved)); } catch (e) {}
+    return saved;
+  }
+
+  var attribution = captureAttribution();
+
+  /* ---------- Media embeds ---------- */
+  function mountMedia(containerId, markup) {
+    var box = document.getElementById(containerId);
+    if (!box || !markup) return;
+    if (/^https?:\/\/\S+\.mp4(\?|$)/i.test(markup.trim())) {
+      box.innerHTML = '<video src="' + markup.trim() + '" controls playsinline preload="metadata"></video>';
+    } else {
+      box.innerHTML = markup;
+    }
+  }
+
+  function mountLogo() {
+    if (!CONFIG.logoUrl) return;
+    document.getElementById("brand").innerHTML =
+      '<img src="' + CONFIG.logoUrl + '" alt="Cozly Media" />';
+  }
+
+  /* ---------- Calendar ---------- */
+  function mountCalendar() {
+    var wrap = document.getElementById("calWrap");
+    if (!wrap || !CONFIG.calendarUrl) return;
+
+    // Prefill from the form so nobody types their details twice.
+    var parts = (lead.name || "").trim().split(/\s+/);
+    var qs = new URLSearchParams();
+    if (parts[0]) qs.set("first_name", parts[0]);
+    if (parts.length > 1) qs.set("last_name", parts.slice(1).join(" "));
+    if (lead.email) qs.set("email", lead.email);
+    if (lead.phone) qs.set("phone", lead.phone);
+
+    var sep = CONFIG.calendarUrl.indexOf("?") > -1 ? "&" : "?";
+    var src = CONFIG.calendarUrl + (qs.toString() ? sep + qs.toString() : "");
+
+    wrap.innerHTML =
+      '<iframe src="' + src + '" scrolling="no" height="620" ' +
+      'title="Book a call with Cozly Media"></iframe>';
+
+    // GHL's resizer, loaded once, on demand.
+    if (!document.getElementById("ghlEmbedJs")) {
+      var s = document.createElement("script");
+      s.id = "ghlEmbedJs";
+      s.src = "https://link.msgsndr.com/js/form_embed.js";
+      document.body.appendChild(s);
+    }
+  }
+
+  /* ---------- Navigation ---------- */
+  function setProgress(step) {
+    var bar = document.getElementById("progressBar");
+    var wrap = document.getElementById("progress");
+    var idx = ORDER.indexOf(step);
+    // Hidden on the VSL, the thank-you and the disqualify views -- a
+    // progress bar on a dead end just rubs it in.
+    if (idx < 1 || step === "thankyou") {
+      wrap.classList.remove("is-on");
+      return;
+    }
+    wrap.classList.add("is-on");
+    bar.style.width = Math.round((idx / (ORDER.length - 2)) * 100) + "%";
+  }
+
+  function show(step, pushHash) {
+    if (!steps[step]) step = "vsl";
+
+    // Guard against someone landing mid-funnel on a deep link with no
+    // answers behind them.
+    if ((step === "calendar" || step === "thankyou") && !lead.email) step = "vsl";
+    if ((step === "form" || step === "q3") && !answers.agency) step = "vsl";
+
+    Object.keys(steps).forEach(function (key) {
+      steps[key].classList.toggle("is-active", key === step);
+    });
+
+    current = step;
+    setProgress(step);
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+
+    if (pushHash !== false) {
+      var target = "#" + step;
+      if (window.location.hash !== target) {
+        window.history.pushState({ step: step }, "", target);
+      }
+    }
+
+    if (step === "calendar") { mountCalendar(); track("Schedule"); }
+    if (step === "dq") track("Lead");
+  }
+
+  /* ---------- Option buttons ---------- */
+  document.querySelectorAll(".option").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var group = btn.parentElement;
+      group.querySelectorAll(".option").forEach(function (o) {
+        o.classList.remove("is-chosen");
+      });
+      btn.classList.add("is-chosen");
+      answers[btn.dataset.q] = btn.dataset.value;
+
+      // Short pause so the selection is visible before the step changes.
+      setTimeout(function () { show(btn.dataset.next); }, 180);
+    });
+  });
+
+  /* ---------- Plain navigation buttons ---------- */
+  document.querySelectorAll("[data-go]").forEach(function (btn) {
+    btn.addEventListener("click", function () { show(btn.dataset.go); });
+  });
+
+  /* ---------- Form ---------- */
+  var form = document.getElementById("leadForm");
+
+  function setError(name, bad) {
+    var f = document.querySelector('.field[data-field="' + name + '"]');
+    if (f) f.classList.toggle("has-error", bad);
+    return !bad;
+  }
+
+  function validate() {
+    var name = document.getElementById("fName").value.trim();
+    var email = document.getElementById("fEmail").value.trim();
+    var phone = document.getElementById("fPhone").value.trim();
+    var company = document.getElementById("fCompany").value.trim();
+
+    var ok = true;
+    ok = setError("name", name.length < 2) && ok;
+    ok = setError("email", !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) && ok;
+    // Deliberately loose: counts digits only, so any country's format passes.
+    ok = setError("phone", (phone.replace(/\D/g, "").length < 7)) && ok;
+    ok = setError("company", company.length < 2) && ok;
+
+    if (ok) lead = { name: name, email: email, phone: phone, company: company };
+    return ok;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!validate()) {
+      var firstBad = document.querySelector(".field.has-error input");
+      if (firstBad) firstBad.focus();
+      return;
+    }
+
+    var btn = document.getElementById("formSubmit");
+    btn.disabled = true;
+    btn.textContent = "One moment…";
+
+    var payload = {
+      name: lead.name,
+      first_name: lead.name.split(/\s+/)[0],
+      last_name: lead.name.split(/\s+/).slice(1).join(" "),
+      email: lead.email,
+      phone: lead.phone,
+      company: lead.company,
+      is_home_care_agency: answers.agency || "",
+      handles_marketing_decisions: answers.decision_maker || "",
+      clients_on_service: answers.clients || "",
+      page_url: window.location.href,
+      submitted_at: new Date().toISOString()
+    };
+    Object.keys(attribution).forEach(function (k) { payload[k] = attribution[k]; });
+
+    track("Lead");
+
+    function proceed() {
+      btn.disabled = false;
+      btn.textContent = "Continue";
+      show("calendar");
+    }
+
+    if (!CONFIG.webhookUrl) { proceed(); return; }
+
+    // The lead is never held hostage to the webhook: whether it succeeds,
+    // fails or times out, they still reach the calendar.
+    var done = false;
+    var finish = function () { if (!done) { done = true; proceed(); } };
+    setTimeout(finish, 4000);
+
+    fetch(CONFIG.webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(finish).catch(finish);
+  });
+
+  /* ---------- Clear an error as soon as the field is corrected ---------- */
+  form.querySelectorAll("input").forEach(function (input) {
+    input.addEventListener("input", function () {
+      input.closest(".field").classList.remove("has-error");
+    });
+  });
+
+  /* ---------- Booking completion ----------
+     GHL's embed posts a message to the parent window when an appointment
+     is booked. That is the cue to move to the thank-you view. */
+  window.addEventListener("message", function (e) {
+    var data = e.data;
+    var text = typeof data === "string" ? data : (data && (data.type || data.event)) || "";
+    if (/appointment|booking|scheduled/i.test(String(text))) {
+      track("CompleteRegistration");
+      show("thankyou");
+    }
+  });
+
+  /* ---------- Back / forward ---------- */
+  window.addEventListener("popstate", function () {
+    show((window.location.hash || "#vsl").slice(1), false);
+  });
+
+  /* ---------- Boot ---------- */
+  initPixel();
+  mountLogo();
+  mountMedia("vslVideo", CONFIG.vslEmbed);
+  mountMedia("tyVideo", CONFIG.thankYouEmbed);
+  show("vsl", false);
+})();
+</script>
+</body>
+</html>
