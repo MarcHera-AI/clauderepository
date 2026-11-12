@@ -704,7 +704,14 @@ var CONFIG = {
   // slotIntervalMin: 0 -- that doubles the slots per day.
   calendar: {
     timezone: "America/Edmonton",  // the zone YOUR hours are defined in
-    days: [1, 2, 3, 4, 5],         // 0=Sun ... 6=Sat  (Nomads: M T W T F)
+    days: [1, 2, 3, 4, 5, 6],      // 0=Sun ... 6=Sat. Mon-Sat, never Sun.
+
+    // One-off days off, as YYYY-MM-DD in the timezone above. These must
+    // be kept in step with GHL by hand: block a day there and it has to
+    // be added here too, or the picker offers a slot GHL will refuse.
+    blockedDates: [
+      "2026-11-14"                 // Sat 14 Nov - busy
+    ],
     startHour: 10,                 // 10:00 AM
     endHour: 17,                   // 5:00 PM  (the meeting must END by this)
     durationMin: 45,               // length of the meeting itself
@@ -903,7 +910,9 @@ var CONFIG = {
           d = cursor.getUTCDate(),
           dow = cursor.getUTCDay();
 
-      var isWorkday = cal.days.indexOf(dow) > -1;
+      var iso = y + "-" + (m < 10 ? "0" : "") + m + "-" + (d < 10 ? "0" : "") + d;
+      var isWorkday = cal.days.indexOf(dow) > -1 &&
+                      (cal.blockedDates || []).indexOf(iso) === -1;
       var withinWindow = false;
 
       if (isWorkday && allowed < cal.bookUpTo) {
