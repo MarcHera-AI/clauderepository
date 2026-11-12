@@ -1,0 +1,19 @@
+name = "cozly-slots"
+main = "slots-worker.js"
+compatibility_date = "2025-06-01"
+
+[vars]
+# The GHL calendar the funnel books into.
+CALENDAR_ID = "lVN0gspXw8iYaWja2km9"
+
+# The zone your availability is defined in. GHL returns slots with
+# offsets, so this mainly affects how GHL groups them by day.
+TIMEZONE = "America/Edmonton"
+
+# Who may call this Worker from a browser. Comma separated, no spaces
+# needed. Keep this tight -- anything listed here can read your
+# availability. Add localhost only while testing.
+ALLOWED_ORIGINS = "https://offer.cozlymedia.com,https://cozlymedia.com"
+
+# GHL_TOKEN is NOT set here. It is a secret:
+#   npx wrangler secret put GHL_TOKEN

@@ -691,6 +691,14 @@ var CONFIG = {
   calendarUrl: "https://api.leadconnectorhq.com/widget/booking/lVN0gspXw8iYaWja2km9",
   calendarId: "lVN0gspXw8iYaWja2km9",
 
+  // Cloudflare Worker that returns GHL's real free slots. When this is
+  // set, the picker shows true availability -- one-off days off and
+  // existing bookings included -- and GHL becomes the single source of
+  // truth. If the call fails for any reason the picker silently falls
+  // back to the rules below, so a Worker outage never costs a booking.
+  // Leave empty to use the rules only.
+  slotsApi: "",
+
   // Availability rules. Hours are written in YOUR zone (timezone below);
   // every visitor sees them converted to their own.
   //
@@ -894,6 +902,47 @@ var CONFIG = {
   var DOW = ["S", "M", "T", "W", "T", "F", "S"];
   var booking = { dayKey: null, startUtc: null };
 
+  /* When the Worker answers, this holds { "YYYY-MM-DD": [utcMs, ...] }
+     keyed by the date in the BUSINESS zone. Null means we are on the
+     rules instead -- either no Worker configured, or the call failed. */
+  var liveSlots = null;
+
+  /* The business-zone calendar date of a given instant. GHL hands back
+     offsets, not zone names, so the grouping has to be done here or a
+     late slot can land on the wrong day chip. */
+  function businessDateKey(utcMs) {
+    var p = {};
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: CONFIG.calendar.timezone,
+      year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date(utcMs)).forEach(function (x) { p[x.type] = x.value; });
+    return p.year + "-" + p.month + "-" + p.day;
+  }
+
+  function loadLiveSlots() {
+    if (!CONFIG.slotsApi) return Promise.resolve(false);
+
+    var url = CONFIG.slotsApi + (CONFIG.slotsApi.indexOf("?") > -1 ? "&" : "?") + "days=21";
+    var timeout = new Promise(function (resolve) { setTimeout(resolve, 6000, null); });
+
+    return Promise.race([fetch(url, { mode: "cors" }).then(function (r) { return r.json(); }), timeout])
+      .then(function (data) {
+        if (!data || !data.ok || !Array.isArray(data.slots) || !data.slots.length) return false;
+        var map = {};
+        data.slots.forEach(function (iso) {
+          var t = Date.parse(iso);
+          if (isNaN(t) || t < Date.now()) return;
+          var key = businessDateKey(t);
+          (map[key] = map[key] || []).push(t);
+        });
+        Object.keys(map).forEach(function (k) { map[k].sort(function (a, b) { return a - b; }); });
+        if (!Object.keys(map).length) return false;
+        liveSlots = map;
+        return true;
+      })
+      .catch(function () { return false; });
+  }
+
   /* Build the booking window: every day in the next fortnight, flagged
      available or not. "Book up to" counts available days only, so a
      weekend never eats into the allowance -- same as Nomads. */
@@ -911,15 +960,21 @@ var CONFIG = {
           dow = cursor.getUTCDay();
 
       var iso = y + "-" + (m < 10 ? "0" : "") + m + "-" + (d < 10 ? "0" : "") + d;
-      var isWorkday = cal.days.indexOf(dow) > -1 &&
-                      (cal.blockedDates || []).indexOf(iso) === -1;
       var withinWindow = false;
 
-      if (isWorkday && allowed < cal.bookUpTo) {
-        withinWindow = buildSlots(y, m, d).length > 0;
-        // A workday with no slots left (late in the day) still counts as
-        // offered, otherwise the window silently slides forward.
-        allowed++;
+      if (liveSlots) {
+        // GHL has already applied its working days, blocked dates and
+        // date range, so a day is open precisely when it has slots.
+        withinWindow = (liveSlots[iso] || []).length > 0;
+      } else {
+        var isWorkday = cal.days.indexOf(dow) > -1 &&
+                        (cal.blockedDates || []).indexOf(iso) === -1;
+        if (isWorkday && allowed < cal.bookUpTo) {
+          withinWindow = buildSlots(y, m, d).length > 0;
+          // A workday with no slots left (late in the day) still counts
+          // as offered, otherwise the window silently slides forward.
+          allowed++;
+        }
       }
 
       out.push({
@@ -936,6 +991,15 @@ var CONFIG = {
   /* Slots for one business day, as UTC instants, future only. */
   function buildSlots(y, m, d) {
     var cal = CONFIG.calendar;
+
+    // Live data wins outright: GHL has already applied its own hours,
+    // notice period, buffers and existing bookings, so re-filtering it
+    // against the local rules would only remove valid slots.
+    if (liveSlots) {
+      var key = y + "-" + (m < 10 ? "0" : "") + m + "-" + (d < 10 ? "0" : "") + d;
+      return (liveSlots[key] || []).slice();
+    }
+
     var slots = [];
     var earliest = Date.now() + (cal.leadTimeMin || 0) * 60000;
     var stepMs = (cal.slotIntervalMin || cal.durationMin) * 60000;
@@ -1011,6 +1075,12 @@ var CONFIG = {
     if (!daysBox || daysBox.dataset.built) return;
     daysBox.dataset.built = "1";
 
+    // Ask the Worker for real availability, then draw. If it is not
+    // configured this resolves immediately and nothing is delayed.
+    loadLiveSlots().then(function () { drawPicker(daysBox); });
+  }
+
+  function drawPicker(daysBox) {
     document.getElementById("pickerLabel").textContent =
       "Pick a day · " + CONFIG.calendar.durationMin + " min";
     document.getElementById("pickerTz").textContent =
