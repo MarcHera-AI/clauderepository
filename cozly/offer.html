@@ -713,8 +713,13 @@ var CONFIG = {
                                    // separately when the grid is wider
                                    // than the meeting, e.g. a 45-minute
                                    // call offered on the hour -> 60.
-    bookUpTo: 2,                   // how many AVAILABLE days ahead
-    leadTimeMin: 60                // no bookings inside the next hour
+    bookUpTo: 2,                   // how many AVAILABLE days ahead.
+                                   // Requires "Count available days
+                                   // only" to be ON in GHL, or a Friday
+                                   // visitor gets one day, not two.
+    leadTimeMin: 180               // 3 hours' notice before the earliest
+                                   // bookable slot. Mirrors GHL's
+                                   // "Minimum scheduling notice".
   },
 
   // GHL inbound webhook. The form POSTs JSON here on submit.
