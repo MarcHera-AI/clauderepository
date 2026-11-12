@@ -396,6 +396,27 @@ h1.accent { color: var(--accent); }
 
 #confirmBtn { margin-top: 14px; }
 
+/* Booking is the highest-commitment click in the funnel, so it gets a
+   visible beat rather than an instant jump to the next view. */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(26, 21, 0, 0.25);
+  border-top-color: var(--accent-ink);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn.is-done { background: #1f9254; color: #fff; }
+.btn.is-done svg { width: 17px; height: 17px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+  .step.is-active { animation: none; }
+}
+
 /* ===== Thank you ===== */
 .ty-title {
   text-align: center;
@@ -1164,7 +1185,8 @@ var CONFIG = {
   confirmBtn.addEventListener("click", function () {
     if (!booking.startUtc) return;
     confirmBtn.disabled = true;
-    confirmBtn.textContent = "Booking…";
+    confirmBtn.innerHTML = '<span class="spinner"></span>Booking your call…';
+    var startedAt = Date.now();
 
     var payload = {
       event: "appointment_booked",
@@ -1189,8 +1211,23 @@ var CONFIG = {
     var finish = function () {
       if (done) return;
       done = true;
-      confirmBtn.disabled = false;
-      show("thankyou");
+
+      // Hold the busy state long enough to read, even when the webhook
+      // answers instantly, then show it succeeded before moving on.
+      var elapsed = Date.now() - startedAt;
+      setTimeout(function () {
+        confirmBtn.classList.add("is-done");
+        confirmBtn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" ' +
+          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<polyline points="20 6 9 17 4 12"></polyline></svg>Booked';
+        setTimeout(function () {
+          show("thankyou");
+          confirmBtn.disabled = false;
+          confirmBtn.classList.remove("is-done");
+          confirmBtn.textContent = "Confirm my call";
+        }, 550);
+      }, Math.max(0, 700 - elapsed));
     };
     setTimeout(finish, 4000);
 
