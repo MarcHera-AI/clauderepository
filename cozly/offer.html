@@ -680,6 +680,17 @@ var CONFIG = {
   // Thank-you page video, same rules as above.
   thankYouEmbed: "https://files.leadconnectorhq.com/file/6af60adec007ee82ac02ce2b/cozly-thankyou-final.mp4",
 
+  // "rules"  -> the Nomads-style picker below. Exact look, slots come
+  //             from the rules, so it cannot see existing bookings.
+  // "embed"  -> GHL's own booking iframe. True availability, but it
+  //             looks like GHL rather than Nomads.
+  calendarMode: "rules",
+
+  // Used by "embed" mode, and sent with the booking webhook either way
+  // so the GHL workflow knows which calendar to write to.
+  calendarUrl: "https://api.leadconnectorhq.com/widget/booking/lVN0gspXw8iYaWja2km9",
+  calendarId: "lVN0gspXw8iYaWja2km9",
+
   // Availability rules. These mirror the Nomads "Custom (this funnel
   // only)" calendar block one for one -- change them here and the picker
   // regenerates. Visitors always see the times in their own time zone.
@@ -910,7 +921,49 @@ var CONFIG = {
     } catch (e) { return ""; }
   }
 
+  /* "embed" mode: hand the whole step over to GHL's own widget, which
+     knows real availability. Prefilled so nobody retypes their details. */
+  function mountGhlEmbed() {
+    var picker = document.querySelector(".picker");
+    if (!picker || picker.dataset.built) return;
+    picker.dataset.built = "1";
+    document.getElementById("confirmBtn").hidden = true;
+
+    var parts = (lead.name || "").trim().split(/\s+/);
+    var qs = new URLSearchParams();
+    if (parts[0]) qs.set("first_name", parts[0]);
+    if (parts.length > 1) qs.set("last_name", parts.slice(1).join(" "));
+    if (lead.email) qs.set("email", lead.email);
+    if (lead.phone) qs.set("phone", lead.phone);
+
+    var sep = CONFIG.calendarUrl.indexOf("?") > -1 ? "&" : "?";
+    picker.outerHTML =
+      '<div class="cal"><iframe src="' + CONFIG.calendarUrl +
+      (qs.toString() ? sep + qs.toString() : "") +
+      '" scrolling="no" height="620" style="display:block;width:100%;border:0" ' +
+      'title="Book a call with Cozly Media"></iframe></div>';
+
+    if (!document.getElementById("ghlEmbedJs")) {
+      var s = document.createElement("script");
+      s.id = "ghlEmbedJs";
+      s.src = "https://link.msgsndr.com/js/form_embed.js";
+      document.body.appendChild(s);
+    }
+
+    // The widget tells the parent window when a slot is booked.
+    window.addEventListener("message", function (e) {
+      var d = e.data;
+      var text = typeof d === "string" ? d : (d && (d.type || d.event)) || "";
+      if (/appointment|booking|scheduled/i.test(String(text))) show("thankyou");
+    });
+  }
+
   function mountCalendar() {
+    if (CONFIG.calendarMode === "embed" && CONFIG.calendarUrl) {
+      mountGhlEmbed();
+      return;
+    }
+
     var daysBox = document.getElementById("pickerDays");
     if (!daysBox || daysBox.dataset.built) return;
     daysBox.dataset.built = "1";
@@ -992,6 +1045,7 @@ var CONFIG = {
       appointment_timezone_visitor: (function () {
         try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ""; }
       })(),
+      calendar_id: CONFIG.calendarId || "",
       is_home_care_agency: answers.agency || "",
       handles_marketing_decisions: answers.decision_maker || "",
       clients_on_service: answers.clients || ""
