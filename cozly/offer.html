@@ -805,6 +805,12 @@ var CONFIG = {
     var video = box.querySelector("video");
     var soundBtn = box.querySelector(".sound");
 
+    // If the file can't be reached, say so rather than leaving a black box.
+    video.addEventListener("error", function () {
+      box.classList.add("is-slot");
+      box.innerHTML = '<div class="video__slot">Video unavailable</div>';
+    });
+
     // Autoplay can still be refused (low power mode, data saver). If it is,
     // give them controls rather than a frozen first frame.
     var tryPlay = video.play();
@@ -829,8 +835,15 @@ var CONFIG = {
 
   function mountLogo() {
     if (!CONFIG.logoUrl) return;
-    document.getElementById("brand").innerHTML =
-      '<img src="' + CONFIG.logoUrl + '" alt="Cozly Media" />';
+    var brand = document.getElementById("brand");
+    var original = brand.innerHTML;          // the text wordmark
+    var img = new Image();
+    img.alt = "Cozly Media";
+    // Only swap the wordmark out once the real logo has actually loaded,
+    // so a dead URL leaves the wordmark standing instead of a broken box.
+    img.onload = function () { brand.innerHTML = ""; brand.appendChild(img); };
+    img.onerror = function () { brand.innerHTML = original; };
+    img.src = CONFIG.logoUrl;
   }
 
   /* ============================================================
