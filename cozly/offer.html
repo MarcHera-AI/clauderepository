@@ -712,6 +712,12 @@ var CONFIG = {
   // slotIntervalMin: 0 -- that doubles the slots per day.
   calendar: {
     timezone: "America/Edmonton",  // the zone YOUR hours are defined in
+
+    // Alberta stopped changing its clocks, so the offset never moves.
+    // Pinning it keeps the fallback maths correct even on a browser
+    // whose timezone data still expects MST in winter. Set to null to
+    // go back to reading the zone from the browser instead.
+    utcOffsetHours: -6,
     days: [1, 2, 3, 4, 5, 6],      // 0=Sun ... 6=Sat. Mon-Sat, never Sun.
 
     // One-off days off, as YYYY-MM-DD in the timezone above. These must
@@ -866,9 +872,12 @@ var CONFIG = {
      Calendar picker
      ============================================================ */
 
-  /* How far the given zone is from UTC at that instant, in ms. Works off
-     Intl rather than a hardcoded offset, so daylight saving is handled. */
+  /* How far the business zone is from UTC at that instant, in ms. Uses
+     the pinned offset when CONFIG sets one; otherwise asks Intl, which
+     handles daylight saving for zones that still observe it. */
   function zoneOffset(utcMs, tz) {
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") return pinned * 3600000;
     var dtf = new Intl.DateTimeFormat("en-US", {
       timeZone: tz, hour12: false,
       year: "numeric", month: "2-digit", day: "2-digit",
@@ -892,6 +901,11 @@ var CONFIG = {
 
   /* Today's date as the business sees it, not as the visitor does. */
   function todayInZone(tz) {
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") {
+      var shifted = new Date(Date.now() + pinned * 3600000);
+      return { y: shifted.getUTCFullYear(), m: shifted.getUTCMonth() + 1, d: shifted.getUTCDate() };
+    }
     var p = {};
     new Intl.DateTimeFormat("en-CA", {
       timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit"
@@ -911,6 +925,10 @@ var CONFIG = {
      offsets, not zone names, so the grouping has to be done here or a
      late slot can land on the wrong day chip. */
   function businessDateKey(utcMs) {
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") {
+      return new Date(utcMs + pinned * 3600000).toISOString().slice(0, 10);
+    }
     var p = {};
     new Intl.DateTimeFormat("en-CA", {
       timeZone: CONFIG.calendar.timezone,
