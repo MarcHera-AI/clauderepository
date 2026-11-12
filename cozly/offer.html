@@ -33,6 +33,11 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* The browser's own [hidden] rule is a user-agent style, so any author
+   rule that sets display (.btn uses flex, .picker__times uses grid)
+   silently beats it and the element shows anyway. */
+[hidden] { display: none !important; }
+
 html { background: var(--bg); }
 
 body {
@@ -395,6 +400,68 @@ h1.accent { color: var(--accent); }
 }
 
 #confirmBtn { margin-top: 14px; }
+
+/* ============================================================
+   Scaling up
+   The phone layout above is the baseline and stays untouched; these
+   blocks widen the column and raise the type scale so the page fills
+   a laptop screen instead of sitting in it as a narrow strip.
+   ============================================================ */
+@media (min-width: 680px) {
+  .shell { max-width: 620px; padding: 40px 28px 76px; }
+
+  .brand { margin-bottom: 28px; }
+  .brand img { height: 42px; }
+  .brand__text { font-size: 1.75rem; }
+  .brand__sub { font-size: 0.64rem; }
+
+  .eyebrow { font-size: 1.6rem; }
+  h1 { font-size: 2.7rem; }
+  .subhead { font-size: 1.08rem; margin-top: 14px; }
+  .q-title { font-size: 1.85rem; margin-bottom: 24px; }
+  .ty-title { font-size: 2.3rem; }
+  .dq-title { font-size: 2.1rem; }
+  .dq-body { font-size: 1.05rem; }
+
+  .video { margin: 26px 0; }
+  .sound { font-size: 0.9rem; padding: 10px 16px; }
+
+  .btn { font-size: 1.1rem; padding: 19px 28px; }
+
+  .options { gap: 13px; }
+  .option { font-size: 1.05rem; padding: 19px 20px; gap: 15px; }
+  .option::before { width: 21px; height: 21px; }
+
+  .fields { gap: 13px; }
+  .field input { font-size: 1.05rem; padding: 18px 20px; }
+
+  .picker { padding: 22px 22px 24px; }
+  /* Three across instead of two: the slots are short, and a wider grid
+     keeps the whole day visible without scrolling. */
+  .picker__times { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .slot { font-size: 1rem; padding: 15px 8px; }
+  .day { padding: 9px 0 10px; }
+  .day__num { font-size: 1.05rem; }
+  .day__dow { font-size: 0.66rem; }
+  .picker__tz { font-size: 0.8rem; }
+
+  .steps-head { font-size: 1.5rem; margin-top: 30px; }
+  .steps-list li { font-size: 1.05rem; }
+  .steps-list { gap: 12px; }
+  .disclaimer { font-size: 0.78rem; margin-top: 22px; }
+}
+
+@media (min-width: 1024px) {
+  .shell { max-width: 760px; padding: 56px 32px 96px; }
+
+  .brand img { height: 48px; }
+  .eyebrow { font-size: 1.75rem; }
+  h1 { font-size: 3.1rem; }
+  .subhead { font-size: 1.15rem; }
+  .q-title { font-size: 2.1rem; }
+  .ty-title { font-size: 2.6rem; }
+  .dq-title { font-size: 2.3rem; }
+}
 
 /* Booking is the highest-commitment click in the funnel, so it gets a
    visible beat rather than an instant jump to the next view. */
