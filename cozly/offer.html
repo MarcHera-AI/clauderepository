@@ -831,8 +831,18 @@ var CONFIG = {
                                    // "Minimum scheduling notice".
   },
 
-  // GHL inbound webhook. The form POSTs JSON here on submit.
-  webhookUrl: "",
+  // GHL inbound webhook. Posted to twice: once on form submit
+  // (event "lead") and again when a time is confirmed (event "booking").
+  webhookUrl: "https://services.leadconnectorhq.com/hooks/hk1aNvq7l95EzYuX7141/webhook-trigger/37a6580c-eff4-4591-bc2c-faf3e616fe51",
+
+  // Stamped onto every webhook post. Matches the shape the Nomads funnel
+  // sends so the existing GHL workflow reads it without changes; "source"
+  // is what tells the two funnels apart in your CRM.
+  funnelMeta: {
+    source: "Cozly site",
+    funnel: "Cozly Media Funnel",
+    funnel_slug: "apply-cozlymedia"
+  },
 
   // Meta Pixel ID. Leave empty and no pixel code runs at all.
   pixelId: ""
@@ -1255,30 +1265,30 @@ var CONFIG = {
     confirmBtn.innerHTML = '<span class="spinner"></span>Booking your call…';
     var startedAt = Date.now();
 
-    var payload = {
-      event: "appointment_booked",
-      name: lead.name, email: lead.email, phone: lead.phone, company: lead.company,
-      appointment_start_iso: new Date(booking.startUtc).toISOString(),
-      appointment_start_unix: Math.floor(booking.startUtc / 1000),
-      appointment_duration_min: CONFIG.calendar.durationMin,
-      appointment_timezone_business: CONFIG.calendar.timezone,
-      appointment_timezone_visitor: (function () {
-        try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ""; }
-      })(),
-      calendar_id: CONFIG.calendarId || "",
-      is_home_care_agency: answers.agency || "",
-      handles_marketing_decisions: answers.decision_maker || "",
-      clients_on_service: answers.clients || ""
-    };
-    Object.keys(attribution).forEach(function (k) { payload[k] = attribution[k]; });
+    var payload = basePayload("booking");
+    var start = new Date(booking.startUtc);
+
+    // Nomads sends +00:00 rather than Z; GHL parses both, but keeping
+    // one format means the workflow's date handling behaves identically
+    // whichever funnel the lead came through.
+    payload.booking_time = start.toISOString().replace(/\.\d{3}Z$/, "+00:00");
+    payload.booking_time_local = new Intl.DateTimeFormat("en-US", {
+      weekday: "short", month: "short", day: "numeric",
+      hour: "numeric", minute: "2-digit", timeZone: CONFIG.calendar.timezone
+    }).format(start);
+    payload.booking_duration_min = CONFIG.calendar.durationMin;
+    payload.calendar_id = CONFIG.calendarId || "";
+    payload.timezone_visitor = (function () {
+      try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ""; }
+    })();
+    payload.answers.push({ question: "Booked call", answer: payload.booking_time_local });
+    payload.answers_text = payload.answers.map(function (a) {
+      return a.question + ": " + a.answer;
+    }).join(" | ");
 
     track("Schedule");
 
-    var done = false;
     var finish = function () {
-      if (done) return;
-      done = true;
-
       // Hold the busy state long enough to read, even when the webhook
       // answers instantly, then show it succeeded before moving on.
       var elapsed = Date.now() - startedAt;
@@ -1296,14 +1306,8 @@ var CONFIG = {
         }, 550);
       }, Math.max(0, 700 - elapsed));
     };
-    setTimeout(finish, 4000);
 
-    if (!CONFIG.webhookUrl) { finish(); return; }
-    fetch(CONFIG.webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }).then(finish).catch(finish);
+    postWebhook(payload, finish);
   });
 
   /* ---------- Navigation ---------- */
@@ -1368,6 +1372,81 @@ var CONFIG = {
     btn.addEventListener("click", function () { show(btn.dataset.go); });
   });
 
+  /* ---------- Webhook payload ----------
+     Mirrors what the Nomads funnel posts, so the existing GHL workflow
+     maps every field without being rebuilt. The condition in that
+     workflow branches on "event", which is why it is always set. */
+
+  var QUESTIONS = {
+    agency: "Are you a home care agency?",
+    decision_maker: "Do you handle marketing decisions for your agency?",
+    clients: "How many clients are on service right now?"
+  };
+
+  /* One id for the whole visit, so the "lead" post and the later
+     "booking" post can be tied to the same person in the CRM. */
+  function leadId() {
+    var key = "cozly_lead_id";
+    var id = null;
+    try { id = sessionStorage.getItem(key); } catch (e) {}
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : "lead-" + Date.now() + "-" + Math.random().toString(16).slice(2, 10);
+      try { sessionStorage.setItem(key, id); } catch (e) {}
+    }
+    return id;
+  }
+
+  function answerList() {
+    var out = [];
+    ["agency", "decision_maker", "clients"].forEach(function (key) {
+      if (answers[key]) out.push({ question: QUESTIONS[key], answer: answers[key] });
+    });
+    if (lead.company) out.push({ question: "company", answer: lead.company });
+    return out;
+  }
+
+  function basePayload(event) {
+    var list = answerList();
+    var parts = (lead.name || "").trim().split(/\s+/);
+    var payload = {
+      event: event,
+      source: CONFIG.funnelMeta.source,
+      funnel: CONFIG.funnelMeta.funnel,
+      funnel_slug: CONFIG.funnelMeta.funnel_slug,
+      lead_id: leadId(),
+      name: lead.name || "",
+      first_name: parts[0] || "",
+      last_name: parts.slice(1).join(" "),
+      email: lead.email || "",
+      phone: lead.phone || "",
+      company: lead.company || "",
+      booked: event === "booking",
+      answers: list,
+      answers_text: list.map(function (a) { return a.question + ": " + a.answer; }).join(" | "),
+      page_url: window.location.href,
+      submitted_at: new Date().toISOString()
+    };
+    Object.keys(attribution).forEach(function (k) { payload[k] = attribution[k]; });
+    return payload;
+  }
+
+  /* The webhook never holds the visitor up: success, failure or timeout,
+     they move on. Losing a CRM record is bad; losing the booking is worse. */
+  function postWebhook(payload, onDone) {
+    var done = false;
+    var finish = function () { if (!done) { done = true; onDone(); } };
+    setTimeout(finish, 4000);
+
+    if (!CONFIG.webhookUrl) { finish(); return; }
+    fetch(CONFIG.webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(finish).catch(finish);
+  }
+
   /* ---------- Form ---------- */
   var form = document.getElementById("leadForm");
 
@@ -1406,42 +1485,13 @@ var CONFIG = {
     btn.disabled = true;
     btn.textContent = "One moment…";
 
-    var payload = {
-      name: lead.name,
-      first_name: lead.name.split(/\s+/)[0],
-      last_name: lead.name.split(/\s+/).slice(1).join(" "),
-      email: lead.email,
-      phone: lead.phone,
-      company: lead.company,
-      is_home_care_agency: answers.agency || "",
-      handles_marketing_decisions: answers.decision_maker || "",
-      clients_on_service: answers.clients || "",
-      page_url: window.location.href,
-      submitted_at: new Date().toISOString()
-    };
-    Object.keys(attribution).forEach(function (k) { payload[k] = attribution[k]; });
-
     track("Lead");
 
-    function proceed() {
+    postWebhook(basePayload("lead"), function () {
       btn.disabled = false;
       btn.textContent = "Continue";
       show("calendar");
-    }
-
-    if (!CONFIG.webhookUrl) { proceed(); return; }
-
-    // The lead is never held hostage to the webhook: whether it succeeds,
-    // fails or times out, they still reach the calendar.
-    var done = false;
-    var finish = function () { if (!done) { done = true; proceed(); } };
-    setTimeout(finish, 4000);
-
-    fetch(CONFIG.webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }).then(finish).catch(finish);
+    });
   });
 
   /* ---------- Clear an error as soon as the field is corrected ---------- */
