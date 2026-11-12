@@ -7,7 +7,7 @@
 <meta name="description" content="We help established home care agencies sign new private pay families." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
 <style>
 /* ============================================================
@@ -296,37 +296,105 @@ h1.accent { color: var(--accent); }
 
 .field.has-error .field__error { display: block; }
 
-/* ===== Calendar ===== */
-.cal {
+/* ===== Calendar picker =====
+   Slots are generated from the fixed rules in CONFIG.calendar, the same
+   way the Nomads "Custom (this funnel only)" calendar block works. */
+.picker {
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--surface);
-  margin-top: 16px;
-}
-
-.cal iframe {
-  display: block;
-  width: 100%;
-  border: 0;
-}
-
-/* Starting height only. GHL's form_embed.js overrides it inline once the
-   calendar reports its real height, which is why this is an attribute on
-   the iframe and not a min-height here. */
-
-.cal__slot {
-  display: grid;
-  place-items: center;
-  gap: 6px;
-  min-height: 300px;
-  padding: 28px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 0.9rem;
-  font-weight: 600;
   background: var(--option);
+  padding: 16px 16px 18px;
+  margin-top: 18px;
+  text-align: left;
 }
+
+.picker__label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.picker__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 7px 0 8px;
+  text-align: center;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.day__dow {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--muted-2);
+  letter-spacing: 0.04em;
+}
+
+.day__num { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+
+/* Days outside the booking window keep their place in the row, struck
+   through, so the week still reads as a week. */
+.day.is-off {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+}
+
+.day.is-off .day__num {
+  color: var(--muted-2);
+  text-decoration: line-through;
+}
+
+.day.is-sel { border-color: var(--accent); background: #fdf6e2; }
+
+.picker__times {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.slot {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 13px 8px;
+  font-family: var(--font);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.slot:hover { border-color: #cfc8bc; }
+.slot.is-sel { border-color: var(--accent); background: #fdf6e2; }
+
+.picker__tz {
+  margin-top: 12px;
+  font-size: 0.74rem;
+  color: var(--muted-2);
+}
+
+.picker__none {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+#confirmBtn { margin-top: 14px; }
 
 /* ===== Thank you ===== */
 .ty-title {
@@ -535,9 +603,15 @@ h1.accent { color: var(--accent); }
     <h1>Choose A Time To Talk With Our Team</h1>
     <p class="subhead">A specialist will walk you through a plan to sign your next 20 private-pay families in 90 days.</p>
 
-    <div class="cal" id="calWrap">
-      <div class="cal__slot">Your calendar goes here<br />(set CONFIG.calendarUrl)</div>
+    <div class="picker">
+      <div class="picker__label" id="pickerLabel">Pick a day</div>
+      <div class="picker__days" id="pickerDays"></div>
+      <div class="picker__times" id="pickerTimes" hidden></div>
+      <p class="picker__none" id="pickerNone" hidden>No times left in the booking window. Please check back tomorrow.</p>
+      <p class="picker__tz" id="pickerTz"></p>
     </div>
+
+    <button class="btn" type="button" id="confirmBtn" hidden>Confirm my call</button>
 
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
@@ -606,9 +680,18 @@ var CONFIG = {
   // Thank-you page video, same rules as above.
   thankYouEmbed: "https://files.leadconnectorhq.com/file/6af60adec007ee82ac02ce2b/cozly-thankyou-final.mp4",
 
-  // GHL calendar, e.g.
-  // "https://api.leadconnectorhq.com/widget/booking/XXXXXXXXXXXX"
-  calendarUrl: "",
+  // Availability rules. These mirror the Nomads "Custom (this funnel
+  // only)" calendar block one for one -- change them here and the picker
+  // regenerates. Visitors always see the times in their own time zone.
+  calendar: {
+    timezone: "America/Edmonton",  // the zone YOUR hours are defined in
+    days: [1, 2, 3, 4, 5],         // 0=Sun ... 6=Sat  (Nomads: M T W T F)
+    startHour: 13,                 // 1:00 PM
+    endHour: 17,                   // 5:00 PM  (last slot ends by this)
+    durationMin: 30,
+    bookUpTo: 2,                   // how many AVAILABLE days ahead
+    leadTimeMin: 60                // no bookings inside the next hour
+  },
 
   // GHL inbound webhook. The form POSTs JSON here on submit.
   webhookUrl: "",
@@ -722,34 +805,217 @@ var CONFIG = {
       '<img src="' + CONFIG.logoUrl + '" alt="Cozly Media" />';
   }
 
-  /* ---------- Calendar ---------- */
-  function mountCalendar() {
-    var wrap = document.getElementById("calWrap");
-    if (!wrap || !CONFIG.calendarUrl) return;
+  /* ============================================================
+     Calendar picker
+     ============================================================ */
 
-    // Prefill from the form so nobody types their details twice.
-    var parts = (lead.name || "").trim().split(/\s+/);
-    var qs = new URLSearchParams();
-    if (parts[0]) qs.set("first_name", parts[0]);
-    if (parts.length > 1) qs.set("last_name", parts.slice(1).join(" "));
-    if (lead.email) qs.set("email", lead.email);
-    if (lead.phone) qs.set("phone", lead.phone);
-
-    var sep = CONFIG.calendarUrl.indexOf("?") > -1 ? "&" : "?";
-    var src = CONFIG.calendarUrl + (qs.toString() ? sep + qs.toString() : "");
-
-    wrap.innerHTML =
-      '<iframe src="' + src + '" scrolling="no" height="620" ' +
-      'title="Book a call with Cozly Media"></iframe>';
-
-    // GHL's resizer, loaded once, on demand.
-    if (!document.getElementById("ghlEmbedJs")) {
-      var s = document.createElement("script");
-      s.id = "ghlEmbedJs";
-      s.src = "https://link.msgsndr.com/js/form_embed.js";
-      document.body.appendChild(s);
-    }
+  /* How far the given zone is from UTC at that instant, in ms. Works off
+     Intl rather than a hardcoded offset, so daylight saving is handled. */
+  function zoneOffset(utcMs, tz) {
+    var dtf = new Intl.DateTimeFormat("en-US", {
+      timeZone: tz, hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit"
+    });
+    var parts = {};
+    dtf.formatToParts(new Date(utcMs)).forEach(function (p) { parts[p.type] = p.value; });
+    var asUtc = Date.UTC(+parts.year, +parts.month - 1, +parts.day,
+                         +parts.hour % 24, +parts.minute, +parts.second);
+    return asUtc - utcMs;
   }
+
+  /* A wall-clock time in the business's zone -> a real UTC instant.
+     Resolved twice because the first guess can land the wrong side of a
+     daylight-saving boundary. */
+  function zonedToUtc(y, m, d, hh, mm, tz) {
+    var guess = Date.UTC(y, m - 1, d, hh, mm);
+    var ts = guess - zoneOffset(guess, tz);
+    return guess - zoneOffset(ts, tz);
+  }
+
+  /* Today's date as the business sees it, not as the visitor does. */
+  function todayInZone(tz) {
+    var p = {};
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    return { y: +p.year, m: +p.month, d: +p.day };
+  }
+
+  var DOW = ["S", "M", "T", "W", "T", "F", "S"];
+  var booking = { dayKey: null, startUtc: null };
+
+  /* Build the booking window: every day in the next fortnight, flagged
+     available or not. "Book up to" counts available days only, so a
+     weekend never eats into the allowance -- same as Nomads. */
+  function buildDays() {
+    var cal = CONFIG.calendar;
+    var today = todayInZone(cal.timezone);
+    var cursor = new Date(Date.UTC(today.y, today.m - 1, today.d));
+    var out = [];
+    var allowed = 0;
+
+    for (var i = 0; i < 14; i++) {
+      var y = cursor.getUTCFullYear(),
+          m = cursor.getUTCMonth() + 1,
+          d = cursor.getUTCDate(),
+          dow = cursor.getUTCDay();
+
+      var isWorkday = cal.days.indexOf(dow) > -1;
+      var withinWindow = false;
+
+      if (isWorkday && allowed < cal.bookUpTo) {
+        withinWindow = buildSlots(y, m, d).length > 0;
+        // A workday with no slots left (late in the day) still counts as
+        // offered, otherwise the window silently slides forward.
+        allowed++;
+      }
+
+      out.push({
+        key: y + "-" + m + "-" + d, y: y, m: m, d: d,
+        dow: dow, label: DOW[dow], num: d, open: withinWindow
+      });
+
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
+      if (allowed >= cal.bookUpTo && out.length >= 7) break;
+    }
+    return out.slice(0, 7);
+  }
+
+  /* Slots for one business day, as UTC instants, future only. */
+  function buildSlots(y, m, d) {
+    var cal = CONFIG.calendar;
+    var slots = [];
+    var earliest = Date.now() + (cal.leadTimeMin || 0) * 60000;
+    var stepMs = cal.durationMin * 60000;
+
+    var startUtc = zonedToUtc(y, m, d, cal.startHour, 0, cal.timezone);
+    var endUtc = zonedToUtc(y, m, d, cal.endHour, 0, cal.timezone);
+
+    for (var t = startUtc; t + stepMs <= endUtc; t += stepMs) {
+      if (t >= earliest) slots.push(t);
+    }
+    return slots;
+  }
+
+  function visitorZoneName() {
+    try {
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      var abbr = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz, timeZoneName: "short"
+      }).formatToParts(new Date()).filter(function (p) {
+        return p.type === "timeZoneName";
+      })[0];
+      return (abbr ? abbr.value + " · " : "") + tz.replace(/_/g, " ");
+    } catch (e) { return ""; }
+  }
+
+  function mountCalendar() {
+    var daysBox = document.getElementById("pickerDays");
+    if (!daysBox || daysBox.dataset.built) return;
+    daysBox.dataset.built = "1";
+
+    document.getElementById("pickerLabel").textContent =
+      "Pick a day · " + CONFIG.calendar.durationMin + " min";
+    document.getElementById("pickerTz").textContent =
+      "Times shown in your time zone" +
+      (visitorZoneName() ? " (" + visitorZoneName() + ")" : "");
+
+    var days = buildDays();
+    daysBox.innerHTML = days.map(function (day) {
+      return '<button class="day' + (day.open ? "" : " is-off") + '" type="button"' +
+             (day.open ? ' data-day="' + day.key + '"' : " disabled") + '>' +
+             '<span class="day__dow">' + day.label + '</span>' +
+             '<span class="day__num">' + day.num + "</span></button>";
+    }).join("");
+
+    var anyOpen = days.some(function (day) { return day.open; });
+    document.getElementById("pickerNone").hidden = anyOpen;
+
+    daysBox.querySelectorAll(".day[data-day]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        daysBox.querySelectorAll(".day").forEach(function (o) { o.classList.remove("is-sel"); });
+        btn.classList.add("is-sel");
+        booking.dayKey = btn.dataset.day;
+        booking.startUtc = null;
+        document.getElementById("confirmBtn").hidden = true;
+        renderSlots(btn.dataset.day);
+      });
+    });
+
+    // Open the first available day straight away -- one less tap.
+    var first = daysBox.querySelector(".day[data-day]");
+    if (first) first.click();
+  }
+
+  function renderSlots(key) {
+    var parts = key.split("-");
+    var slots = buildSlots(+parts[0], +parts[1], +parts[2]);
+    var box = document.getElementById("pickerTimes");
+
+    var fmt = new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit" });
+    box.innerHTML = slots.map(function (t) {
+      return '<button class="slot" type="button" data-t="' + t + '">' +
+             fmt.format(new Date(t)) + "</button>";
+    }).join("");
+    box.hidden = slots.length === 0;
+
+    box.querySelectorAll(".slot").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        box.querySelectorAll(".slot").forEach(function (o) { o.classList.remove("is-sel"); });
+        btn.classList.add("is-sel");
+        booking.startUtc = +btn.dataset.t;
+        var confirm = document.getElementById("confirmBtn");
+        confirm.hidden = false;
+        confirm.textContent = "Confirm " + new Intl.DateTimeFormat([], {
+          weekday: "short", month: "short", day: "numeric",
+          hour: "numeric", minute: "2-digit"
+        }).format(new Date(booking.startUtc));
+      });
+    });
+  }
+
+  /* Booking confirmation -> second webhook post, then the thank-you view. */
+  var confirmBtn = document.getElementById("confirmBtn");
+  confirmBtn.addEventListener("click", function () {
+    if (!booking.startUtc) return;
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = "Booking…";
+
+    var payload = {
+      event: "appointment_booked",
+      name: lead.name, email: lead.email, phone: lead.phone, company: lead.company,
+      appointment_start_iso: new Date(booking.startUtc).toISOString(),
+      appointment_start_unix: Math.floor(booking.startUtc / 1000),
+      appointment_duration_min: CONFIG.calendar.durationMin,
+      appointment_timezone_business: CONFIG.calendar.timezone,
+      appointment_timezone_visitor: (function () {
+        try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ""; }
+      })(),
+      is_home_care_agency: answers.agency || "",
+      handles_marketing_decisions: answers.decision_maker || "",
+      clients_on_service: answers.clients || ""
+    };
+    Object.keys(attribution).forEach(function (k) { payload[k] = attribution[k]; });
+
+    track("Schedule");
+
+    var done = false;
+    var finish = function () {
+      if (done) return;
+      done = true;
+      confirmBtn.disabled = false;
+      show("thankyou");
+    };
+    setTimeout(finish, 4000);
+
+    if (!CONFIG.webhookUrl) { finish(); return; }
+    fetch(CONFIG.webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(finish).catch(finish);
+  });
 
   /* ---------- Navigation ---------- */
   function setProgress(step) {
@@ -789,8 +1055,8 @@ var CONFIG = {
       }
     }
 
-    if (step === "calendar") { mountCalendar(); track("Schedule"); }
-    if (step === "dq") track("Lead");
+    if (step === "calendar") { mountCalendar(); track("InitiateCheckout"); }
+    if (step === "thankyou") track("CompleteRegistration");
   }
 
   /* ---------- Option buttons ---------- */
@@ -894,18 +1160,6 @@ var CONFIG = {
     input.addEventListener("input", function () {
       input.closest(".field").classList.remove("has-error");
     });
-  });
-
-  /* ---------- Booking completion ----------
-     GHL's embed posts a message to the parent window when an appointment
-     is booked. That is the cue to move to the thank-you view. */
-  window.addEventListener("message", function (e) {
-    var data = e.data;
-    var text = typeof data === "string" ? data : (data && (data.type || data.event)) || "";
-    if (/appointment|booking|scheduled/i.test(String(text))) {
-      track("CompleteRegistration");
-      show("thankyou");
-    }
   });
 
   /* ---------- Back / forward ---------- */
