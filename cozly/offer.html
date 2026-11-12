@@ -691,15 +691,32 @@ var CONFIG = {
   calendarUrl: "https://api.leadconnectorhq.com/widget/booking/lVN0gspXw8iYaWja2km9",
   calendarId: "lVN0gspXw8iYaWja2km9",
 
-  // Availability rules. These mirror the Nomads "Custom (this funnel
-  // only)" calendar block one for one -- change them here and the picker
-  // regenerates. Visitors always see the times in their own time zone.
+  // Availability rules. Visitors always see times in their own zone.
+  //
+  // IMPORTANT: these must match the GHL calendar's own availability,
+  // because GHL is what actually accepts the booking. If they drift, the
+  // picker offers times GHL will refuse and the appointment silently
+  // fails to be created.
+  //
+  // Currently set to the NOMADS block (30 min, 1-5 PM). The GHL calendar
+  // "Cozly Media - Growth Plan" is presently configured differently --
+  // 45 min on the hour, 5-8 PM -- which would be:
+  //
+  //   startHour: 17, endHour: 20, durationMin: 45, slotIntervalMin: 60
+  //
+  // Those settings reproduce GHL's widget exactly (5:00, 6:00, 7:00 PM).
+  // Pick one and make both systems agree.
   calendar: {
     timezone: "America/Edmonton",  // the zone YOUR hours are defined in
     days: [1, 2, 3, 4, 5],         // 0=Sun ... 6=Sat  (Nomads: M T W T F)
     startHour: 13,                 // 1:00 PM
     endHour: 17,                   // 5:00 PM  (last slot ends by this)
-    durationMin: 30,
+    durationMin: 30,               // length of the meeting itself
+    slotIntervalMin: 0,            // gap between slot start times.
+                                   // 0 = same as durationMin. Set it
+                                   // separately when the grid is wider
+                                   // than the meeting, e.g. a 45-minute
+                                   // call offered on the hour -> 60.
     bookUpTo: 2,                   // how many AVAILABLE days ahead
     leadTimeMin: 60                // no bookings inside the next hour
   },
@@ -898,12 +915,15 @@ var CONFIG = {
     var cal = CONFIG.calendar;
     var slots = [];
     var earliest = Date.now() + (cal.leadTimeMin || 0) * 60000;
-    var stepMs = cal.durationMin * 60000;
+    var stepMs = (cal.slotIntervalMin || cal.durationMin) * 60000;
+    var meetingMs = cal.durationMin * 60000;
 
     var startUtc = zonedToUtc(y, m, d, cal.startHour, 0, cal.timezone);
     var endUtc = zonedToUtc(y, m, d, cal.endHour, 0, cal.timezone);
 
-    for (var t = startUtc; t + stepMs <= endUtc; t += stepMs) {
+    // A slot only counts if the whole meeting fits before the end of the
+    // working window, which is not the same as the next start fitting.
+    for (var t = startUtc; t + meetingMs <= endUtc; t += stepMs) {
       if (t >= earliest) slots.push(t);
     }
     return slots;
