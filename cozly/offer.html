@@ -691,28 +691,24 @@ var CONFIG = {
   calendarUrl: "https://api.leadconnectorhq.com/widget/booking/lVN0gspXw8iYaWja2km9",
   calendarId: "lVN0gspXw8iYaWja2km9",
 
-  // Availability rules. Visitors always see times in their own zone.
+  // Availability rules. Hours are written in YOUR zone (timezone below);
+  // every visitor sees them converted to their own.
   //
-  // IMPORTANT: these must match the GHL calendar's own availability,
-  // because GHL is what actually accepts the booking. If they drift, the
-  // picker offers times GHL will refuse and the appointment silently
-  // fails to be created.
+  // IMPORTANT: these must match the GHL calendar's availability, because
+  // GHL is what actually accepts the booking. If they drift, the picker
+  // offers times GHL refuses and the appointment is never created.
   //
-  // Currently set to the NOMADS block (30 min, 1-5 PM). The GHL calendar
-  // "Cozly Media - Growth Plan" is presently configured differently --
-  // 45 min on the hour, 5-8 PM -- which would be:
-  //
-  //   startHour: 17, endHour: 20, durationMin: 45, slotIntervalMin: 60
-  //
-  // Those settings reproduce GHL's widget exactly (5:00, 6:00, 7:00 PM).
-  // Pick one and make both systems agree.
+  // Set to 10:00 AM - 5:00 PM Edmonton. Duration is 45 min on the hour,
+  // carried over from the existing "Cozly Media - Growth Plan" calendar.
+  // For 30-minute calls instead, set durationMin: 30 and
+  // slotIntervalMin: 0 -- that doubles the slots per day.
   calendar: {
     timezone: "America/Edmonton",  // the zone YOUR hours are defined in
     days: [1, 2, 3, 4, 5],         // 0=Sun ... 6=Sat  (Nomads: M T W T F)
-    startHour: 13,                 // 1:00 PM
-    endHour: 17,                   // 5:00 PM  (last slot ends by this)
-    durationMin: 30,               // length of the meeting itself
-    slotIntervalMin: 0,            // gap between slot start times.
+    startHour: 10,                 // 10:00 AM
+    endHour: 17,                   // 5:00 PM  (the meeting must END by this)
+    durationMin: 45,               // length of the meeting itself
+    slotIntervalMin: 60,           // gap between slot start times.
                                    // 0 = same as durationMin. Set it
                                    // separately when the grid is wider
                                    // than the meeting, e.g. a 45-minute
