@@ -1272,10 +1272,9 @@ var CONFIG = {
     // one format means the workflow's date handling behaves identically
     // whichever funnel the lead came through.
     payload.booking_time = start.toISOString().replace(/\.\d{3}Z$/, "+00:00");
-    payload.booking_time_local = new Intl.DateTimeFormat("en-US", {
-      weekday: "short", month: "short", day: "numeric",
-      hour: "numeric", minute: "2-digit", timeZone: CONFIG.calendar.timezone
-    }).format(start);
+    payload.booking_time_local = friendlyDateTime(booking.startUtc);
+    // What GHL's Book appointment action should read.
+    payload.booking_time_ghl = ghlDateTime(booking.startUtc);
     payload.booking_duration_min = CONFIG.calendar.durationMin;
     payload.calendar_id = CONFIG.calendarId || "";
     payload.timezone_visitor = (function () {
@@ -1405,6 +1404,61 @@ var CONFIG = {
     });
     if (lead.company) out.push({ question: "company", answer: lead.company });
     return out;
+  }
+
+  /* GHL's "Book appointment" action ignores any offset in the string and
+     reads it in the calendar's own timezone, so it needs the wall-clock
+     time in Edmonton, formatted "YYYY-MM-DD hh:mm AM" -- one of the three
+     layouts that action accepts. Built off the pinned offset so it cannot
+     drift with a visitor's timezone data. */
+  function businessDate(utcMs) {
+    var off = CONFIG.calendar.utcOffsetHours;
+    if (typeof off === "number") return new Date(utcMs + off * 3600000);
+    var p = {};
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: CONFIG.calendar.timezone, hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit"
+    }).formatToParts(new Date(utcMs)).forEach(function (x) { p[x.type] = x.value; });
+    return new Date(Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute));
+  }
+
+  var DOW_LONG = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  /* "Fri, Nov 13, 10:00 AM" -- the human-readable version, built from the
+     same shifted date as the GHL one so the two can never disagree. */
+  function friendlyDateTime(utcMs) {
+    var d = businessDate(utcMs);
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var h24 = d.getUTCHours();
+    var h12 = h24 % 12 || 12;
+    return DOW_LONG[d.getUTCDay()] + ", " + MON[d.getUTCMonth()] + " " + d.getUTCDate() +
+           ", " + h12 + ":" + pad(d.getUTCMinutes()) + " " + (h24 >= 12 ? "PM" : "AM");
+  }
+
+  function ghlDateTime(utcMs) {
+    var off = CONFIG.calendar.utcOffsetHours;
+    var d;
+    if (typeof off === "number") {
+      d = new Date(utcMs + off * 3600000);
+    } else {
+      // No pinned offset: fall back to reading the zone via Intl.
+      var p = {};
+      new Intl.DateTimeFormat("en-CA", {
+        timeZone: CONFIG.calendar.timezone, hour12: false,
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit"
+      }).formatToParts(new Date(utcMs)).forEach(function (x) { p[x.type] = x.value; });
+      d = new Date(Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute));
+    }
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var h24 = d.getUTCHours();
+    var ampm = h24 >= 12 ? "PM" : "AM";
+    var h12 = h24 % 12 || 12;
+    return d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1) + "-" + pad(d.getUTCDate()) +
+           " " + pad(h12) + ":" + pad(d.getUTCMinutes()) + " " + ampm;
   }
 
   function basePayload(event) {
