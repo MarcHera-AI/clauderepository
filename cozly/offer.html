@@ -132,12 +132,26 @@ h1.accent { color: var(--accent); }
   border-radius: var(--radius);
   overflow: hidden;
   background: #111;
-  aspect-ratio: 16 / 9;
 }
 
-.video iframe,
-.video video,
-.video > div { width: 100%; height: 100%; border: 0; display: block; }
+/* 16:9 only while it is the empty placeholder or an iframe embed. A real
+   <video> keeps its own aspect so a portrait recording isn't letterboxed
+   or cropped, capped so it can't run off the screen. */
+.video.is-slot,
+.video.is-frame { aspect-ratio: 16 / 9; }
+
+.video.is-frame iframe,
+.video.is-slot > div { width: 100%; height: 100%; border: 0; display: block; }
+
+.video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 72vh;
+  object-fit: contain;
+  margin-inline: auto;
+  background: #111;
+}
 
 /* Placeholder until a real embed is dropped in. */
 .video__slot {
@@ -151,6 +165,33 @@ h1.accent { color: var(--accent); }
   text-align: center;
   padding: 20px;
 }
+
+/* ===== "Tap for sound" =====
+   The video autoplays muted, which is the only kind of autoplay phones
+   allow. This is the prompt to turn audio on. */
+.sound {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(18, 18, 18, 0.74);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.sound:hover { background: rgba(18, 18, 18, 0.88); }
+.sound svg { width: 15px; height: 15px; }
+.sound.is-gone { opacity: 0; pointer-events: none; }
 
 /* ===== Buttons ===== */
 .btn {
@@ -552,15 +593,18 @@ h1.accent { color: var(--accent); }
    than breaking.
    ============================================================ */
 var CONFIG = {
-  // Logo image URL. Leave empty to keep the text wordmark.
-  logoUrl: "",
+  // Logo image URL. Leave empty to fall back to the text wordmark.
+  // The brown wordmark is the one that belongs on this cream background;
+  // the cream version is for use on a dark background.
+  logoUrl: "https://files.leadconnectorhq.com/file/6af60ab74dccfd82dadddbad/cozly-wordmark-transparent-brown.png",
 
-  // VSL embed. Paste the full <iframe>/<script> markup from Wistia,
-  // YouTube or Vimeo, or a direct .mp4 URL ending in ".mp4".
-  vslEmbed: "",
+  // VSL embed. Either a direct .mp4 URL, or the full <iframe>/<script>
+  // markup from Wistia, YouTube or Vimeo.
+  // An .mp4 autoplays muted with a "Tap for sound" overlay.
+  vslEmbed: "https://files.leadconnectorhq.com/file/6af60adec007ee82ac02ce25/cozly-vsl-final-1-09x-1.mp4",
 
   // Thank-you page video, same rules as above.
-  thankYouEmbed: "",
+  thankYouEmbed: "https://files.leadconnectorhq.com/file/6af60adec007ee82ac02ce2b/cozly-thankyou-final.mp4",
 
   // GHL calendar, e.g.
   // "https://api.leadconnectorhq.com/widget/booking/XXXXXXXXXXXX"
@@ -625,12 +669,51 @@ var CONFIG = {
   /* ---------- Media embeds ---------- */
   function mountMedia(containerId, markup) {
     var box = document.getElementById(containerId);
-    if (!box || !markup) return;
-    if (/^https?:\/\/\S+\.mp4(\?|$)/i.test(markup.trim())) {
-      box.innerHTML = '<video src="' + markup.trim() + '" controls playsinline preload="metadata"></video>';
-    } else {
+    if (!box) return;
+
+    if (!markup) { box.classList.add("is-slot"); return; }
+    markup = markup.trim();
+
+    // A bare link ending in .mp4 (absolute or relative, query string or
+    // not) becomes a <video>. Anything containing a tag is embed markup.
+    if (!/^[^<>\s]+\.mp4(\?[^<>\s]*)?$/i.test(markup)) {
+      box.classList.add("is-frame");
       box.innerHTML = markup;
+      return;
     }
+
+    box.innerHTML =
+      '<video src="' + markup + '" muted autoplay playsinline preload="metadata" ' +
+      'controlslist="nodownload"></video>' +
+      '<button class="sound" type="button">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/>' +
+        '<line x1="17" y1="9" x2="23" y2="15"/></svg>Tap for sound</button>';
+
+    var video = box.querySelector("video");
+    var soundBtn = box.querySelector(".sound");
+
+    // Autoplay can still be refused (low power mode, data saver). If it is,
+    // give them controls rather than a frozen first frame.
+    var tryPlay = video.play();
+    if (tryPlay && tryPlay.catch) {
+      tryPlay.catch(function () { video.controls = true; });
+    }
+
+    function unmute() {
+      video.muted = false;
+      video.controls = true;
+      video.play();
+      soundBtn.classList.add("is-gone");
+      track("ViewContent");
+    }
+
+    soundBtn.addEventListener("click", unmute);
+    // Tapping the video itself before the audio is on means the same thing.
+    video.addEventListener("click", function (e) {
+      if (video.muted) { e.preventDefault(); unmute(); }
+    });
   }
 
   function mountLogo() {
