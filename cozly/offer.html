@@ -1273,6 +1273,19 @@ var CONFIG = {
     // whichever funnel the lead came through.
     payload.booking_time = start.toISOString().replace(/\.\d{3}Z$/, "+00:00");
     payload.booking_time_local = friendlyDateTime(booking.startUtc);
+    // The same moment written in the VISITOR's own timezone, with the
+    // zone abbreviation, e.g. "Fri, Nov 13, 12:00 PM EST". Their browser
+    // is authoritative about their own zone, so this is always right for
+    // them -- and it saves relying on GHL to re-render per contact.
+    try {
+      payload.booking_time_visitor = new Intl.DateTimeFormat("en-US", {
+        weekday: "short", month: "short", day: "numeric",
+        hour: "numeric", minute: "2-digit", timeZoneName: "short"
+      }).format(start);
+    } catch (e) {
+      payload.booking_time_visitor = payload.booking_time_local;
+    }
+
     // What GHL's Book appointment action should read.
     payload.booking_time_ghl = ghlDateTime(booking.startUtc);
     payload.booking_duration_min = CONFIG.calendar.durationMin;
