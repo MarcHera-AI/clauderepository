@@ -13,7 +13,12 @@ TIMEZONE = "America/Edmonton"
 # Who may call this Worker from a browser. Comma separated, no spaces
 # needed. Keep this tight -- anything listed here can read your
 # availability. Add localhost only while testing.
-ALLOWED_ORIGINS = "https://offer.cozlymedia.com,https://cozlymedia.com"
+ALLOWED_ORIGINS = "https://apply.cozlymedia.com,https://offer.cozlymedia.com,https://cozlymedia.com"
+# apply. is the live funnel; offer. is the older Nomads one, kept as a
+# rollback. An origin missing from this list is NOT refused outright --
+# the Worker answers with the first listed origin instead, which the
+# browser then rejects, so the page silently falls back to its own
+# rules. Add a domain here before pointing a funnel at it.
 
 # GHL_TOKEN is NOT set here. It is a secret:
 #   npx wrangler secret put GHL_TOKEN
