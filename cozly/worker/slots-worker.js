@@ -102,28 +102,43 @@ export default {
  * GHL returns an object keyed by date, each holding a slots array:
  *   { "2026-11-13": { slots: ["2026-11-13T10:00:00-07:00", ...] },
  *     "traceId": "..." }
- * Shapes have varied across API versions, so pull any ISO-looking
- * strings out of whatever arrives rather than trusting one layout.
+ * Shapes have varied across API versions, so rather than trusting one
+ * layout we walk whatever arrives and pull out the timestamps.
+ *
+ * "Whatever parses as a date" is too loose to use as the test, though:
+ * Date.parse accepts "11" (-> Nov 2001), a "2021-04-15" version header
+ * and a "401" status code, and it would happily turn an echoed endDate
+ * into a bookable midnight slot. So a value has to look like a full
+ * ISO date AND time, and keys that are known metadata are skipped.
  */
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/;
+const META_KEYS = new Set([
+  "traceId", "version", "startDate", "endDate", "date",
+  "dateAdded", "dateUpdated", "createdAt", "updatedAt", "lastUpdated"
+]);
+
 function extractSlots(data) {
   const out = [];
   const seen = new Set();
 
   const take = (value) => {
-    if (typeof value !== "string") return;
+    if (typeof value !== "string" || !ISO_DATETIME.test(value)) return;
     const t = Date.parse(value);
     if (Number.isNaN(t) || seen.has(t)) return;
     seen.add(t);
     out.push(new Date(t).toISOString());
   };
 
+  // Depth 6 rather than 4: the old limit silently returned nothing if
+  // GHL ever nested the slots one level deeper, which looks identical
+  // to "no availability" from the page's side.
   const walk = (node, depth) => {
-    if (!node || depth > 4) return;
+    if (!node || depth > 6) return;
     if (Array.isArray(node)) { node.forEach((n) => walk(n, depth + 1)); return; }
     if (typeof node === "string") { take(node); return; }
     if (typeof node !== "object") return;
     for (const [key, value] of Object.entries(node)) {
-      if (key === "traceId") continue;
+      if (META_KEYS.has(key)) continue;
       walk(value, depth + 1);
     }
   };

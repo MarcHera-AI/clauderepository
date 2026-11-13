@@ -809,14 +809,16 @@ var CONFIG = {
     // whose timezone data still expects MST in winter. Set to null to
     // go back to reading the zone from the browser instead.
     utcOffsetHours: -6,
+
+    // Printed next to times when we have to override the visitor's own
+    // device clock. Only ever seen by visitors inside the zone above.
+    zoneAbbr: "MDT",
     days: [1, 2, 3, 4, 5, 6],      // 0=Sun ... 6=Sat. Mon-Sat, never Sun.
 
     // One-off days off, as YYYY-MM-DD in the timezone above. These must
     // be kept in step with GHL by hand: block a day there and it has to
     // be added here too, or the picker offers a slot GHL will refuse.
-    blockedDates: [
-      "2026-11-14"                 // Sat 14 Nov - busy
-    ],
+    blockedDates: [],
     startHour: 10,                 // 10:00 AM
     endHour: 17,                   // 5:00 PM  (the meeting must END by this)
     durationMin: 45,               // length of the meeting itself
@@ -1015,7 +1017,56 @@ var CONFIG = {
   }
 
   var DOW = ["S", "M", "T", "W", "T", "F", "S"];
-  var booking = { dayKey: null, startUtc: null };
+  var booking = { dayKey: null, startUtc: null, done: false };
+
+  /* Slot times are generated from the PINNED offset but rendered with
+     the visitor's own device clock. Those agree for everyone outside
+     the business zone. They disagree for a visitor INSIDE it whose
+     device still carries the old daylight-saving rule -- that visitor
+     would be shown 9:00 for a slot GHL books at 10:00. When we detect
+     that, render from the pinned offset instead and label it with
+     CONFIG.calendar.zoneAbbr, so the page always shows the same clock
+     the appointment is actually made on. Cached: it cannot change
+     mid-visit. */
+  var pinnedDisplay = null;
+  function usePinnedDisplay() {
+    if (pinnedDisplay !== null) return pinnedDisplay;
+    pinnedDisplay = false;
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") {
+      try {
+        if (Intl.DateTimeFormat().resolvedOptions().timeZone === CONFIG.calendar.timezone) {
+          var deviceMs = -new Date().getTimezoneOffset() * 60000;
+          pinnedDisplay = deviceMs !== pinned * 3600000;
+        }
+      } catch (e) { pinnedDisplay = false; }
+    }
+    return pinnedDisplay;
+  }
+
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+  /* "10:00 AM" in whichever clock is correct for this visitor. */
+  function slotTimeLabel(utcMs) {
+    if (!usePinnedDisplay()) {
+      return new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit" })
+        .format(new Date(utcMs));
+    }
+    var d = businessDate(utcMs);
+    var h24 = d.getUTCHours();
+    return (h24 % 12 || 12) + ":" + pad2(d.getUTCMinutes()) + " " + (h24 >= 12 ? "PM" : "AM");
+  }
+
+  /* "Sat, Nov 14, 10:00 AM" in whichever clock is correct. */
+  function slotFullLabel(utcMs) {
+    if (!usePinnedDisplay()) {
+      return new Intl.DateTimeFormat([], {
+        weekday: "short", month: "short", day: "numeric",
+        hour: "numeric", minute: "2-digit"
+      }).format(new Date(utcMs));
+    }
+    return friendlyDateTime(utcMs);
+  }
 
   /* When the Worker answers, this holds { "YYYY-MM-DD": [utcMs, ...] }
      keyed by the date in the BUSINESS zone. Null means we are on the
@@ -1065,10 +1116,35 @@ var CONFIG = {
   /* Build the booking window: every day in the next fortnight, flagged
      available or not. "Book up to" counts available days only, so a
      weekend never eats into the allowance -- same as Nomads. */
+  function isoOfUtcMidnight(ms) {
+    return new Date(ms).toISOString().slice(0, 10);
+  }
+
   function buildDays() {
     var cal = CONFIG.calendar;
     var today = todayInZone(cal.timezone);
-    var cursor = new Date(Date.UTC(today.y, today.m - 1, today.d));
+    var startMs = Date.UTC(today.y, today.m - 1, today.d);
+
+    /* The strip is seven consecutive days. Normally it starts today.
+       But if GHL has nothing free in the whole of the next week --
+       a holiday, a full diary -- seven dead chips and "check back
+       tomorrow" would turn a qualified lead away while real slots sit
+       just past the edge. So slide the strip to the first day that
+       does have slots. Rules mode keeps its own window logic below. */
+    if (liveSlots) {
+      var todayIso = isoOfUtcMidnight(startMs);
+      var weekEndIso = isoOfUtcMidnight(startMs + 7 * 86400000);
+      var openKeys = Object.keys(liveSlots)
+        .filter(function (k) { return liveSlots[k].length > 0 && k >= todayIso; })
+        .sort();
+      var anyThisWeek = openKeys.some(function (k) { return k < weekEndIso; });
+      if (!anyThisWeek && openKeys.length) {
+        var p = openKeys[0].split("-");
+        startMs = Date.UTC(+p[0], +p[1] - 1, +p[2]);
+      }
+    }
+
+    var cursor = new Date(startMs);
     var out = [];
     var allowed = 0;
 
@@ -1090,9 +1166,10 @@ var CONFIG = {
                         (cal.blockedDates || []).indexOf(iso) === -1;
         if (isWorkday && allowed < cal.bookUpTo) {
           withinWindow = buildSlots(y, m, d).length > 0;
-          // A workday with no slots left (late in the day) still counts
-          // as offered, otherwise the window silently slides forward.
-          allowed++;
+          // Only a day that actually has slots left uses up part of the
+          // allowance. Counting an already-finished day would leave an
+          // evening visitor looking at a single bookable date.
+          if (withinWindow) allowed++;
         }
       }
 
@@ -1138,6 +1215,11 @@ var CONFIG = {
   function visitorZoneName() {
     try {
       var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // Device clock overridden: print the zone we are actually using.
+      if (usePinnedDisplay()) {
+        return (CONFIG.calendar.zoneAbbr ? CONFIG.calendar.zoneAbbr + " \u00b7 " : "") +
+               CONFIG.calendar.timezone.replace(/_/g, " ");
+      }
       var abbr = new Intl.DateTimeFormat("en-US", {
         timeZone: tz, timeZoneName: "short"
       }).formatToParts(new Date()).filter(function (p) {
@@ -1238,10 +1320,9 @@ var CONFIG = {
     var slots = buildSlots(+parts[0], +parts[1], +parts[2]);
     var box = document.getElementById("pickerTimes");
 
-    var fmt = new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit" });
     box.innerHTML = slots.map(function (t) {
       return '<button class="slot" type="button" data-t="' + t + '">' +
-             fmt.format(new Date(t)) + "</button>";
+             slotTimeLabel(t) + "</button>";
     }).join("");
     box.hidden = slots.length === 0;
 
@@ -1252,10 +1333,7 @@ var CONFIG = {
         booking.startUtc = +btn.dataset.t;
         var confirm = document.getElementById("confirmBtn");
         confirm.hidden = false;
-        confirm.textContent = "Confirm " + new Intl.DateTimeFormat([], {
-          weekday: "short", month: "short", day: "numeric",
-          hour: "numeric", minute: "2-digit"
-        }).format(new Date(booking.startUtc));
+        confirm.textContent = "Confirm " + slotFullLabel(booking.startUtc);
       });
     });
   }
@@ -1281,10 +1359,13 @@ var CONFIG = {
     // is authoritative about their own zone, so this is always right for
     // them -- and it saves relying on GHL to re-render per contact.
     try {
-      payload.booking_time_visitor = new Intl.DateTimeFormat("en-US", {
-        weekday: "short", month: "short", day: "numeric",
-        hour: "numeric", minute: "2-digit", timeZoneName: "short"
-      }).format(start);
+      payload.booking_time_visitor = usePinnedDisplay()
+        ? friendlyDateTime(booking.startUtc) +
+          (CONFIG.calendar.zoneAbbr ? " " + CONFIG.calendar.zoneAbbr : "")
+        : new Intl.DateTimeFormat("en-US", {
+            weekday: "short", month: "short", day: "numeric",
+            hour: "numeric", minute: "2-digit", timeZoneName: "short"
+          }).format(start);
     } catch (e) {
       payload.booking_time_visitor = payload.booking_time_local;
     }
@@ -1314,8 +1395,11 @@ var CONFIG = {
           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
           '<polyline points="20 6 9 17 4 12"></polyline></svg>Booked';
         setTimeout(function () {
+          booking.done = true;
           show("thankyou");
-          confirmBtn.disabled = false;
+          // Left disabled on purpose: the booking is made, and the only
+          // way back to this button is the Back button, which show()
+          // now redirects to the thank-you view anyway.
           confirmBtn.classList.remove("is-done");
           confirmBtn.textContent = "Confirm my call";
         }, 550);
@@ -1342,6 +1426,18 @@ var CONFIG = {
 
   function show(step, pushHash) {
     if (!steps[step]) step = "vsl";
+
+    /* Once a call is booked the funnel is finished. Without this, the
+       browser Back button lands on a live calendar and a second
+       confirm posts another booking -- two appointments, two texts,
+       two invites, for one lead. */
+    if (booking.done && step !== "thankyou") {
+      step = "thankyou";
+      if (window.location.hash !== "#thankyou") {
+        window.history.replaceState({ step: "thankyou" }, "", "#thankyou");
+      }
+      pushHash = false;
+    }
 
     // Guard against someone landing mid-funnel on a deep link with no
     // answers behind them.
