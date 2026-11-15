@@ -4,7 +4,7 @@ Gives the funnel page GoHighLevel's real calendar availability.
 
 ## Why
 
-`offer.html` is a static page on `cozlymedia.com`. It cannot ask GHL for
+`index.html` is a static page on `cozlymedia.com`. It cannot ask GHL for
 availability directly:
 
 - GHL's API needs a private token, which must never appear in page source.
@@ -40,7 +40,7 @@ day, take a booking — the funnel reflects it on the next page load.
    Expect `{"ok":true,"count":N,"slots":[...]}`. If `ok` is false, add
    `&debug=1` to see GHL's own response.
 
-4. **Point the page at it.** In `offer.html`:
+4. **Point the page at it.** In `index.html`:
    ```js
    slotsApi: "https://cozly-slots.<you>.workers.dev/",
    ```
@@ -73,3 +73,15 @@ accurate even after the Worker is live.
 - `extractSlots` walks whatever JSON GHL returns and pulls out anything
   that parses as a timestamp, rather than assuming one response shape,
   because the shape has changed between API versions.
+
+## Deploying the page
+
+Cloudflare Pages project `cozly-apply`, serving `apply.cozlymedia.com`,
+builds from this repo: branch `claude/marketing-agency-website-kkc8qh`, no
+build command, output directory `cozly`. That is why the page is named
+`index.html` — Pages serves the index of the output directory. Pushing to
+that branch deploys it; nothing is uploaded by hand.
+
+The Worker is separate and still manual: paste `slots-worker.js` into the
+Cloudflare dashboard and deploy. Its `GHL_TOKEN` is a Cloudflare secret and
+is never in this repo.
