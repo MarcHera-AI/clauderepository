@@ -1421,7 +1421,10 @@ var CONFIG = {
       return;
     }
     wrap.classList.add("is-on");
-    bar.style.width = Math.round((idx / (ORDER.length - 2)) * 100) + "%";
+    // Divided by the last step's index, not two short of it: dividing by
+    // ORDER.length - 2 put the calendar at 100%, so the bar read "finished"
+    // while the booking -- the only step that matters -- was still undone.
+    bar.style.width = Math.round((idx / (ORDER.length - 1)) * 100) + "%";
   }
 
   function show(step, pushHash) {
