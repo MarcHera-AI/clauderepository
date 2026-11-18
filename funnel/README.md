@@ -59,11 +59,13 @@ add a config value that the template reads.
 | `theme` | Six colours. Defaults are the Cozly palette. |
 | `phone` | `{"display": "(707) 555-0100"}` or `null`. Shows a "Prefer to talk?" line on the landing, calendar, thank-you and disqualify steps. |
 | `media` | `vsl`, `thankYou`: `.mp4` URL, embed markup, or `""` for none. An empty one is removed from the page, not shown as a placeholder. |
-| `copy` | Every visible sentence. Strings are HTML (`&amp;`, `<u>`), so they may carry markup. |
+| `copy` | Every visible sentence. Strings are HTML (`&amp;`, `<u>`), so they may carry markup. `{agency}` and `{phone}` are written in from `agency` and `phone` at build time. `copy.form.subhead`, `copy.thankYou.stepsHead` and `copy.disclaimer` may be `""`, which leaves that line off the page. |
 | `questions` | The qualifying questions in order. Each `{key, title, options}`; an option with `"dq": "<key>"` routes to that disqualify screen, otherwise it moves on. `key` is the answer's name; the CRM gets the question text and option label. |
 | `disqualify` | One screen per reason: `{key: {title, body: [paragraphs]}}`. |
-| `form.extraField` | Optional fourth field after name/email/phone, e.g. Cozly's `company`. Its `key` is also the webhook payload key. `null` for none. |
-| `calendar` | GHL calendar `id`, its `timezone`, and the fallback rules (see below). |
+| `form.extraField` | Optional fourth field after name/email/phone, e.g. Cozly's `company`. Its `key` is also the webhook payload key. Optional `pattern` (a regex the value must match; otherwise 2+ characters), `inputmode`, `maxlength`. `null` for none. |
+| `form.consent` | `{label, error}`: a consent checkbox, unticked by default and required to submit. The payload gets `consent: true` and `consent_text` (the label as plain text). `null` for none. |
+| `serviceArea` | `{field, zips, dq}`: after submit, the ZIP typed into the extra field (`field` must be its key) is checked against `zips`. Outside it, the lead is still posted with `in_service_area: false`, no pixel `Lead` fires, and the visitor ends on the `dq` screen instead of the thank-you. `null` for no check. |
+| `calendar` | GHL calendar `id`, its `timezone`, and the fallback rules (see below). `null` for no calendar: the form goes straight to the thank-you and the client calls the lead back. `copy.calendar` is then not needed. |
 | `slotsApi` | The slots Worker URL, or `""` to use the rules only. |
 | `webhookUrl` | GHL inbound webhook. Gets `event: "lead"` on form submit and `event: "booking"` on confirm. |
 | `funnelMeta` | `source`/`funnel`/`funnel_slug` stamped on every webhook post. |
@@ -93,7 +95,8 @@ at the spot.
 
 - **Back-button booking lock** (`show()`): once booked, every step
   redirects to the thank-you, or Back lands on a live calendar and a second
-  confirm books twice.
+  confirm books twice. Without a calendar it locks once the lead is in,
+  on whichever screen ended the visit (thank-you or out-of-area).
 - **`[hidden] { display: none !important }`**: without `!important`, any
   rule that sets `display` silently un-hides the element.
 - **Pinned-offset clock handling** (`usePinnedDisplay()`): a visitor inside

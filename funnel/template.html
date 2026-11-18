@@ -319,6 +319,34 @@ h1.accent { color: var(--accent); }
 
 .field.has-error .field__error { display: block; }
 
+/* Consent checkbox (form.consent). Unticked by default: consent to be
+   called has to be given, not assumed. */
+.check {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+  text-align: left;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px 2px;
+}
+.field .check input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 1px 0 0;
+  padding: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.field.has-error .check { color: var(--danger); }
+
+/* Optional copy (a blank subhead, steps heading or disclaimer) takes no
+   space rather than leaving a gap. */
+.subhead:empty, .steps-head:empty, .disclaimer:empty { display: none; }
+
 /* ===== Calendar picker =====
    Slots come from the slots Worker when it answers, otherwise from the
    fixed rules in the client's "calendar" block. */
@@ -796,8 +824,23 @@ var CONFIG = {{ computed.configJson|raw }};
     document.getElementById("fields").insertAdjacentHTML("beforeend",
       '<div class="field" data-field="extra">' +
       '<input type="text" id="fExtra" name="' + esc(EXTRA.key) + '" placeholder="' +
-      esc(EXTRA.placeholder) + '" autocomplete="' + esc(EXTRA.autocomplete || "off") + '" />' +
+      esc(EXTRA.placeholder) + '" autocomplete="' + esc(EXTRA.autocomplete || "off") + '"' +
+      (EXTRA.inputmode ? ' inputmode="' + esc(EXTRA.inputmode) + '"' : "") +
+      (EXTRA.maxlength ? ' maxlength="' + esc(EXTRA.maxlength) + '"' : "") + " />" +
       '<p class="field__error">' + esc(EXTRA.error) + "</p></div>");
+  }
+
+  /* Optional consent checkbox, required to submit when the client has
+     one. Its wording travels with the lead as consent_text, so the CRM
+     records exactly what the person agreed to. */
+  var CONSENT = CONFIG.form && CONFIG.form.consent;
+  function renderConsent() {
+    if (!CONSENT) return;
+    document.getElementById("fields").insertAdjacentHTML("beforeend",
+      '<div class="field" data-field="consent">' +
+      '<label class="check"><input type="checkbox" id="fConsent" name="consent" />' +
+      "<span>" + CONSENT.label + "</span></label>" +
+      '<p class="field__error">' + esc(CONSENT.error) + "</p></div>");
   }
 
   function renderPhone() {
@@ -814,14 +857,23 @@ var CONFIG = {{ computed.configJson|raw }};
   renderDisqualify();
   renderThankYouSteps();
   renderExtraField();
+  renderConsent();
   renderPhone();
+
+  /* No calendar (CONFIG.calendar is null): the form is the last step
+     before the thank-you, and the agency calls the lead back. */
+  var HAS_CALENDAR = !!CONFIG.calendar;
+  if (!HAS_CALENDAR) {
+    var calStep = document.querySelector('.step[data-step="calendar"]');
+    if (calStep) calStep.remove();
+  }
 
   var steps = {};
   document.querySelectorAll(".step").forEach(function (el) {
     steps[el.dataset.step] = el;
   });
 
-  var ORDER = ["vsl"].concat(QSTEPS, ["form", "calendar", "thankyou"]);
+  var ORDER = ["vsl"].concat(QSTEPS, HAS_CALENDAR ? ["form", "calendar", "thankyou"] : ["form", "thankyou"]);
   var answers = {};
   var lead = {};
   var current = null;
@@ -983,6 +1035,7 @@ var CONFIG = {{ computed.configJson|raw }};
 
   var DOW = ["S", "M", "T", "W", "T", "F", "S"];
   var booking = { dayKey: null, startUtc: null, done: false };
+  var endStep = "thankyou";
 
   /* Slot times are generated from the PINNED offset but rendered with
      the visitor's own device clock. Those agree for everyone outside
@@ -1306,7 +1359,8 @@ var CONFIG = {{ computed.configJson|raw }};
 
   /* Booking confirmation -> second webhook post, then the thank-you view. */
   var confirmBtn = document.getElementById("confirmBtn");
-  confirmBtn.addEventListener("click", function () {
+  // Gone with the calendar step when the client has no calendar.
+  if (confirmBtn) confirmBtn.addEventListener("click", function () {
     if (!booking.startUtc) return;
     confirmBtn.disabled = true;
     confirmBtn.innerHTML = '<span class="spinner"></span>' + esc(CONFIG.copy.calendar.busy);
@@ -1411,10 +1465,13 @@ var CONFIG = {{ computed.configJson|raw }};
        browser Back button lands on a live calendar and a second
        confirm posts another booking -- two appointments, two texts,
        two invites, for one lead. */
-    if (booking.done && step !== "thankyou") {
-      step = "thankyou";
-      if (window.location.hash !== "#thankyou") {
-        window.history.replaceState({ step: "thankyou" }, "", "#thankyou");
+    /* Without a calendar the same holds once the lead is in, and it
+       holds on whichever screen ended the visit -- the thank-you, or the
+       out-of-area screen when the ZIP check failed. */
+    if (booking.done && step !== endStep) {
+      step = endStep;
+      if (window.location.hash !== "#" + endStep) {
+        window.history.replaceState({ step: endStep }, "", "#" + endStep);
       }
       pushHash = false;
     }
@@ -1561,6 +1618,11 @@ var CONFIG = {{ computed.configJson|raw }};
       phone: lead.phone || ""
     };
     if (EXTRA) payload[EXTRA.key] = lead[EXTRA.key] || "";
+    if (CONSENT) {
+      payload.consent = !!lead.consent;
+      payload.consent_text = plain(CONSENT.label);
+    }
+    if (AREA) payload.in_service_area = inServiceArea();
     payload.booked = event === "booking";
     payload.answers = list;
     payload.answers_text = list.map(function (a) { return a.question + ": " + a.answer; }).join(" | ");
@@ -1588,6 +1650,15 @@ var CONFIG = {{ computed.configJson|raw }};
   /* ---------- Form ---------- */
   var form = document.getElementById("leadForm");
 
+  /* Service-area check (CONFIG.serviceArea): the ZIP typed into the
+     extra field against the client's list. null when there's no check
+     or nothing to check yet, so "unknown" never reads as "outside". */
+  var AREA = CONFIG.serviceArea;
+  function inServiceArea() {
+    if (!AREA || !lead[AREA.field]) return null;
+    return AREA.zips.indexOf(String(lead[AREA.field]).slice(0, 5)) > -1;
+  }
+
   function setError(name, bad) {
     var f = document.querySelector('.field[data-field="' + name + '"]');
     if (f) f.classList.toggle("has-error", bad);
@@ -1599,17 +1670,24 @@ var CONFIG = {{ computed.configJson|raw }};
     var email = document.getElementById("fEmail").value.trim();
     var phone = document.getElementById("fPhone").value.trim();
     var extra = EXTRA ? document.getElementById("fExtra").value.trim() : "";
+    var consent = CONSENT ? document.getElementById("fConsent").checked : false;
 
     var ok = true;
     ok = setError("name", name.length < 2) && ok;
     ok = setError("email", !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) && ok;
     // Deliberately loose: counts digits only, so any country's format passes.
     ok = setError("phone", (phone.replace(/\D/g, "").length < 7)) && ok;
-    if (EXTRA) ok = setError("extra", extra.length < 2) && ok;
+    if (EXTRA) {
+      ok = setError("extra", EXTRA.pattern
+        ? !new RegExp(EXTRA.pattern).test(extra)
+        : extra.length < 2) && ok;
+    }
+    if (CONSENT) ok = setError("consent", !consent) && ok;
 
     if (ok) {
       lead = { name: name, email: email, phone: phone };
       if (EXTRA) lead[EXTRA.key] = extra;
+      if (CONSENT) lead.consent = consent;
     }
     return ok;
   }
@@ -1627,20 +1705,34 @@ var CONFIG = {{ computed.configJson|raw }};
     btn.disabled = true;
     btn.textContent = "One moment…";
 
-    track("Lead");
+    var inArea = inServiceArea();
+    // An out-of-area lead isn't one the ads should learn to find more of.
+    if (inArea !== false) track("Lead");
 
     postWebhook(basePayload("lead"), function () {
       btn.disabled = false;
       btn.innerHTML = label;
-      show("calendar");
+      if (inArea === false) {
+        // Still posted (flagged in_service_area: false) so the CRM has
+        // them, but there's no call coming, so they don't see a promise
+        // of one. Final, like a booking: Back can't reopen the form.
+        endStep = "dq-" + AREA.dq;
+        booking.done = true;
+        show(endStep);
+      } else if (HAS_CALENDAR) {
+        show("calendar");
+      } else {
+        booking.done = true;
+        show("thankyou");
+      }
     });
   });
 
   /* ---------- Clear an error as soon as the field is corrected ---------- */
   form.querySelectorAll("input").forEach(function (input) {
-    input.addEventListener("input", function () {
-      input.closest(".field").classList.remove("has-error");
-    });
+    var clear = function () { input.closest(".field").classList.remove("has-error"); };
+    input.addEventListener("input", clear);
+    input.addEventListener("change", clear);
   });
 
   /* ---------- Back / forward ---------- */

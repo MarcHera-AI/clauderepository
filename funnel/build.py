@@ -49,8 +49,15 @@ DEFAULTS = {
     },
     "phone": None,
     "media": {"vsl": "", "thankYou": ""},
-    "form": {"extraField": None},
-    "copy": {"callPrompt": "Prefer to talk? Call"},
+    "form": {"extraField": None, "consent": None},
+    "serviceArea": None,
+    # Blank copy lines are left off the page rather than shown empty.
+    "copy": {
+        "callPrompt": "Prefer to talk? Call",
+        "disclaimer": "",
+        "form": {"subhead": ""},
+        "thankYou": {"stepsHead": ""},
+    },
     "calendar": {
         "mode": "rules",
         "url": "",
@@ -70,7 +77,13 @@ PAYLOAD_KEYS = {
     "last_name", "email", "phone", "booked", "answers", "answers_text", "page_url",
     "submitted_at", "booking_time", "booking_time_local", "booking_time_visitor",
     "booking_time_ghl", "booking_duration_min", "calendar_id", "timezone_visitor",
+    "consent", "consent_text", "in_service_area",
 }
+
+# Copy may say {agency} or {phone}; the build writes in the config value,
+# so a spelling or number change is one edit, not a hunt through copy.
+TOKENS = ("agency", "phone")
+TOKEN_SCOPES = ("copy", "questions", "disqualify", "form")
 
 
 class ConfigError(Exception):
@@ -116,15 +129,20 @@ REQUIRED_TEXT = [
     "meta.title", "meta.description",
     "brand.wordmark",
     "copy.vsl.eyebrow", "copy.vsl.headline", "copy.vsl.subhead", "copy.vsl.cta",
-    "copy.form.title", "copy.form.subhead", "copy.form.submit", "copy.form.namePlaceholder",
-    "copy.calendar.title", "copy.calendar.subhead", "copy.calendar.confirm",
-    "copy.calendar.busy", "copy.calendar.none", "copy.calendar.bookedLabel",
-    "copy.thankYou.title", "copy.thankYou.subhead", "copy.thankYou.stepsHead",
-    "copy.disclaimer", "copy.callPrompt",
+    "copy.form.title", "copy.form.submit", "copy.form.namePlaceholder",
+    "copy.thankYou.title", "copy.thankYou.subhead",
+    "copy.callPrompt",
     "funnelMeta.source", "funnelMeta.funnel", "funnelMeta.funnel_slug",
-    "calendar.id", "calendar.timezone",
     "webhookUrl",
 ]
+
+# Only when the client has a calendar (calendar is not null).
+CALENDAR_TEXT = [
+    "copy.calendar.title", "copy.calendar.subhead", "copy.calendar.confirm",
+    "copy.calendar.busy", "copy.calendar.none", "copy.calendar.bookedLabel",
+    "calendar.id", "calendar.timezone",
+]
+CALENDAR_COPY_KEYS = ["title", "subhead", "confirm", "busy", "none", "bookedLabel"]
 
 KEY_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
@@ -138,7 +156,11 @@ def validate(cfg, slug):
     errors, warnings = [], []
     err = errors.append
 
-    for path in REQUIRED_TEXT:
+    cal = cfg.get("calendar")
+    if cal is not None and not isinstance(cal, dict):
+        err("calendar must be an object, or null for no calendar step")
+        cal = None
+    for path in REQUIRED_TEXT + (CALENDAR_TEXT if cal is not None else []):
         try:
             v = get(cfg, path)
         except KeyError:
@@ -203,6 +225,9 @@ def validate(cfg, slug):
                 used_dq.add(o["dq"])
         if all(isinstance(o, dict) and "dq" in o for o in opts):
             err(f"{where}: every option disqualifies, so nobody can get past it")
+    area = cfg.get("serviceArea")
+    if isinstance(area, dict) and isinstance(area.get("dq"), str):
+        used_dq.add(area["dq"])
     for key in set(dqs) - used_dq:
         warnings.append(f"disqualify.{key} is never routed to")
 
@@ -224,6 +249,35 @@ def validate(cfg, slug):
                 err("form.extraField.key must be lower_snake_case")
             if k in PAYLOAD_KEYS or k in seen:
                 err(f"form.extraField.key {k!r} collides with a payload field or question key")
+            pat = extra.get("pattern")
+            if pat is not None:
+                try:
+                    re.compile(pat)
+                except (re.error, TypeError):
+                    err("form.extraField.pattern is not a valid regular expression")
+            if "maxlength" in extra and not (is_int(extra["maxlength"]) and extra["maxlength"] > 0):
+                err("form.extraField.maxlength must be a whole number")
+
+    consent = get_safe(cfg, "form.consent")
+    if consent is not None:
+        if not (isinstance(consent, dict) and all(
+                isinstance(consent.get(k), str) and consent[k].strip() for k in ("label", "error"))):
+            err("form.consent must be null or {label, error}")
+
+    # ---- service area: the extra field checked against a ZIP list ----
+    if area is not None:
+        if not isinstance(area, dict):
+            err("serviceArea must be null or {field, zips, dq}")
+        else:
+            if not (isinstance(extra, dict) and area.get("field") == extra.get("key")):
+                err("serviceArea.field must be the form.extraField key (the ZIP the visitor types)")
+            zips = area.get("zips")
+            if not (isinstance(zips, list) and zips and all(isinstance(z, str) and re.fullmatch(r"\d{5}", z) for z in zips)):
+                err("serviceArea.zips must be a non-empty list of 5-digit strings")
+            elif len(set(zips)) != len(zips):
+                err("serviceArea.zips lists a ZIP twice")
+            if area.get("dq") not in dqs:
+                err(f"serviceArea.dq routes to disqualify.{area.get('dq')}, which doesn't exist")
 
     # ---- endpoints ----
     def https(path, allow_empty):
@@ -244,8 +298,14 @@ def validate(cfg, slug):
         if not (isinstance(phone, dict) and len(digits) >= 10):
             err('phone must be null or {"display": "(707) 555-0100"}')
 
+    # ---- tokens ----
+    if cfg.get("phone") is None:
+        for path in find_token(cfg, "{phone}"):
+            err(f"{path} says {{phone}} but phone is null")
+
     # ---- calendar ----
-    cal = cfg.get("calendar", {})
+    if cal is None:
+        return errors, warnings
     if cal.get("mode") not in ("rules", "embed"):
         err('calendar.mode must be "rules" or "embed"')
     days = cal.get("days")
@@ -280,6 +340,46 @@ def get_safe(cfg, path):
         return get(cfg, path)
     except KeyError:
         return None
+
+
+def find_token(cfg, token):
+    out = []
+    def walk(node, path):
+        if isinstance(node, str):
+            if token in node:
+                out.append(path)
+        elif isinstance(node, dict):
+            for k, v in node.items():
+                walk(v, f"{path}.{k}")
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                walk(v, f"{path}[{i}]")
+    for scope in TOKEN_SCOPES:
+        walk(cfg.get(scope), scope)
+    return out
+
+
+def fill_tokens(cfg):
+    """Write {agency} and {phone} into the copy. Copy is HTML, so the
+    values are escaped on the way in."""
+    values = {
+        "agency": html.escape(cfg["agency"]),
+        "phone": html.escape(cfg["phone"]["display"]) if cfg.get("phone") else None,
+    }
+    def walk(node):
+        if isinstance(node, str):
+            for name in TOKENS:
+                if values[name] is not None:
+                    node = node.replace("{" + name + "}", values[name])
+            return node
+        if isinstance(node, dict):
+            return {k: walk(v) for k, v in node.items()}
+        if isinstance(node, list):
+            return [walk(v) for v in node]
+        return node
+    for scope in TOKEN_SCOPES:
+        if scope in cfg:
+            cfg[scope] = walk(cfg[scope])
 
 
 def check_zone(tz, pinned, errors, warnings):
@@ -351,7 +451,7 @@ def page_config(cfg):
     run = copy.deepcopy(cfg)
     if run.get("phone"):
         run["phone"]["tel"] = tel(run["phone"]["display"])
-    if not run["calendar"].get("url"):
+    if run["calendar"] is not None and not run["calendar"].get("url"):
         run["calendar"]["url"] = (
             "https://api.leadconnectorhq.com/widget/booking/" + run["calendar"]["id"]
         )
@@ -456,6 +556,11 @@ def build(slug, template, draft):
 
     if todos:
         draft_stand_ins(cfg, todos)
+    fill_tokens(cfg)
+    if cfg["calendar"] is None:
+        # The calendar step's markup is still in the template (the page
+        # drops it at boot), so its tags need something to render.
+        cfg["copy"]["calendar"] = {k: "" for k in CALENDAR_COPY_KEYS}
 
     out_dir = DIST / slug
     if out_dir.exists():
