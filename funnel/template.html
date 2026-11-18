@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cozly Media | Private Pay Families For Home Care Agencies</title>
+<meta name="description" content="We help established home care agencies sign new private pay families." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<!-- Inline SVG favicon: dark tile, cream "c", amber dot from the wordmark.
+     Data URI so there is no extra request and nothing to upload. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231a1a1a'/><text x='40' y='70' font-size='78' font-family='Helvetica,Arial,sans-serif' font-weight='700' text-anchor='middle' fill='%23fdfbf7'>c</text><circle cx='73' cy='61' r='9' fill='%23f5b800'/></svg>" />
+
+<style>
+/* ============================================================
+   Cozly Media — single-page funnel
+   Palette sampled from the Nomads screenshots. Adjust here only.
+   ============================================================ */
+:root {
+  --bg: #fdfbf7;          /* page cream */
+  --surface: #ffffff;     /* the card the funnel sits on */
+  --option: #f4f1ec;      /* radio option fill */
+  --option-hover: #efebe4;
+  --line: #e7e2d9;
+  --ink: #1a1a1a;
+  --muted: #6f6a62;
+  --muted-2: #9a948b;
+  --accent: #f5b800;      /* amber */
+  --accent-dark: #e0a800;
+  --accent-ink: #1a1500;
+  --danger: #e02020;      /* thank-you page "WAIT" */
+  --radius: 14px;
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* The browser's own [hidden] rule is a user-agent style, so any author
+   rule that sets display (.btn uses flex, .picker__times uses grid)
+   silently beats it and the element shows anyway. */
+[hidden] { display: none !important; }
+
+html { background: var(--bg); }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+img { max-width: 100%; display: block; }
+
+/* The whole funnel lives in one narrow centred column, mobile-first,
+   because essentially all the traffic arrives from Meta on a phone. */
+.shell {
+  width: 100%;
+  max-width: 430px;
+  margin-inline: auto;
+  padding: 28px 20px 48px;
+  flex: 1 0 auto;
+}
+
+/* ===== Logo ===== */
+.brand { text-align: center; margin-bottom: 22px; }
+.brand img { height: 34px; width: auto; margin-inline: auto; }
+
+/* Fallback wordmark, shown until a real logo URL is set in CONFIG. */
+.brand__text {
+  font-weight: 800;
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+.brand__text span { color: var(--accent); }
+.brand__sub {
+  font-size: 0.56rem;
+  letter-spacing: 0.42em;
+  color: var(--muted-2);
+  text-transform: uppercase;
+  margin-top: -2px;
+  padding-left: 0.42em;
+}
+
+/* ===== Steps ===== */
+.step { display: none; }
+.step.is-active { display: block; animation: rise 0.28s ease both; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step.is-active { animation: none; }
+}
+
+/* ===== Type ===== */
+.eyebrow {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.15rem, 5vw, 1.4rem);
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.75rem, 7.5vw, 2.2rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+h1.accent { color: var(--accent); }
+
+.subhead {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+
+.q-title {
+  font-weight: 800;
+  font-size: clamp(1.2rem, 5.4vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+/* ===== Video ===== */
+.video {
+  position: relative;
+  margin: 18px 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #111;
+}
+
+/* 16:9 only while it is the empty placeholder or an iframe embed. A real
+   <video> keeps its own aspect so a portrait recording isn't letterboxed
+   or cropped, capped so it can't run off the screen. */
+.video.is-slot,
+.video.is-frame { aspect-ratio: 16 / 9; }
+
+.video.is-frame iframe,
+.video.is-slot > div { width: 100%; height: 100%; border: 0; display: block; }
+
+.video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 72vh;
+  object-fit: contain;
+  margin-inline: auto;
+  background: #111;
+}
+
+/* Placeholder until a real embed is dropped in. */
+.video__slot {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: #8b8b8b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ===== "Tap for sound" =====
+   The video autoplays muted, which is the only kind of autoplay phones
+   allow. This is the prompt to turn audio on. */
+.sound {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(18, 18, 18, 0.74);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.sound:hover { background: rgba(18, 18, 18, 0.88); }
+.sound svg { width: 15px; height: 15px; }
+.sound.is-gone { opacity: 0; pointer-events: none; }
+
+/* ===== Buttons ===== */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 1.02rem;
+  padding: 17px 24px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.12s ease;
+}
+
+.btn:hover { background: var(--accent-dark); }
+.btn:active { transform: scale(0.99); }
+.btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+/* ===== Options (Q1 / Q2 / Q3) ===== */
+.options { display: grid; gap: 11px; }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+  background: var(--option);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 17px 18px;
+  font-family: var(--font);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.option:hover { background: var(--option-hover); }
+
+.option.is-chosen {
+  border-color: var(--accent);
+  background: #fdf6e2;
+}
+
+/* Drawn rather than a native radio, so the unselected state is an empty
+   ring instead of a filled dot that reads as already-answered. */
+.option::before {
+  content: "";
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid #c9c3b8;
+  background: transparent;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.option.is-chosen::before {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 4px var(--accent);
+}
+
+/* ===== Form ===== */
+.fields { display: grid; gap: 11px; margin-bottom: 16px; }
+
+.field input {
+  width: 100%;
+  background: var(--option);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  font-family: var(--font);
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+.field input::placeholder { color: var(--muted-2); }
+
+.field input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+}
+
+.field.has-error input { border-color: var(--danger); background: #fff6f6; }
+
+.field__error {
+  display: none;
+  color: var(--danger);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 5px 0 0 4px;
+}
+
+.field.has-error .field__error { display: block; }
+
+/* ===== Calendar picker =====
+   Slots are generated from the fixed rules in CONFIG.calendar, the same
+   way the Nomads "Custom (this funnel only)" calendar block works. */
+.picker {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--option);
+  padding: 16px 16px 18px;
+  margin-top: 18px;
+  text-align: left;
+}
+
+.picker__label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.picker__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 7px 0 8px;
+  text-align: center;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.day__dow {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--muted-2);
+  letter-spacing: 0.04em;
+}
+
+.day__num { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+
+/* Days outside the booking window keep their place in the row, struck
+   through, so the week still reads as a week. */
+.day.is-off {
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
+}
+
+.day.is-off .day__num {
+  color: var(--muted-2);
+  text-decoration: line-through;
+}
+
+.day.is-sel { border-color: var(--accent); background: #fdf6e2; }
+
+.picker__times {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.slot {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 13px 8px;
+  font-family: var(--font);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.slot:hover { border-color: #cfc8bc; }
+.slot.is-sel { border-color: var(--accent); background: #fdf6e2; }
+
+.picker__tz {
+  margin-top: 12px;
+  font-size: 0.74rem;
+  color: var(--muted-2);
+}
+
+.picker__none {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+#confirmBtn { margin-top: 14px; }
+
+/* ============================================================
+   Scaling up
+   The phone layout above is the baseline and stays untouched; these
+   blocks widen the column and raise the type scale so the page fills
+   a laptop screen instead of sitting in it as a narrow strip.
+   ============================================================ */
+@media (min-width: 680px) {
+  .shell { max-width: 620px; padding: 40px 28px 76px; }
+
+  .brand { margin-bottom: 28px; }
+  .brand img { height: 42px; }
+  .brand__text { font-size: 1.75rem; }
+  .brand__sub { font-size: 0.64rem; }
+
+  .eyebrow { font-size: 1.6rem; }
+  h1 { font-size: 2.7rem; }
+  .subhead { font-size: 1.08rem; margin-top: 14px; }
+  .q-title { font-size: 1.85rem; margin-bottom: 24px; }
+  .ty-title { font-size: 2.3rem; }
+  .dq-title { font-size: 2.1rem; }
+  .dq-body { font-size: 1.05rem; }
+
+  .video { margin: 26px 0; }
+  .sound { font-size: 0.9rem; padding: 10px 16px; }
+
+  .btn { font-size: 1.1rem; padding: 19px 28px; }
+
+  .options { gap: 13px; }
+  .option { font-size: 1.05rem; padding: 19px 20px; gap: 15px; }
+  .option::before { width: 21px; height: 21px; }
+
+  .fields { gap: 13px; }
+  .field input { font-size: 1.05rem; padding: 18px 20px; }
+
+  .picker { padding: 22px 22px 24px; }
+  /* Three across instead of two: the slots are short, and a wider grid
+     keeps the whole day visible without scrolling. */
+  .picker__times { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .slot { font-size: 1rem; padding: 15px 8px; }
+  .day { padding: 9px 0 10px; }
+  .day__num { font-size: 1.05rem; }
+  .day__dow { font-size: 0.66rem; }
+  .picker__tz { font-size: 0.8rem; }
+
+  .steps-head { font-size: 1.5rem; margin-top: 30px; }
+  .steps-list li { font-size: 1.05rem; }
+  .steps-list { gap: 12px; }
+  .disclaimer { font-size: 0.78rem; margin-top: 22px; }
+}
+
+@media (min-width: 1024px) {
+  .shell { max-width: 760px; padding: 56px 32px 96px; }
+
+  .brand img { height: 48px; }
+  .eyebrow { font-size: 1.75rem; }
+  h1 { font-size: 3.1rem; }
+  .subhead { font-size: 1.15rem; }
+  .q-title { font-size: 2.1rem; }
+  .ty-title { font-size: 2.6rem; }
+  .dq-title { font-size: 2.3rem; }
+}
+
+/* Booking is the highest-commitment click in the funnel, so it gets a
+   visible beat rather than an instant jump to the next view. */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(26, 21, 0, 0.25);
+  border-top-color: var(--accent-ink);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn.is-done { background: #1f9254; color: #fff; }
+.btn.is-done svg { width: 17px; height: 17px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation: none; }
+  .step.is-active { animation: none; }
+}
+
+/* ===== Thank you ===== */
+.ty-title {
+  text-align: center;
+  color: var(--danger);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 6.6vw, 1.95rem);
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+}
+
+.ty-title u { text-underline-offset: 3px; }
+
+.steps-head {
+  text-align: center;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  margin: 22px 0 10px;
+}
+
+.steps-list { list-style: none; display: grid; gap: 10px; }
+
+.steps-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 0.96rem;
+  color: var(--ink);
+}
+
+.steps-list b { flex-shrink: 0; }
+
+/* ===== Disqualify ===== */
+.dq-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: clamp(1.4rem, 6vw, 1.8rem);
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+}
+
+.dq-body {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.96rem;
+  margin-top: 12px;
+}
+
+/* ===== Disclaimer ===== */
+.disclaimer {
+  text-align: center;
+  color: var(--muted-2);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  margin-top: 16px;
+}
+
+.disclaimer a { color: inherit; }
+
+/* ===== Progress ===== */
+.progress {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.progress.is-on { display: block; }
+
+.progress__bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ===== Logo (set CONFIG.logoUrl to replace the text wordmark) ===== -->
+  <div class="brand" id="brand">
+    <div class="brand__text">cozly<span>.</span></div>
+    <div class="brand__sub">media</div>
+  </div>
+
+  <div class="progress" id="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+  <!-- ============================================================
+       STEP 1 — VSL
+       ============================================================ -->
+  <section class="step" data-step="vsl">
+    <p class="eyebrow">Home Care Agencies</p>
+    <h1 class="accent">We Guarantee You 20 New Private Pay Families In 90 Days Or&hellip;</h1>
+    <p class="subhead">We'll Send You $2,000 For Every Family We Miss!</p>
+
+    <div class="video" id="vslVideo">
+      <div class="video__slot">Your VSL goes here<br />(set CONFIG.vslEmbed)</div>
+    </div>
+
+    <button class="btn" type="button" data-go="q1">See if You Qualify &rarr;</button>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 2 — Q1  (No -> disqualify)
+       ============================================================ -->
+  <section class="step" data-step="q1">
+    <h2 class="q-title">Are you a home care agency?</h2>
+    <div class="options">
+      <button class="option" type="button" data-q="agency" data-value="Yes" data-next="q2">Yes</button>
+      <button class="option" type="button" data-q="agency" data-value="No" data-next="dq">No</button>
+    </div>
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 3 — Q2  (No -> disqualify)
+       ============================================================ -->
+  <section class="step" data-step="q2">
+    <h2 class="q-title">Do you handle marketing decisions for your agency?</h2>
+    <div class="options">
+      <button class="option" type="button" data-q="decision_maker" data-value="Yes, I'm the decision-maker" data-next="q3">Yes, I'm the decision-maker</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="Yes, with a partner or team" data-next="q3">Yes, with a partner or team</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq">No</button>
+    </div>
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 4 — Q3  (every answer continues; client count is recorded, not gated)
+       ============================================================ -->
+  <section class="step" data-step="q3">
+    <h2 class="q-title">How many clients are on service right now?</h2>
+    <div class="options">
+      <button class="option" type="button" data-q="clients" data-value="0 to 10"  data-next="form">0 to 10</button>
+      <button class="option" type="button" data-q="clients" data-value="11 to 25" data-next="form">11 to 25</button>
+      <button class="option" type="button" data-q="clients" data-value="26 to 50" data-next="form">26 to 50</button>
+      <button class="option" type="button" data-q="clients" data-value="51 to 99" data-next="form">51 to 99</button>
+      <button class="option" type="button" data-q="clients" data-value="100+"     data-next="form">100+</button>
+    </div>
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 5 — Form
+       ============================================================ -->
+  <section class="step" data-step="form">
+    <h1>You're Almost There!</h1>
+    <p class="subhead">Enter your details below, then choose a time to discuss growing your private-pay census.</p>
+
+    <form id="leadForm" novalidate style="margin-top:18px">
+      <div class="fields">
+        <div class="field" data-field="name">
+          <input type="text" id="fName" name="name" placeholder="Full name" autocomplete="name" />
+          <p class="field__error">Please enter your name</p>
+        </div>
+        <div class="field" data-field="email">
+          <input type="email" id="fEmail" name="email" placeholder="Email" autocomplete="email" inputmode="email" />
+          <p class="field__error">Please enter a valid email</p>
+        </div>
+        <div class="field" data-field="phone">
+          <input type="tel" id="fPhone" name="phone" placeholder="Phone" autocomplete="tel" inputmode="tel" />
+          <p class="field__error">Please enter a valid phone number</p>
+        </div>
+        <div class="field" data-field="company">
+          <input type="text" id="fCompany" name="company" placeholder="Company" autocomplete="organization" />
+          <p class="field__error">Please enter your company</p>
+        </div>
+      </div>
+
+      <button class="btn" type="submit" id="formSubmit">Continue</button>
+    </form>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 6 — Book a call
+       ============================================================ -->
+  <section class="step" data-step="calendar">
+    <h1>Choose A Time To Talk With Our Team</h1>
+    <p class="subhead">A specialist will walk you through a plan to sign your next 20 private-pay families in 90 days.</p>
+
+    <div class="picker">
+      <div class="picker__label" id="pickerLabel">Pick a day</div>
+      <div class="picker__days" id="pickerDays"></div>
+      <div class="picker__times" id="pickerTimes" hidden></div>
+      <p class="picker__none" id="pickerNone" hidden>No times left in the booking window. Please check back tomorrow.</p>
+      <p class="picker__tz" id="pickerTz"></p>
+    </div>
+
+    <button class="btn" type="button" id="confirmBtn" hidden>Confirm my call</button>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 7 — Thank you
+       ============================================================ -->
+  <section class="step" data-step="thankyou">
+    <h2 class="ty-title">WAIT, Your Call Is <u>Not</u> Yet Confirmed!!</h2>
+    <p class="subhead">To confirm your call please watch the below video and follow the stated steps</p>
+
+    <div class="video" id="tyVideo">
+      <div class="video__slot">Your thank-you video goes here<br />(set CONFIG.thankYouEmbed)</div>
+    </div>
+
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+
+    <h3 class="steps-head">Follow The Steps Below:</h3>
+    <ol class="steps-list">
+      <li><b>1.)</b> Open the calendar invite in your email and click "Yes".</li>
+      <li><b>2.)</b> Invite anyone who helps you make marketing decisions for your agency.</li>
+      <li><b>3.)</b> Show up to the call on a computer.</li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       STEP 8 — Disqualify
+       ============================================================ -->
+  <section class="step" data-step="dq">
+    <h2 class="dq-title">We May Not Be the Right Fit Right Now</h2>
+    <p class="dq-body">
+      The Cozly LaunchPad is for established home care agency owners looking to get
+      more private-pay families.
+    </p>
+    <p class="dq-body">Based on your answers, we're unable to offer a call at this time.</p>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — the only part you need to edit.
+   Every value below is a placeholder until you fill it in. The page
+   degrades gracefully: empty values render a labelled slot rather
+   than breaking.
+   ============================================================ */
+var CONFIG = {
+  // Logo image URL. Leave empty to fall back to the text wordmark.
+  // The brown wordmark is the one that belongs on this cream background;
+  // the cream version is for use on a dark background.
+  logoUrl: "https://files.leadconnectorhq.com/file/6af60ab74dccfd82dadddbad/cozly-wordmark-transparent-brown.png",
+
+  // VSL embed. Either a direct .mp4 URL, or the full <iframe>/<script>
+  // markup from Wistia, YouTube or Vimeo.
+  // An .mp4 autoplays muted with a "Tap for sound" overlay.
+  vslEmbed: "https://files.leadconnectorhq.com/file/6af60adec007ee82ac02ce25/cozly-vsl-final-1-09x-1.mp4",
+
+  // Thank-you page video, same rules as above.
+  thankYouEmbed: "https://files.leadconnectorhq.com/file/6af60adec007ee82ac02ce2b/cozly-thankyou-final.mp4",
+
+  // "rules"  -> the Nomads-style picker below. Exact look, slots come
+  //             from the rules, so it cannot see existing bookings.
+  // "embed"  -> GHL's own booking iframe. True availability, but it
+  //             looks like GHL rather than Nomads.
+  calendarMode: "rules",
+
+  // Used by "embed" mode, and sent with the booking webhook either way
+  // so the GHL workflow knows which calendar to write to.
+  calendarUrl: "https://api.leadconnectorhq.com/widget/booking/lVN0gspXw8iYaWja2km9",
+  calendarId: "lVN0gspXw8iYaWja2km9",
+
+  // Cloudflare Worker that returns GHL's real free slots. When this is
+  // set, the picker shows true availability -- one-off days off and
+  // existing bookings included -- and GHL becomes the single source of
+  // truth. If the call fails for any reason the picker silently falls
+  // back to the rules below, so a Worker outage never costs a booking.
+  // Leave empty to use the rules only.
+  slotsApi: "https://cozly-slots.heraecomm.workers.dev/",
+
+  // Availability rules. Hours are written in YOUR zone (timezone below);
+  // every visitor sees them converted to their own.
+  //
+  // IMPORTANT: these must match the GHL calendar's availability, because
+  // GHL is what actually accepts the booking. If they drift, the picker
+  // offers times GHL refuses and the appointment is never created.
+  //
+  // Set to 10:00 AM - 5:00 PM Edmonton. Duration is 45 min on the hour,
+  // carried over from the existing "Cozly Media - Growth Plan" calendar.
+  // For 30-minute calls instead, set durationMin: 30 and
+  // slotIntervalMin: 0 -- that doubles the slots per day.
+  calendar: {
+    timezone: "America/Edmonton",  // the zone YOUR hours are defined in
+
+    // Alberta stopped changing its clocks, so the offset never moves.
+    // Pinning it keeps the fallback maths correct even on a browser
+    // whose timezone data still expects MST in winter. Set to null to
+    // go back to reading the zone from the browser instead.
+    utcOffsetHours: -6,
+
+    // Printed next to times when we have to override the visitor's own
+    // device clock. Only ever seen by visitors inside the zone above.
+    zoneAbbr: "MDT",
+    days: [1, 2, 3, 4, 5, 6],      // 0=Sun ... 6=Sat. Mon-Sat, never Sun.
+
+    // One-off days off, as YYYY-MM-DD in the timezone above. These must
+    // be kept in step with GHL by hand: block a day there and it has to
+    // be added here too, or the picker offers a slot GHL will refuse.
+    blockedDates: [],
+    startHour: 10,                 // 10:00 AM
+    endHour: 17,                   // 5:00 PM  (the meeting must END by this)
+    durationMin: 45,               // length of the meeting itself
+    slotIntervalMin: 60,           // gap between slot start times.
+                                   // 0 = same as durationMin. Set it
+                                   // separately when the grid is wider
+                                   // than the meeting, e.g. a 45-minute
+                                   // call offered on the hour -> 60.
+    bookUpTo: 2,                   // how many AVAILABLE days ahead.
+                                   // Requires "Count available days
+                                   // only" to be ON in GHL, or a Friday
+                                   // visitor gets one day, not two.
+    leadTimeMin: 180               // 3 hours' notice before the earliest
+                                   // bookable slot. Mirrors GHL's
+                                   // "Minimum scheduling notice".
+  },
+
+  // GHL inbound webhook. Posted to twice: once on form submit
+  // (event "lead") and again when a time is confirmed (event "booking").
+  webhookUrl: "https://services.leadconnectorhq.com/hooks/hk1aNvq7l95EzYuX7141/webhook-trigger/37a6580c-eff4-4591-bc2c-faf3e616fe51",
+
+  // Stamped onto every webhook post. Matches the shape the Nomads funnel
+  // sends so the existing GHL workflow reads it without changes; "source"
+  // is what tells the two funnels apart in your CRM.
+  funnelMeta: {
+    source: "Cozly site",
+    funnel: "Cozly Media Funnel",
+    funnel_slug: "apply-cozlymedia"
+  },
+
+  // Meta Pixel ID. Leave empty and no pixel code runs at all.
+  pixelId: "1430748782476632"
+};
+
+(function () {
+  "use strict";
+
+  var steps = {};
+  document.querySelectorAll(".step").forEach(function (el) {
+    steps[el.dataset.step] = el;
+  });
+
+  var ORDER = ["vsl", "q1", "q2", "q3", "form", "calendar", "thankyou"];
+  var answers = {};
+  var lead = {};
+  var current = null;
+
+  /* ---------- Meta Pixel (only if an ID is set) ---------- */
+  function initPixel() {
+    if (!CONFIG.pixelId) return;
+    /* eslint-disable */
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    /* eslint-enable */
+    window.fbq("init", CONFIG.pixelId);
+    window.fbq("track", "PageView");
+  }
+
+  function track(event) {
+    if (CONFIG.pixelId && window.fbq) window.fbq("track", event);
+  }
+
+  /* ---------- Ad click attribution ----------
+     fbclid and utm_* only exist on the first URL. Stash them so they
+     survive the hash changes and still ride along on the webhook. */
+  function captureAttribution() {
+    var saved = {};
+    try { saved = JSON.parse(sessionStorage.getItem("cozly_attr") || "{}"); } catch (e) {}
+    var params = new URLSearchParams(window.location.search);
+    ["fbclid", "gclid", "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]
+      .forEach(function (key) {
+        var val = params.get(key);
+        if (val) saved[key] = val;
+      });
+    try { sessionStorage.setItem("cozly_attr", JSON.stringify(saved)); } catch (e) {}
+    return saved;
+  }
+
+  var attribution = captureAttribution();
+
+  /* ---------- Media embeds ---------- */
+  function mountMedia(containerId, markup) {
+    var box = document.getElementById(containerId);
+    if (!box) return;
+
+    if (!markup) { box.classList.add("is-slot"); return; }
+    markup = markup.trim();
+
+    // A bare link ending in .mp4 (absolute or relative, query string or
+    // not) becomes a <video>. Anything containing a tag is embed markup.
+    if (!/^[^<>\s]+\.mp4(\?[^<>\s]*)?$/i.test(markup)) {
+      box.classList.add("is-frame");
+      box.innerHTML = markup;
+      return;
+    }
+
+    box.innerHTML =
+      '<video src="' + markup + '" muted autoplay playsinline preload="metadata" ' +
+      'controlslist="nodownload"></video>' +
+      '<button class="sound" type="button">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        '<path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/>' +
+        '<line x1="17" y1="9" x2="23" y2="15"/></svg>Tap for sound</button>';
+
+    var video = box.querySelector("video");
+    var soundBtn = box.querySelector(".sound");
+
+    // If the file can't be reached, say so rather than leaving a black box.
+    video.addEventListener("error", function () {
+      box.classList.add("is-slot");
+      box.innerHTML = '<div class="video__slot">Video unavailable</div>';
+    });
+
+    // Autoplay can still be refused (low power mode, data saver). If it is,
+    // give them controls rather than a frozen first frame.
+    var tryPlay = video.play();
+    if (tryPlay && tryPlay.catch) {
+      tryPlay.catch(function () { video.controls = true; });
+    }
+
+    function unmute() {
+      video.muted = false;
+      video.controls = true;
+      video.play();
+      soundBtn.classList.add("is-gone");
+      track("ViewContent");
+    }
+
+    soundBtn.addEventListener("click", unmute);
+    // Tapping the video itself before the audio is on means the same thing.
+    video.addEventListener("click", function (e) {
+      if (video.muted) { e.preventDefault(); unmute(); }
+    });
+  }
+
+  function mountLogo() {
+    if (!CONFIG.logoUrl) return;
+    var brand = document.getElementById("brand");
+    var original = brand.innerHTML;          // the text wordmark
+    var img = new Image();
+    img.alt = "Cozly Media";
+    // Only swap the wordmark out once the real logo has actually loaded,
+    // so a dead URL leaves the wordmark standing instead of a broken box.
+    img.onload = function () { brand.innerHTML = ""; brand.appendChild(img); };
+    img.onerror = function () { brand.innerHTML = original; };
+    img.src = CONFIG.logoUrl;
+  }
+
+  /* ============================================================
+     Calendar picker
+     ============================================================ */
+
+  /* How far the business zone is from UTC at that instant, in ms. Uses
+     the pinned offset when CONFIG sets one; otherwise asks Intl, which
+     handles daylight saving for zones that still observe it. */
+  function zoneOffset(utcMs, tz) {
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") return pinned * 3600000;
+    var dtf = new Intl.DateTimeFormat("en-US", {
+      timeZone: tz, hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit"
+    });
+    var parts = {};
+    dtf.formatToParts(new Date(utcMs)).forEach(function (p) { parts[p.type] = p.value; });
+    var asUtc = Date.UTC(+parts.year, +parts.month - 1, +parts.day,
+                         +parts.hour % 24, +parts.minute, +parts.second);
+    return asUtc - utcMs;
+  }
+
+  /* A wall-clock time in the business's zone -> a real UTC instant.
+     Resolved twice because the first guess can land the wrong side of a
+     daylight-saving boundary. */
+  function zonedToUtc(y, m, d, hh, mm, tz) {
+    var guess = Date.UTC(y, m - 1, d, hh, mm);
+    var ts = guess - zoneOffset(guess, tz);
+    return guess - zoneOffset(ts, tz);
+  }
+
+  /* Today's date as the business sees it, not as the visitor does. */
+  function todayInZone(tz) {
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") {
+      var shifted = new Date(Date.now() + pinned * 3600000);
+      return { y: shifted.getUTCFullYear(), m: shifted.getUTCMonth() + 1, d: shifted.getUTCDate() };
+    }
+    var p = {};
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+    return { y: +p.year, m: +p.month, d: +p.day };
+  }
+
+  var DOW = ["S", "M", "T", "W", "T", "F", "S"];
+  var booking = { dayKey: null, startUtc: null, done: false };
+
+  /* Slot times are generated from the PINNED offset but rendered with
+     the visitor's own device clock. Those agree for everyone outside
+     the business zone. They disagree for a visitor INSIDE it whose
+     device still carries the old daylight-saving rule -- that visitor
+     would be shown 9:00 for a slot GHL books at 10:00. When we detect
+     that, render from the pinned offset instead and label it with
+     CONFIG.calendar.zoneAbbr, so the page always shows the same clock
+     the appointment is actually made on. Cached: it cannot change
+     mid-visit. */
+  var pinnedDisplay = null;
+  function usePinnedDisplay() {
+    if (pinnedDisplay !== null) return pinnedDisplay;
+    pinnedDisplay = false;
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") {
+      try {
+        if (Intl.DateTimeFormat().resolvedOptions().timeZone === CONFIG.calendar.timezone) {
+          var deviceMs = -new Date().getTimezoneOffset() * 60000;
+          pinnedDisplay = deviceMs !== pinned * 3600000;
+        }
+      } catch (e) { pinnedDisplay = false; }
+    }
+    return pinnedDisplay;
+  }
+
+  function pad2(n) { return (n < 10 ? "0" : "") + n; }
+
+  /* "10:00 AM" in whichever clock is correct for this visitor. */
+  function slotTimeLabel(utcMs) {
+    if (!usePinnedDisplay()) {
+      return new Intl.DateTimeFormat([], { hour: "numeric", minute: "2-digit" })
+        .format(new Date(utcMs));
+    }
+    var d = businessDate(utcMs);
+    var h24 = d.getUTCHours();
+    return (h24 % 12 || 12) + ":" + pad2(d.getUTCMinutes()) + " " + (h24 >= 12 ? "PM" : "AM");
+  }
+
+  /* "Sat, Nov 14, 10:00 AM" in whichever clock is correct. */
+  function slotFullLabel(utcMs) {
+    if (!usePinnedDisplay()) {
+      return new Intl.DateTimeFormat([], {
+        weekday: "short", month: "short", day: "numeric",
+        hour: "numeric", minute: "2-digit"
+      }).format(new Date(utcMs));
+    }
+    return friendlyDateTime(utcMs);
+  }
+
+  /* When the Worker answers, this holds { "YYYY-MM-DD": [utcMs, ...] }
+     keyed by the date in the BUSINESS zone. Null means we are on the
+     rules instead -- either no Worker configured, or the call failed. */
+  var liveSlots = null;
+
+  /* The business-zone calendar date of a given instant. GHL hands back
+     offsets, not zone names, so the grouping has to be done here or a
+     late slot can land on the wrong day chip. */
+  function businessDateKey(utcMs) {
+    var pinned = CONFIG.calendar.utcOffsetHours;
+    if (typeof pinned === "number") {
+      return new Date(utcMs + pinned * 3600000).toISOString().slice(0, 10);
+    }
+    var p = {};
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: CONFIG.calendar.timezone,
+      year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date(utcMs)).forEach(function (x) { p[x.type] = x.value; });
+    return p.year + "-" + p.month + "-" + p.day;
+  }
+
+  function loadLiveSlots() {
+    if (!CONFIG.slotsApi) return Promise.resolve(false);
+
+    var url = CONFIG.slotsApi + (CONFIG.slotsApi.indexOf("?") > -1 ? "&" : "?") + "days=21";
+    var timeout = new Promise(function (resolve) { setTimeout(resolve, 6000, null); });
+
+    return Promise.race([fetch(url, { mode: "cors" }).then(function (r) { return r.json(); }), timeout])
+      .then(function (data) {
+        if (!data || !data.ok || !Array.isArray(data.slots) || !data.slots.length) return false;
+        var map = {};
+        data.slots.forEach(function (iso) {
+          var t = Date.parse(iso);
+          if (isNaN(t) || t < Date.now()) return;
+          var key = businessDateKey(t);
+          (map[key] = map[key] || []).push(t);
+        });
+        Object.keys(map).forEach(function (k) { map[k].sort(function (a, b) { return a - b; }); });
+        if (!Object.keys(map).length) return false;
+        liveSlots = map;
+        return true;
+      })
+      .catch(function () { return false; });
+  }
+
+  /* Build the booking window: every day in the next fortnight, flagged
+     available or not. "Book up to" counts available days only, so a
+     weekend never eats into the allowance -- same as Nomads. */
+  function isoOfUtcMidnight(ms) {
+    return new Date(ms).toISOString().slice(0, 10);
+  }
+
+  function buildDays() {
+    var cal = CONFIG.calendar;
+    var today = todayInZone(cal.timezone);
+    var startMs = Date.UTC(today.y, today.m - 1, today.d);
+
+    /* The strip is seven consecutive days. Normally it starts today.
+       But if GHL has nothing free in the whole of the next week --
+       a holiday, a full diary -- seven dead chips and "check back
+       tomorrow" would turn a qualified lead away while real slots sit
+       just past the edge. So slide the strip to the first day that
+       does have slots. Rules mode keeps its own window logic below. */
+    if (liveSlots) {
+      var todayIso = isoOfUtcMidnight(startMs);
+      var weekEndIso = isoOfUtcMidnight(startMs + 7 * 86400000);
+      var openKeys = Object.keys(liveSlots)
+        .filter(function (k) { return liveSlots[k].length > 0 && k >= todayIso; })
+        .sort();
+      var anyThisWeek = openKeys.some(function (k) { return k < weekEndIso; });
+      if (!anyThisWeek && openKeys.length) {
+        var p = openKeys[0].split("-");
+        startMs = Date.UTC(+p[0], +p[1] - 1, +p[2]);
+      }
+    }
+
+    var cursor = new Date(startMs);
+    var out = [];
+    var allowed = 0;
+
+    for (var i = 0; i < 14; i++) {
+      var y = cursor.getUTCFullYear(),
+          m = cursor.getUTCMonth() + 1,
+          d = cursor.getUTCDate(),
+          dow = cursor.getUTCDay();
+
+      var iso = y + "-" + (m < 10 ? "0" : "") + m + "-" + (d < 10 ? "0" : "") + d;
+      var withinWindow = false;
+
+      if (liveSlots) {
+        // GHL has already applied its working days, blocked dates and
+        // date range, so a day is open precisely when it has slots.
+        withinWindow = (liveSlots[iso] || []).length > 0;
+      } else {
+        var isWorkday = cal.days.indexOf(dow) > -1 &&
+                        (cal.blockedDates || []).indexOf(iso) === -1;
+        if (isWorkday && allowed < cal.bookUpTo) {
+          withinWindow = buildSlots(y, m, d).length > 0;
+          // Only a day that actually has slots left uses up part of the
+          // allowance. Counting an already-finished day would leave an
+          // evening visitor looking at a single bookable date.
+          if (withinWindow) allowed++;
+        }
+      }
+
+      out.push({
+        key: y + "-" + m + "-" + d, y: y, m: m, d: d,
+        dow: dow, label: DOW[dow], num: d, open: withinWindow
+      });
+
+      cursor.setUTCDate(cursor.getUTCDate() + 1);
+      if (allowed >= cal.bookUpTo && out.length >= 7) break;
+    }
+    return out.slice(0, 7);
+  }
+
+  /* Slots for one business day, as UTC instants, future only. */
+  function buildSlots(y, m, d) {
+    var cal = CONFIG.calendar;
+
+    // Live data wins outright: GHL has already applied its own hours,
+    // notice period, buffers and existing bookings, so re-filtering it
+    // against the local rules would only remove valid slots.
+    if (liveSlots) {
+      var key = y + "-" + (m < 10 ? "0" : "") + m + "-" + (d < 10 ? "0" : "") + d;
+      return (liveSlots[key] || []).slice();
+    }
+
+    var slots = [];
+    var earliest = Date.now() + (cal.leadTimeMin || 0) * 60000;
+    var stepMs = (cal.slotIntervalMin || cal.durationMin) * 60000;
+    var meetingMs = cal.durationMin * 60000;
+
+    var startUtc = zonedToUtc(y, m, d, cal.startHour, 0, cal.timezone);
+    var endUtc = zonedToUtc(y, m, d, cal.endHour, 0, cal.timezone);
+
+    // A slot only counts if the whole meeting fits before the end of the
+    // working window, which is not the same as the next start fitting.
+    for (var t = startUtc; t + meetingMs <= endUtc; t += stepMs) {
+      if (t >= earliest) slots.push(t);
+    }
+    return slots;
+  }
+
+  function visitorZoneName() {
+    try {
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // Device clock overridden: print the zone we are actually using.
+      if (usePinnedDisplay()) {
+        return (CONFIG.calendar.zoneAbbr ? CONFIG.calendar.zoneAbbr + " \u00b7 " : "") +
+               CONFIG.calendar.timezone.replace(/_/g, " ");
+      }
+      var abbr = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz, timeZoneName: "short"
+      }).formatToParts(new Date()).filter(function (p) {
+        return p.type === "timeZoneName";
+      })[0];
+      return (abbr ? abbr.value + " · " : "") + tz.replace(/_/g, " ");
+    } catch (e) { return ""; }
+  }
+
+  /* "embed" mode: hand the whole step over to GHL's own widget, which
+     knows real availability. Prefilled so nobody retypes their details. */
+  function mountGhlEmbed() {
+    var picker = document.querySelector(".picker");
+    if (!picker || picker.dataset.built) return;
+    picker.dataset.built = "1";
+    document.getElementById("confirmBtn").hidden = true;
+
+    var parts = (lead.name || "").trim().split(/\s+/);
+    var qs = new URLSearchParams();
+    if (parts[0]) qs.set("first_name", parts[0]);
+    if (parts.length > 1) qs.set("last_name", parts.slice(1).join(" "));
+    if (lead.email) qs.set("email", lead.email);
+    if (lead.phone) qs.set("phone", lead.phone);
+
+    var sep = CONFIG.calendarUrl.indexOf("?") > -1 ? "&" : "?";
+    picker.outerHTML =
+      '<div class="cal"><iframe src="' + CONFIG.calendarUrl +
+      (qs.toString() ? sep + qs.toString() : "") +
+      '" scrolling="no" height="620" style="display:block;width:100%;border:0" ' +
+      'title="Book a call with Cozly Media"></iframe></div>';
+
+    if (!document.getElementById("ghlEmbedJs")) {
+      var s = document.createElement("script");
+      s.id = "ghlEmbedJs";
+      s.src = "https://link.msgsndr.com/js/form_embed.js";
+      document.body.appendChild(s);
+    }
+
+    // The widget tells the parent window when a slot is booked.
+    window.addEventListener("message", function (e) {
+      var d = e.data;
+      var text = typeof d === "string" ? d : (d && (d.type || d.event)) || "";
+      if (/appointment|booking|scheduled/i.test(String(text))) show("thankyou");
+    });
+  }
+
+  function mountCalendar() {
+    if (CONFIG.calendarMode === "embed" && CONFIG.calendarUrl) {
+      mountGhlEmbed();
+      return;
+    }
+
+    var daysBox = document.getElementById("pickerDays");
+    if (!daysBox || daysBox.dataset.built) return;
+    daysBox.dataset.built = "1";
+
+    // Ask the Worker for real availability, then draw. If it is not
+    // configured this resolves immediately and nothing is delayed.
+    loadLiveSlots().then(function () { drawPicker(daysBox); });
+  }
+
+  function drawPicker(daysBox) {
+    document.getElementById("pickerLabel").textContent =
+      "Pick a day · " + CONFIG.calendar.durationMin + " min";
+    document.getElementById("pickerTz").textContent =
+      "Times shown in your time zone" +
+      (visitorZoneName() ? " (" + visitorZoneName() + ")" : "");
+
+    var days = buildDays();
+    daysBox.innerHTML = days.map(function (day) {
+      return '<button class="day' + (day.open ? "" : " is-off") + '" type="button"' +
+             (day.open ? ' data-day="' + day.key + '"' : " disabled") + '>' +
+             '<span class="day__dow">' + day.label + '</span>' +
+             '<span class="day__num">' + day.num + "</span></button>";
+    }).join("");
+
+    var anyOpen = days.some(function (day) { return day.open; });
+    document.getElementById("pickerNone").hidden = anyOpen;
+
+    daysBox.querySelectorAll(".day[data-day]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        daysBox.querySelectorAll(".day").forEach(function (o) { o.classList.remove("is-sel"); });
+        btn.classList.add("is-sel");
+        booking.dayKey = btn.dataset.day;
+        booking.startUtc = null;
+        document.getElementById("confirmBtn").hidden = true;
+        renderSlots(btn.dataset.day);
+      });
+    });
+
+    // Open the first available day straight away -- one less tap.
+    var first = daysBox.querySelector(".day[data-day]");
+    if (first) first.click();
+  }
+
+  function renderSlots(key) {
+    var parts = key.split("-");
+    var slots = buildSlots(+parts[0], +parts[1], +parts[2]);
+    var box = document.getElementById("pickerTimes");
+
+    box.innerHTML = slots.map(function (t) {
+      return '<button class="slot" type="button" data-t="' + t + '">' +
+             slotTimeLabel(t) + "</button>";
+    }).join("");
+    box.hidden = slots.length === 0;
+
+    box.querySelectorAll(".slot").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        box.querySelectorAll(".slot").forEach(function (o) { o.classList.remove("is-sel"); });
+        btn.classList.add("is-sel");
+        booking.startUtc = +btn.dataset.t;
+        var confirm = document.getElementById("confirmBtn");
+        confirm.hidden = false;
+        confirm.textContent = "Confirm " + slotFullLabel(booking.startUtc);
+      });
+    });
+  }
+
+  /* Booking confirmation -> second webhook post, then the thank-you view. */
+  var confirmBtn = document.getElementById("confirmBtn");
+  confirmBtn.addEventListener("click", function () {
+    if (!booking.startUtc) return;
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<span class="spinner"></span>Booking your call…';
+    var startedAt = Date.now();
+
+    var payload = basePayload("booking");
+    var start = new Date(booking.startUtc);
+
+    // Nomads sends +00:00 rather than Z; GHL parses both, but keeping
+    // one format means the workflow's date handling behaves identically
+    // whichever funnel the lead came through.
+    payload.booking_time = start.toISOString().replace(/\.\d{3}Z$/, "+00:00");
+    payload.booking_time_local = friendlyDateTime(booking.startUtc);
+    // The same moment written in the VISITOR's own timezone, with the
+    // zone abbreviation, e.g. "Fri, Nov 13, 12:00 PM EST". Their browser
+    // is authoritative about their own zone, so this is always right for
+    // them -- and it saves relying on GHL to re-render per contact.
+    try {
+      payload.booking_time_visitor = usePinnedDisplay()
+        ? friendlyDateTime(booking.startUtc) +
+          (CONFIG.calendar.zoneAbbr ? " " + CONFIG.calendar.zoneAbbr : "")
+        : new Intl.DateTimeFormat("en-US", {
+            weekday: "short", month: "short", day: "numeric",
+            hour: "numeric", minute: "2-digit", timeZoneName: "short"
+          }).format(start);
+    } catch (e) {
+      payload.booking_time_visitor = payload.booking_time_local;
+    }
+
+    // What GHL's Book appointment action should read.
+    payload.booking_time_ghl = ghlDateTime(booking.startUtc);
+    payload.booking_duration_min = CONFIG.calendar.durationMin;
+    payload.calendar_id = CONFIG.calendarId || "";
+    payload.timezone_visitor = (function () {
+      try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return ""; }
+    })();
+    payload.answers.push({ question: "Booked call", answer: payload.booking_time_local });
+    payload.answers_text = payload.answers.map(function (a) {
+      return a.question + ": " + a.answer;
+    }).join(" | ");
+
+    track("Schedule");
+
+    var finish = function () {
+      // Hold the busy state long enough to read, even when the webhook
+      // answers instantly, then show it succeeded before moving on.
+      var elapsed = Date.now() - startedAt;
+      setTimeout(function () {
+        confirmBtn.classList.add("is-done");
+        confirmBtn.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" ' +
+          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+          '<polyline points="20 6 9 17 4 12"></polyline></svg>Booked';
+        setTimeout(function () {
+          booking.done = true;
+          show("thankyou");
+          // Left disabled on purpose: the booking is made, and the only
+          // way back to this button is the Back button, which show()
+          // now redirects to the thank-you view anyway.
+          confirmBtn.classList.remove("is-done");
+          confirmBtn.textContent = "Confirm my call";
+        }, 550);
+      }, Math.max(0, 700 - elapsed));
+    };
+
+    postWebhook(payload, finish);
+  });
+
+  /* ---------- Navigation ---------- */
+  function setProgress(step) {
+    var bar = document.getElementById("progressBar");
+    var wrap = document.getElementById("progress");
+    var idx = ORDER.indexOf(step);
+    // Hidden on the VSL, the thank-you and the disqualify views -- a
+    // progress bar on a dead end just rubs it in.
+    if (idx < 1 || step === "thankyou") {
+      wrap.classList.remove("is-on");
+      return;
+    }
+    wrap.classList.add("is-on");
+    // Divided by the last step's index, not two short of it: dividing by
+    // ORDER.length - 2 put the calendar at 100%, so the bar read "finished"
+    // while the booking -- the only step that matters -- was still undone.
+    bar.style.width = Math.round((idx / (ORDER.length - 1)) * 100) + "%";
+  }
+
+  function show(step, pushHash) {
+    if (!steps[step]) step = "vsl";
+
+    /* Once a call is booked the funnel is finished. Without this, the
+       browser Back button lands on a live calendar and a second
+       confirm posts another booking -- two appointments, two texts,
+       two invites, for one lead. */
+    if (booking.done && step !== "thankyou") {
+      step = "thankyou";
+      if (window.location.hash !== "#thankyou") {
+        window.history.replaceState({ step: "thankyou" }, "", "#thankyou");
+      }
+      pushHash = false;
+    }
+
+    // Guard against someone landing mid-funnel on a deep link with no
+    // answers behind them.
+    if ((step === "calendar" || step === "thankyou") && !lead.email) step = "vsl";
+    if ((step === "form" || step === "q3") && !answers.agency) step = "vsl";
+
+    Object.keys(steps).forEach(function (key) {
+      steps[key].classList.toggle("is-active", key === step);
+    });
+
+    current = step;
+    setProgress(step);
+    window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
+
+    if (pushHash !== false) {
+      var target = "#" + step;
+      if (window.location.hash !== target) {
+        window.history.pushState({ step: step }, "", target);
+      }
+    }
+
+    if (step === "calendar") { mountCalendar(); track("InitiateCheckout"); }
+    if (step === "thankyou") track("CompleteRegistration");
+  }
+
+  /* ---------- Option buttons ---------- */
+  document.querySelectorAll(".option").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var group = btn.parentElement;
+      group.querySelectorAll(".option").forEach(function (o) {
+        o.classList.remove("is-chosen");
+      });
+      btn.classList.add("is-chosen");
+      answers[btn.dataset.q] = btn.dataset.value;
+
+      // Short pause so the selection is visible before the step changes.
+      setTimeout(function () { show(btn.dataset.next); }, 180);
+    });
+  });
+
+  /* ---------- Plain navigation buttons ---------- */
+  document.querySelectorAll("[data-go]").forEach(function (btn) {
+    btn.addEventListener("click", function () { show(btn.dataset.go); });
+  });
+
+  /* ---------- Webhook payload ----------
+     Mirrors what the Nomads funnel posts, so the existing GHL workflow
+     maps every field without being rebuilt. The condition in that
+     workflow branches on "event", which is why it is always set. */
+
+  var QUESTIONS = {
+    agency: "Are you a home care agency?",
+    decision_maker: "Do you handle marketing decisions for your agency?",
+    clients: "How many clients are on service right now?"
+  };
+
+  /* One id for the whole visit, so the "lead" post and the later
+     "booking" post can be tied to the same person in the CRM. */
+  function leadId() {
+    var key = "cozly_lead_id";
+    var id = null;
+    try { id = sessionStorage.getItem(key); } catch (e) {}
+    if (!id) {
+      id = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : "lead-" + Date.now() + "-" + Math.random().toString(16).slice(2, 10);
+      try { sessionStorage.setItem(key, id); } catch (e) {}
+    }
+    return id;
+  }
+
+  function answerList() {
+    var out = [];
+    ["agency", "decision_maker", "clients"].forEach(function (key) {
+      if (answers[key]) out.push({ question: QUESTIONS[key], answer: answers[key] });
+    });
+    if (lead.company) out.push({ question: "company", answer: lead.company });
+    return out;
+  }
+
+  /* GHL's "Book appointment" action ignores any offset in the string and
+     reads it in the calendar's own timezone, so it needs the wall-clock
+     time in Edmonton, formatted "YYYY-MM-DD hh:mm AM" -- one of the three
+     layouts that action accepts. Built off the pinned offset so it cannot
+     drift with a visitor's timezone data. */
+  function businessDate(utcMs) {
+    var off = CONFIG.calendar.utcOffsetHours;
+    if (typeof off === "number") return new Date(utcMs + off * 3600000);
+    var p = {};
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: CONFIG.calendar.timezone, hour12: false,
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit"
+    }).formatToParts(new Date(utcMs)).forEach(function (x) { p[x.type] = x.value; });
+    return new Date(Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute));
+  }
+
+  var DOW_LONG = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  /* "Fri, Nov 13, 10:00 AM" -- the human-readable version, built from the
+     same shifted date as the GHL one so the two can never disagree. */
+  function friendlyDateTime(utcMs) {
+    var d = businessDate(utcMs);
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var h24 = d.getUTCHours();
+    var h12 = h24 % 12 || 12;
+    return DOW_LONG[d.getUTCDay()] + ", " + MON[d.getUTCMonth()] + " " + d.getUTCDate() +
+           ", " + h12 + ":" + pad(d.getUTCMinutes()) + " " + (h24 >= 12 ? "PM" : "AM");
+  }
+
+  function ghlDateTime(utcMs) {
+    var off = CONFIG.calendar.utcOffsetHours;
+    var d;
+    if (typeof off === "number") {
+      d = new Date(utcMs + off * 3600000);
+    } else {
+      // No pinned offset: fall back to reading the zone via Intl.
+      var p = {};
+      new Intl.DateTimeFormat("en-CA", {
+        timeZone: CONFIG.calendar.timezone, hour12: false,
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit"
+      }).formatToParts(new Date(utcMs)).forEach(function (x) { p[x.type] = x.value; });
+      d = new Date(Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour % 24, +p.minute));
+    }
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var h24 = d.getUTCHours();
+    var ampm = h24 >= 12 ? "PM" : "AM";
+    var h12 = h24 % 12 || 12;
+    return d.getUTCFullYear() + "-" + pad(d.getUTCMonth() + 1) + "-" + pad(d.getUTCDate()) +
+           " " + pad(h12) + ":" + pad(d.getUTCMinutes()) + " " + ampm;
+  }
+
+  function basePayload(event) {
+    var list = answerList();
+    var parts = (lead.name || "").trim().split(/\s+/);
+    var payload = {
+      event: event,
+      source: CONFIG.funnelMeta.source,
+      funnel: CONFIG.funnelMeta.funnel,
+      funnel_slug: CONFIG.funnelMeta.funnel_slug,
+      lead_id: leadId(),
+      name: lead.name || "",
+      first_name: parts[0] || "",
+      last_name: parts.slice(1).join(" "),
+      email: lead.email || "",
+      phone: lead.phone || "",
+      company: lead.company || "",
+      booked: event === "booking",
+      answers: list,
+      answers_text: list.map(function (a) { return a.question + ": " + a.answer; }).join(" | "),
+      page_url: window.location.href,
+      submitted_at: new Date().toISOString()
+    };
+    Object.keys(attribution).forEach(function (k) { payload[k] = attribution[k]; });
+    return payload;
+  }
+
+  /* The webhook never holds the visitor up: success, failure or timeout,
+     they move on. Losing a CRM record is bad; losing the booking is worse. */
+  function postWebhook(payload, onDone) {
+    var done = false;
+    var finish = function () { if (!done) { done = true; onDone(); } };
+    setTimeout(finish, 4000);
+
+    if (!CONFIG.webhookUrl) { finish(); return; }
+    fetch(CONFIG.webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(finish).catch(finish);
+  }
+
+  /* ---------- Form ---------- */
+  var form = document.getElementById("leadForm");
+
+  function setError(name, bad) {
+    var f = document.querySelector('.field[data-field="' + name + '"]');
+    if (f) f.classList.toggle("has-error", bad);
+    return !bad;
+  }
+
+  function validate() {
+    var name = document.getElementById("fName").value.trim();
+    var email = document.getElementById("fEmail").value.trim();
+    var phone = document.getElementById("fPhone").value.trim();
+    var company = document.getElementById("fCompany").value.trim();
+
+    var ok = true;
+    ok = setError("name", name.length < 2) && ok;
+    ok = setError("email", !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) && ok;
+    // Deliberately loose: counts digits only, so any country's format passes.
+    ok = setError("phone", (phone.replace(/\D/g, "").length < 7)) && ok;
+    ok = setError("company", company.length < 2) && ok;
+
+    if (ok) lead = { name: name, email: email, phone: phone, company: company };
+    return ok;
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!validate()) {
+      var firstBad = document.querySelector(".field.has-error input");
+      if (firstBad) firstBad.focus();
+      return;
+    }
+
+    var btn = document.getElementById("formSubmit");
+    btn.disabled = true;
+    btn.textContent = "One moment…";
+
+    track("Lead");
+
+    postWebhook(basePayload("lead"), function () {
+      btn.disabled = false;
+      btn.textContent = "Continue";
+      show("calendar");
+    });
+  });
+
+  /* ---------- Clear an error as soon as the field is corrected ---------- */
+  form.querySelectorAll("input").forEach(function (input) {
+    input.addEventListener("input", function () {
+      input.closest(".field").classList.remove("has-error");
+    });
+  });
+
+  /* ---------- Back / forward ---------- */
+  window.addEventListener("popstate", function () {
+    show((window.location.hash || "#vsl").slice(1), false);
+  });
+
+  /* ---------- Boot ---------- */
+  initPixel();
+  mountLogo();
+  mountMedia("vslVideo", CONFIG.vslEmbed);
+  mountMedia("tyVideo", CONFIG.thankYouEmbed);
+  show("vsl", false);
+})();
+</script>
+</body>
+</html>
