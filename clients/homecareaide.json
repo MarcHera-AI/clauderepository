@@ -187,7 +187,7 @@
   "calendar": null,
 
   "slotsApi": "",
-  "webhookUrl": "TODO: GHL inbound webhook URL for her workflow",
+  "webhookUrl": "https://services.leadconnectorhq.com/hooks/QNZdMda0z8wPgAVryVbX/webhook-trigger/8b0c7ec3-51a7-4e36-8004-74435d1facd3",
 
   "funnelMeta": {
     "source": "Homecare Aide Services site",
@@ -195,5 +195,5 @@
     "funnel_slug": "homecareaide"
   },
 
-  "pixelId": "TODO: Meta pixel id for the ad account running her ads"
+  "pixelId": "28775367942165784"
 }
