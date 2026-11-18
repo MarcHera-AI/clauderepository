@@ -38,7 +38,7 @@ DIST = ROOT / "dist"
 # Values a client may leave out. Everything else must be in its JSON.
 # The theme defaults are the Cozly palette.
 DEFAULTS = {
-    "brand": {"logoUrl": "", "wordmarkSub": "", "faviconLetter": ""},
+    "brand": {"logoUrl": "", "logoHeight": None, "wordmarkSub": "", "faviconLetter": ""},
     "theme": {
         "bg": "#fdfbf7",
         "accent": "#f5b800",
@@ -56,7 +56,7 @@ DEFAULTS = {
         "callPrompt": "Prefer to talk? Call",
         "disclaimer": "",
         "form": {"subhead": ""},
-        "thankYou": {"stepsHead": ""},
+        "thankYou": {"subhead": "", "stepsHead": ""},
     },
     "calendar": {
         "mode": "rules",
@@ -130,7 +130,7 @@ REQUIRED_TEXT = [
     "brand.wordmark",
     "copy.vsl.eyebrow", "copy.vsl.headline", "copy.vsl.subhead", "copy.vsl.cta",
     "copy.form.title", "copy.form.submit", "copy.form.namePlaceholder",
-    "copy.thankYou.title", "copy.thankYou.subhead",
+    "copy.thankYou.title",
     "copy.callPrompt",
     "funnelMeta.source", "funnelMeta.funnel", "funnelMeta.funnel_slug",
     "webhookUrl",
@@ -173,6 +173,10 @@ def validate(cfg, slug):
         err(f"slug is {cfg.get('slug')!r} but the file is clients/{slug}.json")
     if not re.fullmatch(r"[a-z0-9-]+", slug):
         err("the slug may only use a-z, 0-9 and '-' (it becomes a folder and a storage key)")
+
+    lh = get_safe(cfg, "brand.logoHeight")
+    if lh is not None and not (is_int(lh) and 16 <= lh <= 240):
+        err("brand.logoHeight must be null or a whole number of pixels, 16-240")
 
     for k, v in cfg.get("theme", {}).items():
         if not (isinstance(v, str) and HEX_RE.match(v)):

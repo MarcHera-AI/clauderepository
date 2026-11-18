@@ -981,6 +981,9 @@ var CONFIG = {{ computed.configJson|raw }};
     var original = brand.innerHTML;          // the text wordmark
     var img = new Image();
     img.alt = CONFIG.agency;
+    // A logo with the name inside it needs more height than a wordmark
+    // to be readable; brand.logoHeight sets it for every screen width.
+    if (CONFIG.brand.logoHeight) img.style.height = CONFIG.brand.logoHeight + "px";
     // Only swap the wordmark out once the real logo has actually loaded,
     // so a dead URL leaves the wordmark standing instead of a broken box.
     img.onload = function () { brand.innerHTML = ""; brand.appendChild(img); };

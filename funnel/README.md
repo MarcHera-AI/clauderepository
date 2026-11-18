@@ -55,11 +55,11 @@ add a config value that the template reads.
 | `slug` | Must match the filename. Also the sessionStorage prefix. |
 | `agency`, `domain` | Business name (logo alt text, iframe title), live domain. |
 | `meta` | `<title>` and description. |
-| `brand` | `logoUrl` (https URL, or a file under `clients/` that gets copied next to the page), text `wordmark`/`wordmarkSub` shown until the logo loads, `faviconLetter`. |
+| `brand` | `logoUrl` (https URL, or a file under `clients/` that gets copied next to the page), optional `logoHeight` in px (for a tall logo with the name inside it; default 34-48px by screen width), text `wordmark`/`wordmarkSub` shown until the logo loads, `faviconLetter`. |
 | `theme` | Six colours. Defaults are the Cozly palette. |
 | `phone` | `{"display": "(707) 555-0100"}` or `null`. Shows a "Prefer to talk?" line on the landing, calendar, thank-you and disqualify steps. |
 | `media` | `vsl`, `thankYou`: `.mp4` URL, embed markup, or `""` for none. An empty one is removed from the page, not shown as a placeholder. |
-| `copy` | Every visible sentence. Strings are HTML (`&amp;`, `<u>`), so they may carry markup. `{agency}` and `{phone}` are written in from `agency` and `phone` at build time. `copy.form.subhead`, `copy.thankYou.stepsHead` and `copy.disclaimer` may be `""`, which leaves that line off the page. |
+| `copy` | Every visible sentence. Strings are HTML (`&amp;`, `<u>`), so they may carry markup. `{agency}` and `{phone}` are written in from `agency` and `phone` at build time. `copy.form.subhead`, `copy.thankYou.subhead`, `copy.thankYou.stepsHead` and `copy.disclaimer` may be `""`, which leaves that line off the page. |
 | `questions` | The qualifying questions in order. Each `{key, title, options}`; an option with `"dq": "<key>"` routes to that disqualify screen, otherwise it moves on. `key` is the answer's name; the CRM gets the question text and option label. |
 | `disqualify` | One screen per reason: `{key: {title, body: [paragraphs]}}`. |
 | `form.extraField` | Optional fourth field after name/email/phone, e.g. Cozly's `company`. Its `key` is also the webhook payload key. Optional `pattern` (a regex the value must match; otherwise 2+ characters), `inputmode`, `maxlength`. `null` for none. |
