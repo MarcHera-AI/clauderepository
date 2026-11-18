@@ -67,6 +67,10 @@
       ]
     },
     "disclaimer": "",
+    "footer": [
+      "<b>{agency}</b> provides private in-home care for families in Sonoma and Marin County, California.",
+      "Trusted, screened caregivers for companionship, personal care, memory care and overnight help. No long-term contracts."
+    ],
     "callPrompt": "Prefer to talk? Call"
   },
 
