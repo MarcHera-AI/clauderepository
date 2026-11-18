@@ -1,44 +1,45 @@
 {
   "_notes": [
-    "Funnel for Home Care Aide Services (owner Aida Bernal), Sonoma and Marin County, CA.",
+    "Funnel for Homecare Aide Services (owner Aida Bernal), Sonoma and Marin County, CA.",
     "Speaks to families arranging in-home care for someone, usually a parent - not to agency owners.",
     "No calendar: the form goes straight to the thank-you and her team calls the lead back.",
     "Copy says {agency} and {phone} where it names them; build.py writes the values in.",
-    "Agency spelling is unconfirmed: the ad images say 'Homecare Aide Services'. Change 'agency' once Aida confirms.",
-    "serviceArea.zips: every Sonoma (50) and Marin (41) County ZIP per zip-codes.com, PO boxes included. 94952 Petaluma also reaches into Marin. Aida to confirm she covers the far corners (The Sea Ranch, Annapolis, Stewarts Point, Cloverdale).",
+    "No phone number and no video, by choice: the 'Prefer to talk?' lines and the video box are left off.",
+    "serviceArea.zips: every Sonoma (50) and Marin (41) County ZIP per zip-codes.com, PO boxes included. 94952 Petaluma also reaches into Marin. Confirmed she covers all of both counties.",
     "Any value containing TODO blocks the build for this client only. See funnel/README.md.",
-    "theme is a placeholder (calm teal) until her logo arrives; match it to the logo then."
+    "theme: her logo's blue (#00349c) on white, since the logo has a white background."
   ],
 
   "slug": "homecareaide",
-  "agency": "Home Care Aide Services",
+  "agency": "Homecare Aide Services",
   "domain": "homecareaide.cozlymedia.com",
 
   "meta": {
-    "title": "Home Care Aide Services | In-Home Care in Sonoma & Marin County",
+    "title": "Homecare Aide Services | In-Home Care in Sonoma & Marin County",
     "description": "Trusted, screened in-home caregivers for private-pay families in Sonoma and Marin County. Check care availability."
   },
 
   "brand": {
-    "logoUrl": "TODO: her logo - an https URL, or a file placed under clients/",
-    "wordmark": "Home Care Aide",
+    "logoUrl": "homecareaide-logo.webp",
+    "logoHeight": 100,
+    "wordmark": "Homecare Aide",
     "wordmarkSub": "Services",
     "faviconLetter": "H"
   },
 
   "theme": {
-    "bg": "#fbfaf7",
-    "accent": "#2f7d73",
-    "accentDark": "#276a61",
+    "bg": "#ffffff",
+    "accent": "#00349c",
+    "accentDark": "#00287a",
     "accentInk": "#ffffff",
-    "accentTint": "#e8f3f1",
-    "thankYouTitle": "#2f7d73"
+    "accentTint": "#e8eef9",
+    "thankYouTitle": "#00349c"
   },
 
-  "phone": { "display": "TODO: her phone number" },
+  "phone": null,
 
   "media": {
-    "vsl": "TODO: VSL video (.mp4 URL or embed markup), or empty string for none",
+    "vsl": "",
     "thankYou": ""
   },
 
@@ -57,7 +58,7 @@
     },
     "thankYou": {
       "title": "Thank you! We&rsquo;re calling you in the next few minutes.",
-      "subhead": "We&rsquo;ll call from {phone}. Save it so you know it&rsquo;s us.",
+      "subhead": "",
       "stepsHead": "",
       "steps": [
         "We call you within minutes",
@@ -186,8 +187,8 @@
   "webhookUrl": "TODO: GHL inbound webhook URL for her workflow",
 
   "funnelMeta": {
-    "source": "Home Care Aide Services site",
-    "funnel": "Home Care Aide Services Funnel",
+    "source": "Homecare Aide Services site",
+    "funnel": "Homecare Aide Services Funnel",
     "funnel_slug": "homecareaide"
   },
 
