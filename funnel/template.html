@@ -1814,6 +1814,11 @@ var CONFIG = {{ computed.configJson|raw }};
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
+    /* Only from the form while it is showing. The webhook can answer in
+       a few ms; the page moves on and re-enables the button, and for a
+       moment the last field still has focus, so a second Enter used to
+       submit -- and post the lead -- again. */
+    if (current !== "form") return;
     if (!validate()) {
       var firstBad = document.querySelector(".field.has-error input");
       if (firstBad) firstBad.focus();
