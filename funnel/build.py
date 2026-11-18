@@ -57,6 +57,7 @@ DEFAULTS = {
     "copy": {
         "callPrompt": "Prefer to talk? Call",
         "disclaimer": "",
+        "footer": [],
         # Required only with a landing screen (startWithQuestions false).
         "vsl": {"eyebrow": "", "cta": ""},
         "form": {"subhead": ""},
@@ -247,6 +248,10 @@ def validate(cfg, slug):
         used_dq.add(area["dq"])
     for key in set(dqs) - used_dq:
         warnings.append(f"disqualify.{key} is never routed to")
+
+    footer = get_safe(cfg, "copy.footer")
+    if not (isinstance(footer, list) and all(isinstance(p, str) and p.strip() for p in footer)):
+        err("copy.footer must be a list of paragraphs (empty for no footer)")
 
     steps = get_safe(cfg, "copy.thankYou.steps")
     if not (isinstance(steps, list) and steps and all(isinstance(s, str) and s.strip() for s in steps)):

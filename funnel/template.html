@@ -612,6 +612,20 @@ h1.accent { color: var(--accent); }
 
 .dq-body a { color: var(--ink); font-weight: 700; }
 
+/* ===== Footer (copy.footer) ===== */
+.site-footer {
+  margin-top: 56px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  color: var(--muted-2);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.site-footer p + p { margin-top: 8px; }
+.site-footer b { color: var(--ink); font-weight: 700; }
+.site-footer a { color: inherit; }
+
 /* ===== Disclaimer ===== */
 .disclaimer {
   text-align: center;
@@ -757,6 +771,9 @@ h1.accent { color: var(--accent); }
        ============================================================ -->
   <div id="dqMount" hidden></div>
 
+  <!-- copy.footer, when the client has one, under every step. -->
+  <footer class="site-footer" id="siteFooter" hidden></footer>
+
 </div>
 
 <script>
@@ -865,6 +882,14 @@ var CONFIG = {{ computed.configJson|raw }};
       '<p class="field__error">' + esc(CONSENT.error) + "</p></div>");
   }
 
+  function renderFooter() {
+    var lines = CONFIG.copy.footer || [];
+    if (!lines.length) return;
+    var el = document.getElementById("siteFooter");
+    el.innerHTML = lines.map(function (p) { return "<p>" + p + "</p>"; }).join("");
+    el.hidden = false;
+  }
+
   function renderPhone() {
     var p = CONFIG.phone;
     document.querySelectorAll(".call").forEach(function (el) {
@@ -880,6 +905,7 @@ var CONFIG = {{ computed.configJson|raw }};
   renderThankYouSteps();
   renderExtraField();
   renderConsent();
+  renderFooter();
   renderPhone();
 
   /* No calendar (CONFIG.calendar is null): the form is the last step

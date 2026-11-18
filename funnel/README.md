@@ -59,7 +59,7 @@ add a config value that the template reads.
 | `theme` | Six colours. Defaults are the Cozly palette. |
 | `phone` | `{"display": "(707) 555-0100"}` or `null`. Shows a "Prefer to talk?" line on the landing, calendar, thank-you and disqualify steps. |
 | `media` | `vsl`, `thankYou`: `.mp4` URL, embed markup, or `""` for none. An empty one is removed from the page, not shown as a placeholder. |
-| `copy` | Every visible sentence. Strings are HTML (`&amp;`, `<u>`), so they may carry markup. `{agency}` and `{phone}` are written in from `agency` and `phone` at build time. `copy.form.subhead`, `copy.thankYou.subhead`, `copy.thankYou.stepsHead` and `copy.disclaimer` may be `""`, which leaves that line off the page. |
+| `copy` | Every visible sentence. Strings are HTML (`&amp;`, `<u>`), so they may carry markup. `{agency}` and `{phone}` are written in from `agency` and `phone` at build time. `copy.footer` is a list of paragraphs shown under every step (`[]` for none). `copy.form.subhead`, `copy.thankYou.subhead`, `copy.thankYou.stepsHead` and `copy.disclaimer` may be `""`, which leaves that line off the page. |
 | `startWithQuestions` | `true` drops the landing screen: the visit opens on question 1, with `copy.vsl` eyebrow/headline/subhead above it, and bounced deep links land there. `copy.vsl.cta` isn't used and `media.vsl` must be `""`. Default `false`. |
 | `showQuestionCount` | `true` shows "2 of 4" under each question's options. Default `false`. |
 | `questions` | The qualifying questions in order. Each `{key, title, options}`; an option with `"dq": "<key>"` routes to that disqualify screen, otherwise it moves on. `key` is the answer's name; the CRM gets the question text and option label. |
