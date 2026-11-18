@@ -632,16 +632,16 @@ h1.accent { color: var(--accent); }
   </section>
 
   <!-- ============================================================
-       STEP 4 — Q3  (every answer continues; client count is recorded, not gated)
+       STEP 4 — Q3  (0-5 -> disqualify)
        ============================================================ -->
   <section class="step" data-step="q3">
     <h2 class="q-title">How many clients are on service right now?</h2>
     <div class="options">
-      <button class="option" type="button" data-q="clients" data-value="0 to 10"  data-next="form">0 to 10</button>
-      <button class="option" type="button" data-q="clients" data-value="11 to 25" data-next="form">11 to 25</button>
+      <button class="option" type="button" data-q="clients" data-value="0 to 5"   data-next="dq">0 to 5</button>
+      <button class="option" type="button" data-q="clients" data-value="6 to 15"  data-next="form">6 to 15</button>
+      <button class="option" type="button" data-q="clients" data-value="16 to 25" data-next="form">16 to 25</button>
       <button class="option" type="button" data-q="clients" data-value="26 to 50" data-next="form">26 to 50</button>
-      <button class="option" type="button" data-q="clients" data-value="51 to 99" data-next="form">51 to 99</button>
-      <button class="option" type="button" data-q="clients" data-value="100+"     data-next="form">100+</button>
+      <button class="option" type="button" data-q="clients" data-value="51+"      data-next="form">51+</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
