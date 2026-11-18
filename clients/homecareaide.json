@@ -2,6 +2,10 @@
   "_notes": [
     "Funnel for Home Care Aide Services (owner Aida Bernal), Sonoma and Marin County, CA.",
     "Speaks to families arranging in-home care for someone, usually a parent - not to agency owners.",
+    "No calendar: the form goes straight to the thank-you and her team calls the lead back.",
+    "Copy says {agency} and {phone} where it names them; build.py writes the values in.",
+    "Agency spelling is unconfirmed: the ad images say 'Homecare Aide Services'. Change 'agency' once Aida confirms.",
+    "serviceArea.zips: every Sonoma (50) and Marin (41) County ZIP per zip-codes.com, PO boxes included. 94952 Petaluma also reaches into Marin. Aida to confirm she covers the far corners (The Sea Ranch, Annapolis, Stewarts Point, Cloverdale).",
     "Any value containing TODO blocks the build for this client only. See funnel/README.md.",
     "theme is a placeholder (calm teal) until her logo arrives; match it to the logo then."
   ],
@@ -12,7 +16,7 @@
 
   "meta": {
     "title": "Home Care Aide Services | In-Home Care in Sonoma & Marin County",
-    "description": "Trusted in-home caregivers for families in Sonoma and Marin County. See if we can help and book a care assessment."
+    "description": "Trusted, screened in-home caregivers for private-pay families in Sonoma and Marin County. Check care availability."
   },
 
   "brand": {
@@ -40,115 +44,143 @@
 
   "copy": {
     "vsl": {
-      "eyebrow": "Families in Sonoma &amp; Marin County",
-      "headline": "TODO: headline (her offer)",
-      "subhead": "TODO: subhead (her offer)",
-      "cta": "See If We Can Help &rarr;"
+      "eyebrow": "Private in-home care &middot; Serving Sonoma &amp; Marin County",
+      "headline": "Get Mom or Dad the Help They Need at Home, Starting This Week",
+      "subhead": "Trusted, screened caregivers for private-pay families in Sonoma and Marin County. No insurance waiting lists. No long-term contracts.",
+      "cta": "Check Care Availability"
     },
     "form": {
       "title": "Almost Done",
-      "subhead": "Where should we send your appointment details? We'll only use them to arrange care.",
+      "subhead": "",
       "namePlaceholder": "Your full name",
       "submit": "Continue"
     },
-    "calendar": {
-      "title": "Choose A Time For Your Care Assessment",
-      "subhead": "A care coordinator will go over your loved one's needs, answer your questions, and explain how care would work.",
-      "confirm": "Confirm my assessment",
-      "busy": "Booking your assessment…",
-      "none": "No times are open right now. Please call us and we'll find one for you.",
-      "bookedLabel": "Booked assessment"
-    },
     "thankYou": {
-      "title": "You're Booked. Here's What Happens Next.",
-      "subhead": "Your care assessment is on the calendar. We'll be in touch before it to confirm.",
-      "stepsHead": "Before Your Assessment:",
+      "title": "Thank you! We&rsquo;re calling you in the next few minutes.",
+      "subhead": "We&rsquo;ll call from {phone}. Save it so you know it&rsquo;s us.",
+      "stepsHead": "",
       "steps": [
-        "Look out for a confirmation text and email from Home Care Aide Services.",
-        "If someone else helps make care decisions - a sibling, a spouse - invite them to join.",
-        "Jot down your loved one's daily routine, medications and anything that worries you, so nothing gets missed."
+        "We call you within minutes",
+        "Free in-home assessment",
+        "Care starts, with the caregiver you choose"
       ]
     },
-    "disclaimer": "By continuing you agree to be contacted by Home Care Aide Services by phone, text or email about your care request. Consent is not a condition of service. Message and data rates may apply; reply STOP to opt out.",
+    "disclaimer": "",
     "callPrompt": "Prefer to talk? Call"
   },
 
   "questions": [
     {
       "key": "care_for",
-      "title": "Who are you looking for care for?",
+      "title": "Who is the care for?",
       "options": [
-        { "label": "My mom or dad" },
-        { "label": "My spouse or partner" },
+        { "label": "Mom or Dad" },
+        { "label": "My spouse" },
         { "label": "Myself" },
-        { "label": "Another relative or a friend" }
+        { "label": "Another family member" },
+        { "label": "I&rsquo;m looking for a caregiver job", "dq": "job_seeker" }
       ]
     },
     {
-      "key": "location",
-      "title": "Where will care take place?",
+      "key": "help_type",
+      "title": "What kind of help do they need?",
       "options": [
-        { "label": "Sonoma County" },
-        { "label": "Marin County" },
-        { "label": "Somewhere else", "dq": "area" }
+        { "label": "Companionship" },
+        { "label": "Bathing, dressing and meals" },
+        { "label": "Memory care (Alzheimer&rsquo;s, dementia)" },
+        { "label": "Overnight help" }
       ]
     },
     {
-      "key": "care_type",
-      "title": "What kind of help is needed most?",
+      "key": "hours_per_week",
+      "title": "About how many hours of help a week?",
       "options": [
-        { "label": "Everyday help at home: meals, housekeeping, errands" },
-        { "label": "Personal care: bathing, dressing, getting around" },
-        { "label": "Memory care: dementia or Alzheimer's" },
-        { "label": "Help recovering after a hospital stay" },
+        { "label": "Under 20", "dq": "under_20_hours" },
+        { "label": "20 to 39" },
+        { "label": "40+" },
+        { "label": "24/7 or live-in" },
         { "label": "Not sure yet" }
       ]
     },
     {
-      "key": "start",
-      "title": "When would you like care to start?",
+      "key": "payment",
+      "title": "Private care with {agency} is $40 an hour. How will care be paid for?",
       "options": [
-        { "label": "As soon as possible" },
-        { "label": "Within the next month" },
-        { "label": "In a few months" },
-        { "label": "Just looking into options" }
+        { "label": "Private pay (savings, income or family helping)" },
+        { "label": "Long-term care insurance" },
+        { "label": "Medicare", "dq": "payment" },
+        { "label": "Medicaid or a state program", "dq": "payment" },
+        { "label": "VA benefits", "dq": "payment" },
+        { "label": "Not sure yet", "dq": "payment" }
       ]
     }
   ],
 
   "disqualify": {
-    "area": {
-      "title": "We're Not In Your Area Yet",
+    "job_seeker": {
+      "title": "Thanks for your interest!",
       "body": [
-        "Home Care Aide Services provides in-home care in Sonoma and Marin County, California, so we can't send a caregiver to where your loved one lives.",
-        "Your local Area Agency on Aging can point you to trusted care nearby. Find yours at <a href=\"https://eldercare.acl.gov\" target=\"_blank\" rel=\"noopener\">eldercare.acl.gov</a>."
+        "This page is for families looking for care.",
+        "To apply, please contact {agency} directly."
+      ]
+    },
+    "under_20_hours": {
+      "title": "Thank you for sharing.",
+      "body": [
+        "Our care plans start at 4 hours a day, 5 days a week, so we may not be the right fit right now.",
+        "If your needs change, we&rsquo;d love to help."
+      ]
+    },
+    "payment": {
+      "title": "Thank you for reaching out.",
+      "body": [
+        "Our care is private pay, so we&rsquo;re not the right fit for Medicare, Medicaid or VA covered care, but you&rsquo;re not on your own.",
+        "Your local Area Agency on Aging can connect you with free and state-funded programs near you. Find yours at <a href=\"https://eldercare.acl.gov\" target=\"_blank\" rel=\"noopener\">eldercare.acl.gov</a> or call <a href=\"tel:+18006771116\">1-800-677-1116</a>."
+      ]
+    },
+    "out_of_area": {
+      "title": "Thank you!",
+      "body": [
+        "We don&rsquo;t serve your area yet, but your local Area Agency on Aging can help you find care nearby at <a href=\"https://eldercare.acl.gov\" target=\"_blank\" rel=\"noopener\">eldercare.acl.gov</a> or <a href=\"tel:+18006771116\">1-800-677-1116</a>."
       ]
     }
   },
 
   "form": {
     "extraField": {
-      "key": "city",
-      "placeholder": "City where care is needed",
-      "error": "Please enter the city",
-      "autocomplete": "address-level2"
+      "key": "zip",
+      "placeholder": "ZIP code",
+      "error": "Please enter your 5-digit ZIP code",
+      "autocomplete": "postal-code",
+      "inputmode": "numeric",
+      "maxlength": 10,
+      "pattern": "^\\d{5}(-\\d{4})?$"
+    },
+    "consent": {
+      "label": "By checking this box, I agree to receive calls and text messages from {agency} about my care inquiry. Message and data rates may apply. Reply STOP to opt out.",
+      "error": "Please check the box so we can call you"
     }
   },
 
-  "calendar": {
-    "mode": "rules",
-    "id": "TODO: GHL calendar id her assessments book into",
-    "timezone": "TODO: the GHL calendar's own timezone, e.g. America/Los_Angeles",
-    "utcOffsetHours": null,
-    "days": [1, 2, 3, 4, 5],
-    "blockedDates": [],
-    "startHour": 9,
-    "endHour": 17,
-    "durationMin": 30,
-    "slotIntervalMin": 0,
-    "bookUpTo": 3,
-    "leadTimeMin": 120
+  "serviceArea": {
+    "field": "zip",
+    "dq": "out_of_area",
+    "zips": [
+      "94922", "94923", "94926", "94927", "94928", "94931", "94951", "94952", "94953", "94954",
+      "94955", "94972", "94975", "94999", "95401", "95402", "95403", "95404", "95405", "95406",
+      "95407", "95409", "95412", "95416", "95419", "95421", "95425", "95430", "95431", "95433",
+      "95436", "95439", "95441", "95442", "95444", "95446", "95448", "95450", "95452", "95462",
+      "95465", "95471", "95472", "95473", "95476", "95480", "95486", "95487", "95492", "95497",
+
+      "94901", "94903", "94904", "94912", "94913", "94914", "94915", "94920", "94924", "94925",
+      "94929", "94930", "94933", "94937", "94938", "94939", "94940", "94941", "94942", "94945",
+      "94946", "94947", "94948", "94949", "94950", "94956", "94957", "94960", "94963", "94964",
+      "94965", "94966", "94970", "94971", "94973", "94974", "94976", "94977", "94978", "94979",
+      "94998"
+    ]
   },
+
+  "calendar": null,
 
   "slotsApi": "",
   "webhookUrl": "TODO: GHL inbound webhook URL for her workflow",
