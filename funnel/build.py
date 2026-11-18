@@ -51,10 +51,14 @@ DEFAULTS = {
     "media": {"vsl": "", "thankYou": ""},
     "form": {"extraField": None, "consent": None},
     "serviceArea": None,
+    "startWithQuestions": False,
+    "showQuestionCount": False,
     # Blank copy lines are left off the page rather than shown empty.
     "copy": {
         "callPrompt": "Prefer to talk? Call",
         "disclaimer": "",
+        # Required only with a landing screen (startWithQuestions false).
+        "vsl": {"eyebrow": "", "cta": ""},
         "form": {"subhead": ""},
         "thankYou": {"subhead": "", "stepsHead": ""},
     },
@@ -128,7 +132,7 @@ REQUIRED_TEXT = [
     "slug", "agency", "domain",
     "meta.title", "meta.description",
     "brand.wordmark",
-    "copy.vsl.eyebrow", "copy.vsl.headline", "copy.vsl.subhead", "copy.vsl.cta",
+    "copy.vsl.headline", "copy.vsl.subhead",
     "copy.form.title", "copy.form.submit", "copy.form.namePlaceholder",
     "copy.thankYou.title",
     "copy.callPrompt",
@@ -160,7 +164,16 @@ def validate(cfg, slug):
     if cal is not None and not isinstance(cal, dict):
         err("calendar must be an object, or null for no calendar step")
         cal = None
-    for path in REQUIRED_TEXT + (CALENDAR_TEXT if cal is not None else []):
+    start_q = cfg.get("startWithQuestions")
+    for k in ("startWithQuestions", "showQuestionCount"):
+        if not isinstance(cfg.get(k), bool):
+            err(f"{k} must be true or false")
+    # A landing screen needs its eyebrow and button; the question-first
+    # layout has neither a button nor anywhere for a video.
+    landing = [] if start_q else ["copy.vsl.eyebrow", "copy.vsl.cta"]
+    if start_q and get_safe(cfg, "media.vsl"):
+        err("media.vsl has nowhere to play when startWithQuestions is true")
+    for path in REQUIRED_TEXT + landing + (CALENDAR_TEXT if cal is not None else []):
         try:
             v = get(cfg, path)
         except KeyError:

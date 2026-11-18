@@ -136,6 +136,20 @@ h1.accent { color: var(--accent); }
   margin-top: 10px;
 }
 
+/* startWithQuestions: the landing headline sits above the first
+   question instead of on a screen of its own. */
+.intro { margin-bottom: 26px; }
+.intro .eyebrow:empty { display: none; }
+
+/* showQuestionCount: "2 of 4" under a question's options. */
+.q-count {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 18px;
+}
+
 .q-title {
   font-weight: 800;
   font-size: clamp(1.2rem, 5.4vw, 1.5rem);
@@ -777,7 +791,12 @@ var CONFIG = {{ computed.configJson|raw }};
     var mount = document.getElementById("questionMount");
     var html = CONFIG.questions.map(function (q, i) {
       var next = QSTEPS[i + 1] || "form";
-      return '<section class="step" data-step="' + QSTEPS[i] + '">' +
+      var intro = (i === 0 && CONFIG.startWithQuestions)
+        ? '<div class="intro"><p class="eyebrow">' + CONFIG.copy.vsl.eyebrow + "</p>" +
+          '<h1 class="accent">' + CONFIG.copy.vsl.headline + "</h1>" +
+          '<p class="subhead">' + CONFIG.copy.vsl.subhead + "</p></div>"
+        : "";
+      return '<section class="step" data-step="' + QSTEPS[i] + '">' + intro +
         '<h2 class="q-title">' + q.title + "</h2>" +
         '<div class="options">' +
         q.options.map(function (o) {
@@ -789,6 +808,9 @@ var CONFIG = {{ computed.configJson|raw }};
                  ' data-next="' + (o.dq ? "dq-" + esc(o.dq) : next) + '">' + o.label + "</button>";
         }).join("") +
         "</div>" +
+        (CONFIG.showQuestionCount
+          ? '<p class="q-count">' + (i + 1) + " of " + CONFIG.questions.length + "</p>"
+          : "") +
         '<p class="disclaimer">' + CONFIG.copy.disclaimer + "</p>" +
         "</section>";
     }).join("");
@@ -868,12 +890,21 @@ var CONFIG = {{ computed.configJson|raw }};
     if (calStep) calStep.remove();
   }
 
+  /* startWithQuestions: no landing screen; the visit opens on the first
+     question, which carries the headline. START is where every bounced
+     deep link and a fresh load land. */
+  var START = CONFIG.startWithQuestions ? QSTEPS[0] : "vsl";
+  if (CONFIG.startWithQuestions) {
+    var landing = document.querySelector('.step[data-step="vsl"]');
+    if (landing) landing.remove();
+  }
+
   var steps = {};
   document.querySelectorAll(".step").forEach(function (el) {
     steps[el.dataset.step] = el;
   });
 
-  var ORDER = ["vsl"].concat(QSTEPS, HAS_CALENDAR ? ["form", "calendar", "thankyou"] : ["form", "thankyou"]);
+  var ORDER = (START === "vsl" ? ["vsl"] : []).concat(QSTEPS, HAS_CALENDAR ? ["form", "calendar", "thankyou"] : ["form", "thankyou"]);
   var answers = {};
   var lead = {};
   var current = null;
@@ -1439,7 +1470,7 @@ var CONFIG = {{ computed.configJson|raw }};
     var idx = ORDER.indexOf(step);
     // Hidden on the VSL, the thank-you and the disqualify views -- a
     // progress bar on a dead end just rubs it in.
-    if (idx < 1 || step === "thankyou") {
+    if (idx < 0 || (START === "vsl" && idx < 1) || step === "thankyou") {
       wrap.classList.remove("is-on");
       return;
     }
@@ -1447,7 +1478,10 @@ var CONFIG = {{ computed.configJson|raw }};
     // Divided by the last step's index, not two short of it: dividing by
     // ORDER.length - 2 put the calendar at 100%, so the bar read "finished"
     // while the booking -- the only step that matters -- was still undone.
-    bar.style.width = Math.round((idx / (ORDER.length - 1)) * 100) + "%";
+    // Without a landing screen the first question is step one, not zero,
+    // and the form still stops short of 100%.
+    var at = START === "vsl" ? idx / (ORDER.length - 1) : (idx + 1) / ORDER.length;
+    bar.style.width = Math.round(at * 100) + "%";
   }
 
   /* Every question before this step has an answer. Used to bounce a
@@ -1462,7 +1496,7 @@ var CONFIG = {{ computed.configJson|raw }};
 
   function show(step, pushHash) {
     if (step === "first-question") step = QSTEPS[0];
-    if (!steps[step]) step = "vsl";
+    if (!steps[step]) step = START;
 
     /* Once a call is booked the funnel is finished. Without this, the
        browser Back button lands on a live calendar and a second
@@ -1481,8 +1515,8 @@ var CONFIG = {{ computed.configJson|raw }};
 
     // Guard against someone landing mid-funnel on a deep link with no
     // answers behind them.
-    if ((step === "calendar" || step === "thankyou") && !lead.email) step = "vsl";
-    if ((step === "form" || QSTEPS.indexOf(step) > 0) && !answeredBefore(step)) step = "vsl";
+    if ((step === "calendar" || step === "thankyou") && !lead.email) step = START;
+    if ((step === "form" || QSTEPS.indexOf(step) > 0) && !answeredBefore(step)) step = START;
 
     Object.keys(steps).forEach(function (key) {
       steps[key].classList.toggle("is-active", key === step);
@@ -1740,7 +1774,7 @@ var CONFIG = {{ computed.configJson|raw }};
 
   /* ---------- Back / forward ---------- */
   window.addEventListener("popstate", function () {
-    show((window.location.hash || "#vsl").slice(1), false);
+    show((window.location.hash || "#" + START).slice(1), false);
   });
 
   /* ---------- Boot ---------- */
@@ -1748,7 +1782,7 @@ var CONFIG = {{ computed.configJson|raw }};
   mountLogo();
   mountMedia("vslVideo", CONFIG.media.vsl);
   mountMedia("tyVideo", CONFIG.media.thankYou);
-  show("vsl", false);
+  show(START, false);
 })();
 </script>
 </body>
