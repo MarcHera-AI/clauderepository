@@ -107,6 +107,10 @@ at the spot.
 - **Adaptive day strip** (`buildDays()`): if the Worker has nothing in the
   next seven days the strip slides to the first open day instead of
   showing a dead week.
+- **Real-name check** (`nameProblem()`): a first and last name, and
+  nothing that is unmistakably not a person (digits, a business, "test",
+  a keyboard mash). Deliberately loose: an odd but possible name always
+  passes. The messages are `copy.form.nameErrors`.
 - **Double-tap guard** (option clicks): an option only counts on the
   visible step, and not in its first 350ms, so a double-tap can't answer
   the next question too.

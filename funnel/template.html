@@ -706,7 +706,7 @@ h1.accent { color: var(--accent); }
       <div class="fields" id="fields">
         <div class="field" data-field="name">
           <input type="text" id="fName" name="name" placeholder="{{ copy.form.namePlaceholder }}" autocomplete="name" />
-          <p class="field__error">Please enter your name</p>
+          <p class="field__error">{{ copy.form.nameErrors.missing }}</p>
         </div>
         <div class="field" data-field="email">
           <input type="email" id="fEmail" name="email" placeholder="Email" autocomplete="email" inputmode="email" />
@@ -1728,6 +1728,58 @@ var CONFIG = {{ computed.configJson|raw }};
     return !bad;
   }
 
+  /* ---------- Real names ----------
+     The name is what the caller greets them by and what the CRM files
+     them under, and "test test" or "asdf" is how funnel hackers and
+     tyre-kickers get through. There is no test for "is this a real
+     person's name", so this rejects only what is unmistakably not one:
+     a single word, digits or symbols, a business, a placeholder, a
+     keyboard mash. Anything unusual but plausible is let through on
+     purpose -- turning a real family away costs far more than one untidy
+     record. Returns "" when fine, else which error to show. */
+  var NAME_OK_CHARS = (function () {
+    try { return new RegExp("^[\\p{L}\\p{M}\\s'\u2019.-]+$", "u"); }
+    catch (e) { return /^[^0-9@#$%^*()_+=\[\]{}<>\/\\|~`!?;:"]+$/; }
+  })();
+  var CJK = /[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/;
+  var NAME_BIZ = /(^|[\s.,-])(inc|llc|l\.l\.c|ltd|limited|corp|corporation|company|services|agency|group|enterprises|holdings|solutions|staffing)([\s.,-]|$)/i;
+  // Words that are never someone's name (common real surnames like Doe or
+  // Guest are deliberately not here).
+  var NAME_JUNK_WORD = /^(test|testing|tester|asdf|qwerty|fake|none|null|undefined|n\/a|xx+|abc|abcd|name|firstname|lastname|anonymous|anon|nobody|noname|idk|blah|lol|sample|demo|dummy|user|admin|unknown|nope)$/i;
+  var NAME_JUNK_FULL = /^(john doe|jane doe|mickey mouse|minnie mouse|donald duck|first last|first name|last name|your name|full name|no name|my name|bugs bunny|santa claus)$/i;
+  // Runs along a keyboard row; none of these appear inside real names.
+  var KEYBOARD = /(qwer|asdf|sdfg|dfgh|fghj|ghjk|hjkl|zxcv|xcvb|cvbn|vbnm|rtyu|tyui|yuio|uiop)/i;
+  var VOWEL = /[aeiouy\u00e0-\u00ff\u0100-\u017f]/i;
+
+  function nameProblem(name) {
+    name = name.replace(/\s+/g, " ").trim();
+    if (!name) return "missing";
+    if (name.length > 60) return "fake";
+    if (NAME_BIZ.test(name)) return "business";
+    if (!NAME_OK_CHARS.test(name)) return "fake";              // digits, @, emoji, symbols
+    if (CJK.test(name)) return name.replace(/\s/g, "").length >= 2 ? "" : "full";
+    var words = name.split(" ");
+    var real = words.filter(function (w) { return w.replace(/[.'\u2019-]/g, "").length > 1; });
+    if (words.length > 6) return "fake";
+    var lower = name.toLowerCase();
+    if (NAME_JUNK_FULL.test(lower)) return "fake";
+    if (/(\p{L})\1\1/u.test(lower)) return "fake";               // "aaa", "Jjjohn"
+    if (KEYBOARD.test(lower)) return "fake";
+    for (var i = 0; i < words.length; i++) {
+      var w = words[i].replace(/[.'\u2019]/g, "");
+      if (NAME_JUNK_WORD.test(w)) return "fake";
+      // A long Latin-letter word with no vowel at all is a mash ("Bcdfg");
+      // short ones are real ("Ng").
+      if (/^[a-z-]{4,}$/i.test(w) && !VOWEL.test(w)) return "fake";
+    }
+    // Junk first, so "qwerty" is told it isn't a name rather than that
+    // it's missing a surname.
+    if (real.length < 2) return "full";                         // first and last name
+    var same = real.every(function (w) { return w.toLowerCase() === real[0].toLowerCase(); });
+    if (same) return "fake";                                    // "test test", "Bob Bob"
+    return "";
+  }
+
   function validate() {
     var name = document.getElementById("fName").value.trim();
     var email = document.getElementById("fEmail").value.trim();
@@ -1736,7 +1788,12 @@ var CONFIG = {{ computed.configJson|raw }};
     var consent = CONSENT ? document.getElementById("fConsent").checked : false;
 
     var ok = true;
-    ok = setError("name", name.length < 2) && ok;
+    var nameIssue = nameProblem(name);
+    if (nameIssue) {
+      document.querySelector('.field[data-field="name"] .field__error').textContent =
+        CONFIG.copy.form.nameErrors[nameIssue];
+    }
+    ok = setError("name", !!nameIssue) && ok;
     ok = setError("email", !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) && ok;
     // Deliberately loose: counts digits only, so any country's format passes.
     ok = setError("phone", (phone.replace(/\D/g, "").length < 7)) && ok;

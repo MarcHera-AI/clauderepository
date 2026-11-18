@@ -60,7 +60,17 @@ DEFAULTS = {
         "footer": [],
         # Required only with a landing screen (startWithQuestions false).
         "vsl": {"eyebrow": "", "cta": ""},
-        "form": {"subhead": ""},
+        "form": {
+            "subhead": "",
+            # What the name field says when funnel/template.html's real-name
+            # check turns a name down.
+            "nameErrors": {
+                "missing": "Please enter your name",
+                "full": "Please enter your first and last name",
+                "fake": "Please enter your real name",
+                "business": "Please use your own name, not a business name",
+            },
+        },
         "thankYou": {"subhead": "", "stepsHead": ""},
     },
     "calendar": {
@@ -135,6 +145,8 @@ REQUIRED_TEXT = [
     "brand.wordmark",
     "copy.vsl.headline", "copy.vsl.subhead",
     "copy.form.title", "copy.form.submit", "copy.form.namePlaceholder",
+    "copy.form.nameErrors.missing", "copy.form.nameErrors.full",
+    "copy.form.nameErrors.fake", "copy.form.nameErrors.business",
     "copy.thankYou.title",
     "copy.callPrompt",
     "funnelMeta.source", "funnelMeta.funnel", "funnelMeta.funnel_slug",
