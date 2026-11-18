@@ -70,6 +70,9 @@
     "callPrompt": "Prefer to talk? Call"
   },
 
+  "startWithQuestions": true,
+  "showQuestionCount": true,
+
   "questions": [
     {
       "key": "care_for",
