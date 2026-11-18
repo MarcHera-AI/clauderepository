@@ -1,0 +1,163 @@
+{
+  "_notes": [
+    "Funnel for Home Care Aide Services (owner Aida Bernal), Sonoma and Marin County, CA.",
+    "Speaks to families arranging in-home care for someone, usually a parent - not to agency owners.",
+    "Any value containing TODO blocks the build for this client only. See funnel/README.md.",
+    "theme is a placeholder (calm teal) until her logo arrives; match it to the logo then."
+  ],
+
+  "slug": "homecareaide",
+  "agency": "Home Care Aide Services",
+  "domain": "homecareaide.cozlymedia.com",
+
+  "meta": {
+    "title": "Home Care Aide Services | In-Home Care in Sonoma & Marin County",
+    "description": "Trusted in-home caregivers for families in Sonoma and Marin County. See if we can help and book a care assessment."
+  },
+
+  "brand": {
+    "logoUrl": "TODO: her logo - an https URL, or a file placed under clients/",
+    "wordmark": "Home Care Aide",
+    "wordmarkSub": "Services",
+    "faviconLetter": "H"
+  },
+
+  "theme": {
+    "bg": "#fbfaf7",
+    "accent": "#2f7d73",
+    "accentDark": "#276a61",
+    "accentInk": "#ffffff",
+    "accentTint": "#e8f3f1",
+    "thankYouTitle": "#2f7d73"
+  },
+
+  "phone": { "display": "TODO: her phone number" },
+
+  "media": {
+    "vsl": "TODO: VSL video (.mp4 URL or embed markup), or empty string for none",
+    "thankYou": ""
+  },
+
+  "copy": {
+    "vsl": {
+      "eyebrow": "Families in Sonoma &amp; Marin County",
+      "headline": "TODO: headline (her offer)",
+      "subhead": "TODO: subhead (her offer)",
+      "cta": "See If We Can Help &rarr;"
+    },
+    "form": {
+      "title": "Almost Done",
+      "subhead": "Where should we send your appointment details? We'll only use them to arrange care.",
+      "namePlaceholder": "Your full name",
+      "submit": "Continue"
+    },
+    "calendar": {
+      "title": "Choose A Time For Your Care Assessment",
+      "subhead": "A care coordinator will go over your loved one's needs, answer your questions, and explain how care would work.",
+      "confirm": "Confirm my assessment",
+      "busy": "Booking your assessment…",
+      "none": "No times are open right now. Please call us and we'll find one for you.",
+      "bookedLabel": "Booked assessment"
+    },
+    "thankYou": {
+      "title": "You're Booked. Here's What Happens Next.",
+      "subhead": "Your care assessment is on the calendar. We'll be in touch before it to confirm.",
+      "stepsHead": "Before Your Assessment:",
+      "steps": [
+        "Look out for a confirmation text and email from Home Care Aide Services.",
+        "If someone else helps make care decisions - a sibling, a spouse - invite them to join.",
+        "Jot down your loved one's daily routine, medications and anything that worries you, so nothing gets missed."
+      ]
+    },
+    "disclaimer": "By continuing you agree to be contacted by Home Care Aide Services by phone, text or email about your care request. Consent is not a condition of service. Message and data rates may apply; reply STOP to opt out.",
+    "callPrompt": "Prefer to talk? Call"
+  },
+
+  "questions": [
+    {
+      "key": "care_for",
+      "title": "Who are you looking for care for?",
+      "options": [
+        { "label": "My mom or dad" },
+        { "label": "My spouse or partner" },
+        { "label": "Myself" },
+        { "label": "Another relative or a friend" }
+      ]
+    },
+    {
+      "key": "location",
+      "title": "Where will care take place?",
+      "options": [
+        { "label": "Sonoma County" },
+        { "label": "Marin County" },
+        { "label": "Somewhere else", "dq": "area" }
+      ]
+    },
+    {
+      "key": "care_type",
+      "title": "What kind of help is needed most?",
+      "options": [
+        { "label": "Everyday help at home: meals, housekeeping, errands" },
+        { "label": "Personal care: bathing, dressing, getting around" },
+        { "label": "Memory care: dementia or Alzheimer's" },
+        { "label": "Help recovering after a hospital stay" },
+        { "label": "Not sure yet" }
+      ]
+    },
+    {
+      "key": "start",
+      "title": "When would you like care to start?",
+      "options": [
+        { "label": "As soon as possible" },
+        { "label": "Within the next month" },
+        { "label": "In a few months" },
+        { "label": "Just looking into options" }
+      ]
+    }
+  ],
+
+  "disqualify": {
+    "area": {
+      "title": "We're Not In Your Area Yet",
+      "body": [
+        "Home Care Aide Services provides in-home care in Sonoma and Marin County, California, so we can't send a caregiver to where your loved one lives.",
+        "Your local Area Agency on Aging can point you to trusted care nearby. Find yours at <a href=\"https://eldercare.acl.gov\" target=\"_blank\" rel=\"noopener\">eldercare.acl.gov</a>."
+      ]
+    }
+  },
+
+  "form": {
+    "extraField": {
+      "key": "city",
+      "placeholder": "City where care is needed",
+      "error": "Please enter the city",
+      "autocomplete": "address-level2"
+    }
+  },
+
+  "calendar": {
+    "mode": "rules",
+    "id": "TODO: GHL calendar id her assessments book into",
+    "timezone": "TODO: the GHL calendar's own timezone, e.g. America/Los_Angeles",
+    "utcOffsetHours": null,
+    "days": [1, 2, 3, 4, 5],
+    "blockedDates": [],
+    "startHour": 9,
+    "endHour": 17,
+    "durationMin": 30,
+    "slotIntervalMin": 0,
+    "bookUpTo": 3,
+    "leadTimeMin": 120
+  },
+
+  "slotsApi": "",
+  "webhookUrl": "TODO: GHL inbound webhook URL for her workflow",
+
+  "funnelMeta": {
+    "source": "Home Care Aide Services site",
+    "funnel": "Home Care Aide Services Funnel",
+    "funnel_slug": "homecareaide"
+  },
+
+  "pixelId": "TODO: Meta pixel id for the ad account running her ads"
+}
