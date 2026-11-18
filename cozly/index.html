@@ -1625,6 +1625,31 @@ var CONFIG = {
     return !bad;
   }
 
+  /* People type their agency into the name box, because the question right
+     before this one was about their agency. The company field is directly
+     underneath, so the fix is to say so rather than silently accept it.
+
+     There is no reliable test for "is this a person's name", so this only
+     rejects what is unmistakably a business: a word like LLC or Services, a
+     phrase like "home care", or a digit. Anything ambiguous is let through --
+     a real lead turned away costs far more than one tidy record. */
+  var BIZ_WORD = /(^|[\s.,&-])(inc|llc|l\.l\.c|ltd|limited|corp|corporation|co|company|services|service|agency|agencies|group|llp|pllc|enterprises|holdings|solutions|associates|partners|staffing|caregivers)([\s.,&-]|$)/i;
+  var BIZ_PHRASE = /(home\s*care|senior\s*care|health\s*care|healthcare|in[-\s]?home|assisted\s*living|nursing)/i;
+
+  function looksLikeCompany(name) {
+    if (/\d/.test(name)) return true;              // "24/7 Care", "A1 Homecare"
+    if (/[&@]/.test(name)) return true;            // "Smith & Sons"
+    if (BIZ_WORD.test(name)) return true;
+    if (BIZ_PHRASE.test(name)) return true;
+    return false;
+  }
+
+  /* "Full name" means both. One word is almost always a first name only, and
+     the setter needs a surname to greet them properly on the call. */
+  function hasTwoNames(name) {
+    return name.split(/\s+/).filter(function (w) { return w.length > 1; }).length >= 2;
+  }
+
   function validate() {
     var name = document.getElementById("fName").value.trim();
     var email = document.getElementById("fEmail").value.trim();
@@ -1632,7 +1657,16 @@ var CONFIG = {
     var company = document.getElementById("fCompany").value.trim();
 
     var ok = true;
-    ok = setError("name", name.length < 2) && ok;
+    var nameBad = name.length < 2 || !hasTwoNames(name) || looksLikeCompany(name);
+    if (nameBad) {
+      var msg = document.querySelector('.field[data-field="name"] .field__error');
+      if (msg) {
+        msg.textContent = looksLikeCompany(name)
+          ? "Please use your own name \u2014 there's a box for your company below"
+          : "Please enter your first and last name";
+      }
+    }
+    ok = setError("name", nameBad) && ok;
     ok = setError("email", !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) && ok;
     // Deliberately loose: counts digits only, so any country's format passes.
     ok = setError("phone", (phone.replace(/\D/g, "").length < 7)) && ok;
