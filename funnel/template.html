@@ -825,6 +825,7 @@ var CONFIG = {{ computed.configJson|raw }};
   var answers = {};
   var lead = {};
   var current = null;
+  var shownAt = 0;
 
   /* ---------- Meta Pixel (only if an ID is set) ---------- */
   function initPixel() {
@@ -1428,6 +1429,7 @@ var CONFIG = {{ computed.configJson|raw }};
     });
 
     current = step;
+    shownAt = Date.now();
     setProgress(step);
     window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
 
@@ -1443,8 +1445,17 @@ var CONFIG = {{ computed.configJson|raw }};
   }
 
   /* ---------- Option buttons ---------- */
+  /* A double-tap used to answer two questions: the first tap moves on
+     after 180ms, and the next question's option is drawn under the same
+     finger in time to catch the second. So an option only counts on the
+     step that is actually showing, and not in the first moments after it
+     appeared -- nobody reads a question in a third of a second. */
+  var OPTION_SETTLE_MS = 350;
+
   document.querySelectorAll(".option").forEach(function (btn) {
     btn.addEventListener("click", function () {
+      if (btn.closest(".step") !== steps[current]) return;
+      if (Date.now() - shownAt < OPTION_SETTLE_MS) return;
       var group = btn.parentElement;
       group.querySelectorAll(".option").forEach(function (o) {
         o.classList.remove("is-chosen");
