@@ -954,6 +954,26 @@ var CONFIG = {{ computed.configJson|raw }};
     if (CONFIG.pixelId && window.fbq) window.fbq("track", event);
   }
 
+  /* ---------- Step tracking (trackSteps) ----------
+     Lead only says who finished. With clicks and no leads, the question
+     is where people stop, so each screen reached sends a custom event
+     (Step_Q1 ... Step_Form, Step_DQ_payment) and a form submit that
+     fails sends FormError_<field>. Each fires at most once per visit, so
+     Back and forth doesn't inflate the counts, and the event-name
+     counts in Events Manager read as a drop-off funnel. Custom events,
+     not standard ones, so the Lead optimisation is untouched. */
+  var stepsSent = {};
+  function trackOnce(name) {
+    if (!CONFIG.trackSteps || !CONFIG.pixelId || !window.fbq || stepsSent[name]) return;
+    stepsSent[name] = true;
+    window.fbq("trackCustom", name);
+  }
+  function stepEventName(step) {
+    if (/^q\d+$/.test(step)) return "Step_Q" + step.slice(1);
+    if (step.indexOf("dq-") === 0) return "Step_DQ_" + step.slice(3).replace(/[^A-Za-z0-9_]/g, "_");
+    return "Step_" + step.charAt(0).toUpperCase() + step.slice(1).replace(/[^A-Za-z0-9_]/g, "_");
+  }
+
   /* ---------- Ad click attribution ----------
      fbclid and utm_* only exist on the first URL. Stash them so they
      survive the hash changes and still ride along on the webhook. */
@@ -1560,6 +1580,7 @@ var CONFIG = {{ computed.configJson|raw }};
       }
     }
 
+    trackOnce(stepEventName(step));
     if (step === "calendar") { mountCalendar(); track("InitiateCheckout"); }
     if (step === "thankyou") track("CompleteRegistration");
   }
@@ -1751,6 +1772,7 @@ var CONFIG = {{ computed.configJson|raw }};
   var KEYBOARD = /(qwer|asdf|sdfg|dfgh|fghj|ghjk|hjkl|zxcv|xcvb|cvbn|vbnm|rtyu|tyui|yuio|uiop)/i;
   var VOWEL = /[aeiouy\u00e0-\u00ff\u0100-\u017f]/i;
 
+  var lastNameIssue = "";
   function nameProblem(name) {
     name = name.replace(/\s+/g, " ").trim();
     if (!name) return "missing";
@@ -1789,6 +1811,7 @@ var CONFIG = {{ computed.configJson|raw }};
 
     var ok = true;
     var nameIssue = nameProblem(name);
+    lastNameIssue = nameIssue;
     if (nameIssue) {
       document.querySelector('.field[data-field="name"] .field__error').textContent =
         CONFIG.copy.form.nameErrors[nameIssue];
@@ -1820,6 +1843,11 @@ var CONFIG = {{ computed.configJson|raw }};
        submit -- and post the lead -- again. */
     if (current !== "form") return;
     if (!validate()) {
+      document.querySelectorAll(".field.has-error").forEach(function (f) {
+        var key = f.getAttribute("data-field");
+        // Which name rule fired, so a rule turning away real people shows up.
+        trackOnce("FormError_" + key + (key === "name" && lastNameIssue ? "_" + lastNameIssue : ""));
+      });
       var firstBad = document.querySelector(".field.has-error input");
       if (firstBad) firstBad.focus();
       return;

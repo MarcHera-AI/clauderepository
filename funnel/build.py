@@ -53,6 +53,9 @@ DEFAULTS = {
     "serviceArea": None,
     "startWithQuestions": False,
     "showQuestionCount": False,
+    # Send a custom pixel event for each screen reached and each failed
+    # form field, to see where visitors drop off.
+    "trackSteps": False,
     # Blank copy lines are left off the page rather than shown empty.
     "copy": {
         "callPrompt": "Prefer to talk? Call",
@@ -178,7 +181,7 @@ def validate(cfg, slug):
         err("calendar must be an object, or null for no calendar step")
         cal = None
     start_q = cfg.get("startWithQuestions")
-    for k in ("startWithQuestions", "showQuestionCount"):
+    for k in ("startWithQuestions", "showQuestionCount", "trackSteps"):
         if not isinstance(cfg.get(k), bool):
             err(f"{k} must be true or false")
     # A landing screen needs its eyebrow and button; the question-first
