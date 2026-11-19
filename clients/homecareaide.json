@@ -105,7 +105,7 @@
       "key": "hours_per_week",
       "title": "About how many hours of help a week?",
       "options": [
-        { "label": "Under 20", "dq": "under_20_hours" },
+        { "label": "Under 20" },
         { "label": "20 to 39" },
         { "label": "40+" },
         { "label": "24/7 or live-in" },
@@ -114,14 +114,13 @@
     },
     {
       "key": "payment",
-      "title": "Private care with {agency} is $40 an hour. How will care be paid for?",
+      "title": "How will care be paid for?",
       "options": [
         { "label": "Private pay (savings, income or family helping)" },
         { "label": "Long-term care insurance" },
         { "label": "Medicare", "dq": "payment" },
         { "label": "Medicaid or a state program", "dq": "payment" },
-        { "label": "VA benefits", "dq": "payment" },
-        { "label": "Not sure yet", "dq": "payment" }
+        { "label": "VA benefits", "dq": "payment" }
       ]
     }
   ],
@@ -132,13 +131,6 @@
       "body": [
         "This page is for families looking for care.",
         "To apply, please contact {agency} directly."
-      ]
-    },
-    "under_20_hours": {
-      "title": "Thank you for sharing.",
-      "body": [
-        "Our care plans start at 4 hours a day, 5 days a week, so we may not be the right fit right now.",
-        "If your needs change, we&rsquo;d love to help."
       ]
     },
     "payment": {
