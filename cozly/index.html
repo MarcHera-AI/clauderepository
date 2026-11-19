@@ -969,6 +969,21 @@ var CONFIG = {
   // [{ title: "...", note: "...", url: "https://..." }]
   dqVideos: [],
 
+  // Where the soft-exit email capture posts.
+  //
+  // OFF BY DEFAULT, and it must stay off until GHL can handle it. The
+  // "Cozly Funnel: New Lead" workflow branches on "event": anything that
+  // is not "lead" falls through to the booking branch, which fires the
+  // booked alert and then tries to create an appointment that has no
+  // time. A disqualified agency leaving an email would look exactly like
+  // a new booking.
+  //
+  // To switch it on: add a branch to that workflow for event =
+  // "dq_nurture" that only tags the contact, re-capture the webhook's
+  // Mapping Reference so the new fields (tier, dq_reason, budget) are
+  // known, then paste the same webhookUrl value here.
+  nurtureWebhookUrl: "",
+
   pixelId: "1430748782476632"
 };
 
@@ -1589,10 +1604,21 @@ var CONFIG = {
       btn.textContent = "Sending\u2026";
 
       lead.email = email;
-      postWebhook(basePayload("dq_nurture"), function () {
+
+      var done = function () {
         nurtureForm.hidden = true;
         document.getElementById("nurtureDone").hidden = false;
-      });
+      };
+
+      // Until GHL has a branch for this event, posting would look like a
+      // booking. Better to thank them and lose the address than to fire a
+      // booked alert at Markuss for someone we just turned away.
+      if (!CONFIG.nurtureWebhookUrl) { done(); return; }
+
+      var payload = basePayload("dq_nurture");
+      var saved = CONFIG.webhookUrl;
+      CONFIG.webhookUrl = CONFIG.nurtureWebhookUrl;
+      postWebhook(payload, function () { CONFIG.webhookUrl = saved; done(); });
     });
   }
 
