@@ -534,6 +534,48 @@ h1.accent { color: var(--accent); }
   margin-top: 12px;
 }
 
+/* ---- soft-exit blocks ---- */
+.dq-offer {
+  margin-top: 26px;
+  padding: 20px;
+  background: var(--option);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  text-align: center;
+}
+.dq-offer h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.dq-offer p { margin-top: 8px; color: var(--muted); font-size: 0.93rem; }
+.dq-offer .btn { margin-top: 14px; }
+
+.dq-videos { margin-top: 22px; display: grid; gap: 10px; }
+.dq-video {
+  display: block;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.dq-video:hover { background: var(--option-hover); }
+.dq-video span {
+  display: block;
+  margin-top: 3px;
+  font-weight: 400;
+  font-size: 0.87rem;
+  color: var(--muted);
+}
+
+.dq-capture { margin-top: 24px; }
+.dq-done { text-align: center; margin-top: 16px; color: var(--muted); font-size: 0.95rem; }
+
 /* ===== Disclaimer ===== */
 .disclaimer {
   text-align: center;
@@ -602,10 +644,12 @@ h1.accent { color: var(--accent); }
        STEP 2 — Q1  (No -> disqualify)
        ============================================================ -->
   <section class="step" data-step="q1">
-    <h2 class="q-title">Are you a home care agency?</h2>
+    <h2 class="q-title">What kind of home care do you provide?</h2>
     <div class="options">
-      <button class="option" type="button" data-q="agency" data-value="Yes" data-next="q2">Yes</button>
-      <button class="option" type="button" data-q="agency" data-value="No" data-next="dq">No</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Mostly private pay" data-next="q2">Mostly private pay</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Mix of private pay and Medicaid/VA" data-next="q2">Mix of private pay and Medicaid/VA</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Mostly Medicaid or VA" data-next="dq-hard" data-dq="medicaid">Mostly Medicaid or VA</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Medicare home health" data-next="dq-hard" data-dq="medicare">Medicare home health</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
@@ -622,7 +666,7 @@ h1.accent { color: var(--accent); }
     <div class="options">
       <button class="option" type="button" data-q="decision_maker" data-value="Yes, I'm the decision-maker" data-next="q3">Yes, I'm the decision-maker</button>
       <button class="option" type="button" data-q="decision_maker" data-value="Yes, with a partner or team" data-next="q3">Yes, with a partner or team</button>
-      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq">No</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq-soft" data-dq="not_dm">No</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
@@ -635,13 +679,38 @@ h1.accent { color: var(--accent); }
        STEP 4 — Q3  (0-5 -> disqualify)
        ============================================================ -->
   <section class="step" data-step="q3">
-    <h2 class="q-title">How many clients are on service right now?</h2>
+    <h2 class="q-title">What's your agency doing in annual revenue?</h2>
     <div class="options">
-      <button class="option" type="button" data-q="clients" data-value="0 to 5"   data-next="dq">0 to 5</button>
-      <button class="option" type="button" data-q="clients" data-value="6 to 15"  data-next="form">6 to 15</button>
-      <button class="option" type="button" data-q="clients" data-value="16 to 25" data-next="form">16 to 25</button>
-      <button class="option" type="button" data-q="clients" data-value="26 to 50" data-next="form">26 to 50</button>
-      <button class="option" type="button" data-q="clients" data-value="51+"      data-next="form">51+</button>
+      <button class="option" type="button" data-q="revenue" data-value="Under $500k"  data-next="q4">Under $500k</button>
+      <button class="option" type="button" data-q="revenue" data-value="$500k to $1M" data-next="form">$500k to $1M</button>
+      <button class="option" type="button" data-q="revenue" data-value="$1M to $3M"   data-next="form">$1M to $3M</button>
+      <button class="option" type="button" data-q="revenue" data-value="$3M+"         data-next="form">$3M+</button>
+    </div>
+    <p class="disclaimer">
+      By continuing you agree to our terms and privacy policy. Results are not typical
+      and are not a guarantee of future outcomes. This site is not part of, or endorsed
+      by, any third-party platform.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       STEP 4b — Q4  (budget; only reached from "Under $500k")
+
+       Revenue alone would throw away a small agency whose owner is
+       genuinely funded -- someone who just sold a business, or is
+       bankrolling growth deliberately. This catches them. A range
+       rather than yes/no on purpose: a binary gets "yes" from
+       everyone, a range gets an honest answer and segments the ones
+       who clear it.
+       ============================================================ -->
+  <section class="step" data-step="q4">
+    <h2 class="q-title">Last one.</h2>
+    <p class="subhead">All in &mdash; our fee plus ad spend &mdash; what's your monthly budget for bringing in new private-pay families?</p>
+    <div class="options" style="margin-top:18px">
+      <button class="option" type="button" data-q="budget" data-value="Under $1,500"     data-next="dq-soft" data-dq="low_budget">Under $1,500</button>
+      <button class="option" type="button" data-q="budget" data-value="$1,500 to $3,000" data-next="form">$1,500 to $3,000</button>
+      <button class="option" type="button" data-q="budget" data-value="$3,000 to $5,000" data-next="form">$3,000 to $5,000</button>
+      <button class="option" type="button" data-q="budget" data-value="$5,000+"          data-next="form">$5,000+</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
@@ -739,13 +808,50 @@ h1.accent { color: var(--accent); }
   <!-- ============================================================
        STEP 8 — Disqualify
        ============================================================ -->
-  <section class="step" data-step="dq">
-    <h2 class="dq-title">We May Not Be the Right Fit Right Now</h2>
+  <!-- HARD exit: structurally unsellable (Medicaid/VA, Medicare). Brief and
+       respectful. No email capture and no retargeting event -- there is no point
+       paying to chase someone we cannot serve. -->
+  <section class="step" data-step="dq-hard">
+    <h2 class="dq-title">We're Not the Right Fit</h2>
     <p class="dq-body">
-      The Cozly LaunchPad is for established home care agency owners looking to get
-      more private-pay families.
+      Cozly only does private-pay family acquisition. Medicaid, VA and Medicare
+      home health work very differently, and we'd be the wrong people to run it.
     </p>
-    <p class="dq-body">Based on your answers, we're unable to offer a call at this time.</p>
+    <p class="dq-body">Thanks for taking the time &mdash; genuinely.</p>
+  </section>
+
+  <!-- SOFT exit: a fit eventually, just not today. These people are the
+       retargeting pool and the paid-audit buyers, so this page has to earn
+       its keep rather than dead-end them. Every block below is CONFIG-driven
+       and hides itself when empty, so the page is never half-built. -->
+  <section class="step" data-step="dq-soft">
+    <h2 class="dq-title">You're Close &mdash; But Not Quite Yet</h2>
+    <p class="dq-body">
+      We work with agencies who can put real, consistent spend behind their ads,
+      because that's the point where paid traffic starts paying for itself.
+      Below it, you'd be funding a learning curve instead of buying growth.
+    </p>
+    <p class="dq-body">That's not a no forever. Here's what actually moves the needle at your size.</p>
+
+    <div class="dq-offer" id="dqOffer" hidden>
+      <h3 id="dqOfferTitle"></h3>
+      <p id="dqOfferBody"></p>
+      <a class="btn" id="dqOfferBtn" href="#" target="_blank" rel="noopener"></a>
+    </div>
+
+    <div class="dq-videos" id="dqVideos" hidden></div>
+
+    <form class="dq-capture" id="nurtureForm" novalidate hidden>
+      <p class="dq-body">Or leave your email and we'll send the free training as we publish it.</p>
+      <div class="fields">
+        <div class="field" data-field="nurture_email">
+          <input type="email" id="nEmail" name="nurture_email" placeholder="Email" autocomplete="email" inputmode="email" />
+          <p class="field__error">Please enter a valid email</p>
+        </div>
+      </div>
+      <button class="btn" type="submit" id="nurtureSubmit">Send it over</button>
+    </form>
+    <p class="dq-done" id="nurtureDone" hidden>Sent &mdash; check your inbox.</p>
   </section>
 
 </div>
@@ -850,6 +956,19 @@ var CONFIG = {
   },
 
   // Meta Pixel ID. Leave empty and no pixel code runs at all.
+  // Soft-exit resources, shown to agencies who are a fit eventually but not
+  // today. Each block hides itself while its values are empty, so this can
+  // ship before the content exists without the page looking half-built.
+  audit: {
+    title: "Want us to look at what you're running now?",
+    body: "We pull your current marketing apart and hand you the exact plan we would run ourselves \u2014 yours to keep either way.",
+    cta: "Book a $499 Growth Audit",
+    url: ""   // <- paste the audit booking URL here to switch the block on
+  },
+
+  // [{ title: "...", note: "...", url: "https://..." }]
+  dqVideos: [],
+
   pixelId: "1430748782476632"
 };
 
@@ -861,7 +980,7 @@ var CONFIG = {
     steps[el.dataset.step] = el;
   });
 
-  var ORDER = ["vsl", "q1", "q2", "q3", "form", "calendar", "thankyou"];
+  var ORDER = ["vsl", "q1", "q2", "q3", "q4", "form", "calendar", "thankyou"];
   var answers = {};
   var lead = {};
   var current = null;
@@ -882,6 +1001,13 @@ var CONFIG = {
 
   function track(event) {
     if (CONFIG.pixelId && window.fbq) window.fbq("track", event);
+  }
+
+  /* Custom events, so the DQ'd can be built into a retargeting audience
+     (soft) or excluded from prospecting entirely (hard). Standard events
+     would pollute the conversion data the campaign optimises on. */
+  function trackCustom(event, params) {
+    if (CONFIG.pixelId && window.fbq) window.fbq("trackCustom", event, params || {});
   }
 
   /* ---------- Ad click attribution ----------
@@ -1409,6 +1535,67 @@ var CONFIG = {
     postWebhook(payload, finish);
   });
 
+  /* ---------- Soft exit ---------- */
+  function mountSoftExit() {
+    var a = CONFIG.audit || {};
+    if (a.url) {
+      document.getElementById("dqOfferTitle").textContent = a.title || "";
+      document.getElementById("dqOfferBody").textContent = a.body || "";
+      var btn = document.getElementById("dqOfferBtn");
+      btn.textContent = a.cta || "Learn more";
+      btn.href = a.url;
+      document.getElementById("dqOffer").hidden = false;
+    }
+
+    var vids = CONFIG.dqVideos || [];
+    if (vids.length) {
+      var box = document.getElementById("dqVideos");
+      box.innerHTML = "";
+      vids.forEach(function (v) {
+        if (!v || !v.url) return;
+        var el = document.createElement("a");
+        el.className = "dq-video";
+        el.href = v.url;
+        el.target = "_blank";
+        el.rel = "noopener";
+        el.textContent = v.title || "Watch";
+        if (v.note) {
+          var n = document.createElement("span");
+          n.textContent = v.note;
+          el.appendChild(n);
+        }
+        box.appendChild(el);
+      });
+      box.hidden = false;
+    }
+
+    // The email capture is the floor: it works with no content written at all,
+    // and it is the only thing here that turns a dead end into a list.
+    var f = document.getElementById("nurtureForm");
+    if (f && document.getElementById("nurtureDone").hidden) f.hidden = false;
+  }
+
+  var nurtureForm = document.getElementById("nurtureForm");
+  if (nurtureForm) {
+    nurtureForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = document.getElementById("nEmail");
+      var email = (input.value || "").trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setError("nurture_email", true); return; }
+      setError("nurture_email", false);
+
+      var btn = document.getElementById("nurtureSubmit");
+      btn.disabled = true;
+      btn.textContent = "Sending\u2026";
+
+      lead.email = email;
+      postWebhook(basePayload("dq_nurture"), function () {
+        nurtureForm.hidden = true;
+        document.getElementById("nurtureDone").hidden = false;
+      });
+    });
+  }
+
   /* ---------- Navigation ---------- */
   function setProgress(step) {
     var bar = document.getElementById("progressBar");
@@ -1445,7 +1632,7 @@ var CONFIG = {
     // Guard against someone landing mid-funnel on a deep link with no
     // answers behind them.
     if ((step === "calendar" || step === "thankyou") && !lead.email) step = "vsl";
-    if ((step === "form" || step === "q3") && !answers.agency) step = "vsl";
+    if ((step === "q3" || step === "q4" || step === "form") && !answers.payer_mix) step = "vsl";
 
     Object.keys(steps).forEach(function (key) {
       steps[key].classList.toggle("is-active", key === step);
@@ -1464,6 +1651,8 @@ var CONFIG = {
 
     if (step === "calendar") { mountCalendar(); track("InitiateCheckout"); }
     if (step === "thankyou") track("CompleteRegistration");
+    if (step === "dq-soft") { mountSoftExit(); trackCustom("DQSoft", { reason: answers.dq_reason || "" }); }
+    if (step === "dq-hard") { trackCustom("DQHard", { reason: answers.dq_reason || "" }); }
   }
 
   /* ---------- Option buttons ---------- */
@@ -1475,6 +1664,9 @@ var CONFIG = {
       });
       btn.classList.add("is-chosen");
       answers[btn.dataset.q] = btn.dataset.value;
+      // Why they were turned away, so the CRM and the pixel can tell the
+      // difference between "too small" and "wrong business entirely".
+      if (btn.dataset.dq) answers.dq_reason = btn.dataset.dq;
 
       // Short pause so the selection is visible before the step changes.
       setTimeout(function () { show(btn.dataset.next); }, 180);
@@ -1492,10 +1684,24 @@ var CONFIG = {
      workflow branches on "event", which is why it is always set. */
 
   var QUESTIONS = {
-    agency: "Are you a home care agency?",
+    payer_mix: "What kind of home care do you provide?",
     decision_maker: "Do you handle marketing decisions for your agency?",
-    clients: "How many clients are on service right now?"
+    revenue: "What's your agency doing in annual revenue?",
+    budget: "Monthly budget for new private-pay families"
   };
+
+  /* What Markuss needs to see before he dials. The funnel never shows a
+     tier to the visitor -- if a $3M agency learns a cheaper option exists,
+     they will ask for it -- so this exists only in the CRM record. */
+  function tierOf() {
+    switch (answers.revenue) {
+      case "$3M+":          return "premium";
+      case "$1M to $3M":    return "core";
+      case "$500k to $1M":  return "downsell";
+      case "Under $500k":   return "small-but-funded";
+      default:              return "";
+    }
+  }
 
   /* One id for the whole visit, so the "lead" post and the later
      "booking" post can be tied to the same person in the CRM. */
@@ -1514,7 +1720,7 @@ var CONFIG = {
 
   function answerList() {
     var out = [];
-    ["agency", "decision_maker", "clients"].forEach(function (key) {
+    ["payer_mix", "decision_maker", "revenue", "budget"].forEach(function (key) {
       if (answers[key]) out.push({ question: QUESTIONS[key], answer: answers[key] });
     });
     if (lead.company) out.push({ question: "company", answer: lead.company });
@@ -1592,6 +1798,8 @@ var CONFIG = {
       phone: lead.phone || "",
       company: lead.company || "",
       booked: event === "booking",
+      tier: tierOf(),
+      dq_reason: answers.dq_reason || "",
       answers: list,
       answers_text: list.map(function (a) { return a.question + ": " + a.answer; }).join(" | "),
       page_url: window.location.href,
