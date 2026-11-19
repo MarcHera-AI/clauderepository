@@ -6,6 +6,7 @@
     "Copy says {agency} and {phone} where it names them; build.py writes the values in.",
     "No phone number and no video, by choice: the 'Prefer to talk?' lines and the video box are left off.",
     "serviceArea.zips: every Sonoma (50) and Marin (41) County ZIP per zip-codes.com, PO boxes included. 94952 Petaluma also reaches into Marin. Confirmed she covers all of both counties.",
+    "Plus 58 nearby ZIPs (added 2026-11-18): every ZIP in Napa, Lake, Mendocino, Solano, San Francisco and Contra Costa County whose Census 2020 centre point is within 15 miles of a Sonoma or Marin ZIP centre, plus 94515 Calistoga (half in Sonoma). Includes all of San Francisco and the Richmond/El Cerrito side of the Richmond-San Rafael Bridge.",
     "Any value containing TODO blocks the build for this client only. See funnel/README.md.",
     "theme: her logo's blue (#00349c) on white, since the logo has a white background."
   ],
@@ -184,7 +185,14 @@
       "94929", "94930", "94933", "94937", "94938", "94939", "94940", "94941", "94942", "94945",
       "94946", "94947", "94948", "94949", "94950", "94956", "94957", "94960", "94963", "94964",
       "94965", "94966", "94970", "94971", "94973", "94974", "94976", "94977", "94978", "94979",
-      "94998"
+      "94998",
+
+      "94503", "94508", "94515", "94558", "94559", "94567", "94573", "94574", "94576", "94599",
+      "95426", "95451", "95461", "95467", "95445", "95449", "95494", "94589", "94590", "94592",
+      "94102", "94103", "94104", "94105", "94107", "94108", "94109", "94110", "94111", "94112",
+      "94114", "94115", "94116", "94117", "94118", "94121", "94122", "94123", "94124", "94127",
+      "94129", "94130", "94131", "94132", "94133", "94134", "94158", "94525", "94530", "94547",
+      "94564", "94572", "94708", "94801", "94803", "94804", "94805", "94806"
     ]
   },
 
