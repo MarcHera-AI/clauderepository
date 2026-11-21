@@ -46,8 +46,8 @@
 
   "copy": {
     "vsl": {
-      "eyebrow": "Private in-home care &middot; Serving Sonoma &amp; Marin County",
-      "headline": "Get Mom or Dad the Help They Need at Home, Starting This Week",
+      "eyebrow": "ATTENTION SONOMA AND MARIN COUNTY FAMILIES",
+      "headline": "Keep your loved one safe at home, before something goes wrong",
       "subhead": "Trusted, screened caregivers for private-pay families in Sonoma and Marin County. No insurance waiting lists. No long-term contracts.",
       "cta": "Check Care Availability"
     },
@@ -80,6 +80,14 @@
   "trackSteps": true,
 
   "questions": [
+    {
+      "key": "in_area",
+      "title": "Is your loved one in Sonoma or Marin County needing help at home?",
+      "options": [
+        { "label": "Yes" },
+        { "label": "No", "dq": "out_of_area" }
+      ]
+    },
     {
       "key": "care_for",
       "title": "Who is the care for?",
