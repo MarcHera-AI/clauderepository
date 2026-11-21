@@ -641,15 +641,14 @@ h1.accent { color: var(--accent); }
   </section>
 
   <!-- ============================================================
-       STEP 2 — Q1  (No -> disqualify)
+       STEP 2 — Q1  (No -> soft exit)
        ============================================================ -->
   <section class="step" data-step="q1">
-    <h2 class="q-title">Right now, how do most of your clients pay?</h2>
+    <h2 class="q-title">Do you handle marketing decisions for your agency?</h2>
     <div class="options">
-      <button class="option" type="button" data-q="payer_mix" data-value="Mostly private pay" data-next="q2">Mostly private pay</button>
-      <button class="option" type="button" data-q="payer_mix" data-value="Mix of private pay and Medicaid/VA" data-next="q2">Mix of private pay and Medicaid/VA</button>
-      <button class="option" type="button" data-q="payer_mix" data-value="Mostly Medicaid or VA" data-next="dq-hard" data-dq="medicaid">Mostly Medicaid or VA</button>
-      <button class="option" type="button" data-q="payer_mix" data-value="Medicare home health" data-next="dq-hard" data-dq="medicare">Medicare home health</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="Yes, I'm the decision-maker" data-next="q2">Yes, I'm the decision-maker</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="Yes, with a partner or team" data-next="q2">Yes, with a partner or team</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq-soft" data-dq="not_dm">No</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
@@ -659,14 +658,15 @@ h1.accent { color: var(--accent); }
   </section>
 
   <!-- ============================================================
-       STEP 3 — Q2  (No -> disqualify)
+       STEP 3 — Q2  (Medicaid/VA or Medicare -> disqualify)
        ============================================================ -->
   <section class="step" data-step="q2">
-    <h2 class="q-title">Do you handle marketing decisions for your agency?</h2>
+    <h2 class="q-title">Right now, how do most of your clients pay?</h2>
     <div class="options">
-      <button class="option" type="button" data-q="decision_maker" data-value="Yes, I'm the decision-maker" data-next="q3">Yes, I'm the decision-maker</button>
-      <button class="option" type="button" data-q="decision_maker" data-value="Yes, with a partner or team" data-next="q3">Yes, with a partner or team</button>
-      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq-soft" data-dq="not_dm">No</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Mostly private pay" data-next="q3">Mostly private pay</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Mix of private pay and Medicaid/VA" data-next="q3">Mix of private pay and Medicaid/VA</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Mostly Medicaid or VA" data-next="dq-hard" data-dq="medicaid">Mostly Medicaid or VA</button>
+      <button class="option" type="button" data-q="payer_mix" data-value="Medicare home health" data-next="dq-hard" data-dq="medicare">Medicare home health</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
