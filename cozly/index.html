@@ -641,14 +641,14 @@ h1.accent { color: var(--accent); }
   </section>
 
   <!-- ============================================================
-       STEP 2 — Q1  (No -> soft exit)
+       STEP 2 — Q1  (No -> polite exit, no playbook offer)
        ============================================================ -->
   <section class="step" data-step="q1">
     <h2 class="q-title">Do you handle marketing decisions for your agency?</h2>
     <div class="options">
       <button class="option" type="button" data-q="decision_maker" data-value="Yes, I'm the decision-maker" data-next="q2">Yes, I'm the decision-maker</button>
       <button class="option" type="button" data-q="decision_maker" data-value="Yes, with a partner or team" data-next="q2">Yes, with a partner or team</button>
-      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq-soft" data-dq="not_dm">No</button>
+      <button class="option" type="button" data-q="decision_maker" data-value="No" data-next="dq-hard" data-dq="not_dm">No</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
@@ -658,15 +658,18 @@ h1.accent { color: var(--accent); }
   </section>
 
   <!-- ============================================================
-       STEP 3 — Q2  (Medicaid/VA or Medicare -> disqualify)
+       STEP 3 — Q2  (no disqualify; context for the sales call)
+       Nobody is turned away here. The answer goes to GHL so the closer
+       walks in knowing what they're fighting, and it's their own words
+       for ads and follow-ups.
        ============================================================ -->
   <section class="step" data-step="q2">
-    <h2 class="q-title">Right now, how do most of your clients pay?</h2>
+    <h2 class="q-title">What's holding back your growth the most?</h2>
     <div class="options">
-      <button class="option" type="button" data-q="payer_mix" data-value="Mostly private pay" data-next="q3">Mostly private pay</button>
-      <button class="option" type="button" data-q="payer_mix" data-value="Mix of private pay and Medicaid/VA" data-next="q3">Mix of private pay and Medicaid/VA</button>
-      <button class="option" type="button" data-q="payer_mix" data-value="Mostly Medicaid or VA" data-next="dq-hard" data-dq="medicaid">Mostly Medicaid or VA</button>
-      <button class="option" type="button" data-q="payer_mix" data-value="Medicare home health" data-next="dq-hard" data-dq="medicare">Medicare home health</button>
+      <button class="option" type="button" data-q="growth_blocker" data-value="Not enough inquiries" data-next="q3">Not enough inquiries</button>
+      <button class="option" type="button" data-q="growth_blocker" data-value="Inquiries don't turn into clients" data-next="q3">Inquiries don't turn into clients</button>
+      <button class="option" type="button" data-q="growth_blocker" data-value="Staffing" data-next="q3">Staffing</button>
+      <button class="option" type="button" data-q="growth_blocker" data-value="Something else" data-next="q3">Something else</button>
     </div>
     <p class="disclaimer">
       By continuing you agree to our terms and privacy policy. Results are not typical
@@ -808,16 +811,15 @@ h1.accent { color: var(--accent); }
   <!-- ============================================================
        STEP 8 — Disqualify
        ============================================================ -->
-  <!-- HARD exit: structurally unsellable (Medicaid/VA, Medicare). Brief and
-       respectful. No email capture and no retargeting event -- there is no point
-       paying to chase someone we cannot serve. -->
+  <!-- HARD exit: not the person who decides (Q1 "No"). Brief and polite, no
+       offer and no email capture. The useful move is getting the page in
+       front of whoever does decide. -->
   <section class="step" data-step="dq-hard">
-    <h2 class="dq-title">We're Not the Right Fit</h2>
+    <h2 class="dq-title">Thanks for Checking Us Out</h2>
     <p class="dq-body">
-      Cozly only does private-pay family acquisition. Medicaid, VA and Medicare
-      home health work very differently, and we'd be the wrong people to run it.
+      This is built for whoever makes the marketing decisions at your agency.
+      Feel free to pass this page along to them.
     </p>
-    <p class="dq-body">Thanks for taking the time.</p>
   </section>
 
   <!-- SOFT exit: a fit eventually, just not today. These people are the
@@ -1642,7 +1644,7 @@ var CONFIG = {
   }
 
   function show(step, pushHash) {
-    /* Soft exits (Q1 "No", budget "Under $1,500") now leave for the $1
+    /* The soft exit (budget "Under $1,500") leaves for the $1
        playbook page instead of the on-page dead end. The DQSoft event
        still fires first, with a short wait so the pixel request goes out
        before the page unloads. No hash is pushed, so Back returns to the
@@ -1670,7 +1672,7 @@ var CONFIG = {
     // Guard against someone landing mid-funnel on a deep link with no
     // answers behind them.
     if ((step === "calendar" || step === "thankyou") && !lead.email) step = "vsl";
-    if ((step === "q3" || step === "q4" || step === "form") && !answers.payer_mix) step = "vsl";
+    if ((step === "q3" || step === "q4" || step === "form") && !answers.growth_blocker) step = "vsl";
 
     Object.keys(steps).forEach(function (key) {
       steps[key].classList.toggle("is-active", key === step);
@@ -1722,8 +1724,8 @@ var CONFIG = {
      workflow branches on "event", which is why it is always set. */
 
   var QUESTIONS = {
-    payer_mix: "Right now, how do most of your clients pay?",
     decision_maker: "Do you handle marketing decisions for your agency?",
+    growth_blocker: "What's holding back your growth the most?",
     revenue: "What's your agency doing in annual revenue?",
     budget: "Monthly budget for new private-pay families"
   };
@@ -1758,7 +1760,7 @@ var CONFIG = {
 
   function answerList() {
     var out = [];
-    ["payer_mix", "decision_maker", "revenue", "budget"].forEach(function (key) {
+    ["decision_maker", "growth_blocker", "revenue", "budget"].forEach(function (key) {
       if (answers[key]) out.push({ question: QUESTIONS[key], answer: answers[key] });
     });
     if (lead.company) out.push({ question: "company", answer: lead.company });
