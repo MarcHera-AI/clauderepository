@@ -996,6 +996,7 @@ var CONFIG = {
   });
 
   var ORDER = ["vsl", "q1", "q2", "q3", "q4", "form", "calendar", "thankyou"];
+  var NOT_A_FIT_URL = "/not-a-fit";
   var answers = {};
   var lead = {};
   var current = null;
@@ -1641,6 +1642,17 @@ var CONFIG = {
   }
 
   function show(step, pushHash) {
+    /* Soft exits (Q1 "No", budget "Under $1,500") now leave for the $1
+       playbook page instead of the on-page dead end. The DQSoft event
+       still fires first, with a short wait so the pixel request goes out
+       before the page unloads. No hash is pushed, so Back returns to the
+       question they just answered rather than bouncing them out again. */
+    if (step === "dq-soft") {
+      trackCustom("DQSoft", { reason: answers.dq_reason || "" });
+      setTimeout(function () { window.location.href = NOT_A_FIT_URL; }, 300);
+      return;
+    }
+
     if (!steps[step]) step = "vsl";
 
     /* Once a call is booked the funnel is finished. Without this, the

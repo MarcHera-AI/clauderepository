@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Cozly Media | Your Private-Pay Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231a1a1a'/><text x='40' y='70' font-size='78' font-family='Helvetica,Arial,sans-serif' font-weight='700' text-anchor='middle' fill='%23fdfbf7'>c</text><circle cx='73' cy='61' r='9' fill='%23f5b800'/></svg>" />
+
+<style>
+/* Tokens copied from the funnel (index.html) so the pages read as one site. */
+:root {
+  --bg: #fdfbf7;
+  --line: #e7e2d9;
+  --ink: #1a1a1a;
+  --muted: #6f6a62;
+  --muted-2: #9a948b;
+  --accent: #f5b800;
+  --accent-dark: #e0a800;
+  --accent-ink: #1a1500;
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { background: var(--bg); }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell {
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+  padding: 28px 20px 56px;
+  text-align: center;
+}
+
+.brand { margin-bottom: 30px; }
+.brand img { height: 34px; width: auto; margin-inline: auto; }
+
+.label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1 {
+  font-weight: 800;
+  font-size: clamp(1.6rem, 7vw, 2.1rem);
+  line-height: 1.14;
+  letter-spacing: -0.03em;
+  margin-top: 12px;
+}
+
+/* Shadow and 3D look are in the PNG: no CSS shadow, border or background. */
+.cover { width: 200px; height: auto; margin: 28px auto 24px; }
+
+.text { font-size: 1rem; }
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 800;
+  font-size: 1.08rem;
+  padding: 19px 24px;
+  margin-top: 26px;
+  text-decoration: none;
+  transition: background 0.18s ease, transform 0.12s ease;
+}
+.btn:hover { background: var(--accent-dark); }
+.btn:active { transform: scale(0.99); }
+
+.fine { color: var(--muted-2); font-size: 0.82rem; margin-top: 10px; }
+
+.signoff {
+  margin-top: 38px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<main class="shell">
+  <div class="brand">
+    <img src="https://files.leadconnectorhq.com/file/6af60ab74dccfd82dadddbad/cozly-wordmark-transparent-brown.png" alt="Cozly Media" />
+  </div>
+
+  <p class="label">You're in</p>
+  <h1>Your Private-Pay Playbook is ready</h1>
+
+  <img class="cover" src="/playbook-cover-3d.png" alt="The Private-Pay Playbook cover" />
+
+  <p class="text">Thanks for grabbing the playbook. Hit the button below to download it. Grab a pen too, there are a few checklists and worksheets inside worth filling out.</p>
+
+  <a class="btn" href="/The-Private-Pay-Playbook.pdf" download="The-Private-Pay-Playbook.pdf">Download the playbook</a>
+  <p class="fine">Bookmark this page in case you need to download it again.</p>
+
+  <p class="signoff">Marc, Founder of Cozly Media</p>
+</main>
+
+</body>
+</html>
